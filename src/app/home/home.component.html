@@ -1,0 +1,81 @@
+<div class="bg-gray-100 font-sans antialiased min-h-screen pb-12">
+    <div class="flex flex-col lg:flex-row">
+        <div class="flex items-center justify-center mt-5 lg:ml-10 mb-6">
+            <img alt="Logo" class="h-24 w-48 lg:h-24 lg:w-60" src="assets/companyLogo.png" />
+        </div>
+        <div class="flex flex-col lg:flex-row  justify-between items-center mb-6 w-full lg:w-full px-4 lg:px-0">
+            <div class="flex bg-white lg:ml-80 pl-4 pr-10 rounded-full w-full max-w-md">
+                <input class="p-2 border-0 w-full text-center" placeholder="Try Searching" type="text"/>
+                <i class="fas fa-search text-gray-400 mt-2"></i>
+            </div>
+            <div class="flex items-center lg:mr-8 space-x-8 lg:space-x-10 sm:mt-4 lg:mt-0">
+                <i class="fas fa-bell text-purple-700 relative">
+                    <span class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
+                </i>
+                <i class="fas fa-envelope text-gray-400"></i>
+                <i class="fas fa-user text-gray-400" (click)="openLogout()"></i>
+                <i class="fas fa-sign-out-alt text-gray-400 text-xl cursor-pointer" (click)="onLogoutClick()"></i>
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-col lg:flex-row">
+        <button class="lg:hidden p-2 bg-purple-600 text-white rounded-md ml-4" (click)="menuOpen = !menuOpen">
+            ☰ Menu
+        </button>
+        <div class="w-full lg:w-80 bg-gray-200 lg:ml-10 shadow-lg p-6" [class.hidden]="!menuOpen && isMobile">
+            <nav class="mt-4 lg:mt-10">
+                <a class="flex items-center py-3 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer" (click)="onHomeClick()">
+                    <i class="fas fa-home text-purple-600"></i>
+                    <span class="mx-4 font-medium">Home</span>
+                    <i class="fas fa-caret-down ml-auto"></i>
+                </a>
+                <a class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer" (click)="onReportClick()">
+                    <i class="fas fa-clipboard-list text-purple-600"></i>
+                    <span class="mx-4 font-medium">Reports</span>
+                    <i class="fas fa-caret-down ml-auto"></i>
+                </a>
+                <a class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer" (click)="onDeviceDetail()">
+                    <i class="fas fa-calendar-alt text-purple-600"></i>
+                    <span class="mx-4 font-medium">Device</span>
+                    <i class="fas fa-caret-down ml-auto"></i>
+                </a>
+                <a class="flex items-center py-3 px-6 mt-10 lg:mt-56     text-white bg-purple-600 rounded-lg hover:bg-purple-700" href="#">
+                    <i class="fas fa-external-link-alt mx-8"></i>
+                    <span class="mx-0 font-medium text-center">Visit More</span>
+                </a>
+            </nav>
+        </div>
+        <div class="flex-1 p-4 lg:pt-2">
+            <div class="bg-white p-6 lg:pb-32 rounded-lg shadow-lg">
+                <h1 class="text-xl font-bold mb-2">Welcome Back</h1>
+                <p class="text-purple-700 ml-1 text-lg">{{username}}</p>
+                <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <div class="menustyle p-6 rounded-lg cursor-pointer" (click)="bilogformOpen()">
+                        <div class="flex justify-center mb-4">
+                            <div class="menustyleinner p-4 rounded-full">
+                                <img src="assets/icons/bilog_icon.png" class="w-16 h-16"/>
+                            </div>
+                        </div>
+                        <p class="font-semibold text-center">BI Log</p>
+                    </div>
+                    <div class="menustyle p-6 rounded-lg">
+                        <div class="flex justify-center mb-4">
+                            <div class="menustyleinner p-4 rounded-full">
+                                <img src="assets/icons/ultrasound_icon.png" class="w-16 h-16"/>
+                            </div>
+                        </div>
+                        <p class="font-semibold text-center">Ultrasonic Washer Log</p>
+                    </div>
+                    <div class="menustyle p-6 rounded-lg">
+                        <div class="flex justify-center mb-4">
+                            <div class="menustyleinner p-4 rounded-full">
+                                <img class="w-16 h-16" src="assets/icons/watermark_icon.png"/>
+                            </div>
+                        </div>
+                        <p class="font-semibold text-center">Water Testing Log</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

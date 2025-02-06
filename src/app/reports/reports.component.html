@@ -1,0 +1,218 @@
+<div class="bg-gray-100 font-sans antialiased">
+    <!-- Desktop Header -->
+    <div class="hidden lg:flex">
+        <div class="flex items-center justify-center mt-5 ml-10 mb-6">
+            <img alt="Logo" class="h-24 w-60" src="assets/companyLogo.png"/>
+        </div>
+        
+        <div class="flex justify-between items-center mb-6 col-5 ml-60 mt-4">
+            <div class="flex ml-40 bg-white pl-4 pr-10" style="border-radius: 50px;">
+                <input class="p-2 border-0 w-60 h-8 text-center" placeholder="Try Searching" type="text"/>
+                <i class="fas fa-search text-gray-200 mt-2"></i>
+            </div>
+            <div class="flex items-center space-x-10 ml-40">
+                <div class="relative">
+                    <i class="fas fa-bell text-purple-700"></i>
+                    <span class="absolute top-0 right-0 h-2 w-2 bg-red-600 rounded-full"></span>
+                </div>
+                <i class="fas fa-envelope text-gray-400"></i>
+                <i class="fas fa-user text-gray-400"></i>
+                <i class="fas fa-chart-line text-gray-400"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Header -->
+    <div class="lg:hidden flex justify-between items-center p-4">
+        <img alt="Logo" class="h-12" src="assets/companyLogo.png"/>
+        <button (click)="toggleSidebar()" class="text-gray-600">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="hidden lg:block w-80 ml-8 h-screen bg-gray-200 shadow-lg pr-10 pl-10">
+            <nav class="mt-10">
+                <!-- Sidebar content from your original code -->
+                <a (click)="onHomeClick()" class="flex items-center py-3 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer">
+                    <i class="fas fa-home text-purple-600"></i>
+                    <span class="mx-4 font-medium">Home</span>
+                    <i class="fas fa-caret-down ml-16"></i>
+                </a>
+                <a class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer">
+                    <i class="fas fa-clipboard-list text-purple-600"></i>
+                    <span class="mx-4 font-medium">Reports</span>
+                    <i class="fas fa-caret-down ml-14"></i>
+                </a>
+                <a (click)="onDeviceDetailClick()" class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer">
+                    <i class="fas fa-calendar-alt text-purple-600"></i>
+                    <span class="mx-4 font-medium">Device</span>
+                    <i class="fas fa-caret-down ml-16"></i>
+                </a>
+                <a class="flex items-center py-2 px-8 mt-56 text-white bg-purple-600 rounded-lg hover:bg-purple-700">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span class="mx-4 font-medium">Visit More</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Mobile Sidebar -->
+        <div *ngIf="showSidebar" 
+             class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+             (click)="toggleSidebar()">
+        </div>
+        <div [class.translate-x-0]="showSidebar"
+             [class.translate-x-full]="!showSidebar"
+             class="lg:hidden fixed right-0 top-0 w-64 h-full bg-gray-200 z-50 transform transition-transform duration-300 ease-in-out p-4">
+            <!-- Mobile sidebar content -->
+            <nav class="mt-10">
+            
+                <!-- Sidebar content from your original code -->
+                <a (click)="onHomeClick()" class="flex items-center py-3 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer">
+                    <i class="fas fa-home text-purple-600"></i>
+                    <span class="mx-4 font-medium">Home</span>
+                    <i class="fas fa-caret-down ml-16"></i>
+                </a>
+                <a class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer">
+                    <i class="fas fa-clipboard-list text-purple-600"></i>
+                    <span class="mx-4 font-medium">Reports</span>
+                    <i class="fas fa-caret-down ml-14"></i>
+                </a>
+                <a (click)="onDeviceDetailClick()" class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer">
+                    <i class="fas fa-calendar-alt text-purple-600"></i>
+                    <span class="mx-4 font-medium">Device</span>
+                    <i class="fas fa-caret-down ml-16"></i>
+                </a>
+                <a class="flex items-center py-2 px-8 mt-56 text-white bg-purple-600 rounded-lg hover:bg-purple-700">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span class="mx-4 font-medium">Visit More</span>
+                </a>
+            </nav>
+           
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 pr-10 pl-10">
+            <div class="flex flex-col lg:flex-row mb-4 ml-5 gap-4">
+                <div class="flex flex-col lg:flex-row gap-4">
+                    <div class="flex flex-col lg:flex-row items-center">
+                        <label class="lg:mt-2">Start Time</label>
+                        <div class="relative ml-2 ">
+                            <input class="p-2 fields" 
+                                   type="date" 
+                                   [(ngModel)]="startTime"
+                                   (change)="onDateChange()"/>
+                        </div>
+                    </div>
+                    <div class="flex flex-col lg:flex-row items-center lg:ml-8">
+                        <label class="lg:mt-2">End Time</label>
+                        <div class="relative ml-2">
+                            <input class="p-2 fields" 
+                                   type="date" 
+                                   [(ngModel)]="endTime"
+                                   (change)="onDateChange()"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-4 lg:ml-64">
+                    <button class="flex items-center py-2 px-4 text-white bg-gray-500 rounded-lg hover:bg-purple-700"
+                            (click)="exportExcel()">
+                        <span class="mx-1 font-medium">Excel</span>
+                    </button>
+                    <button class="flex items-center py-2 px-4 text-white bg-purple-500 rounded-lg hover:bg-purple-700"
+                            (click)="exportPDF()">
+                        <span class="mx-1 font-medium">PDF</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="flex flex-col lg:flex-row justify-between items-center mb-6">
+                    <h2 class="text-xl font-semibold mb-4 lg:mb-0">Reports</h2>
+                    <div class="flex flex-col lg:flex-row gap-4 w-full lg:w-auto">
+                        <div class="relative">
+                            <!-- <i class="fas fa-search absolute left-4 top-2.5 text-gray-400"></i> -->
+                            <input type="text" 
+                                   placeholder="Try searching 'NewProducts'" 
+                                   class="w-full lg:w-64 ml-1 p-2 pl-10 border rounded-lg"/>
+                        </div>
+                        <div class="flex items-center border px-4 py-2 rounded-lg">
+                            <i class="fas fa-filter text-gray-600"></i>
+                            <span class="ml-2">Filter</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white">
+                        <!-- Table content from your original code -->
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-1 columnheading border-b border-gray-200">Record</th>
+                                <th class="py-2 px-3 columnheading border-b border-gray-200">Start Time</th>
+                                <th class="py-2 px-3 columnheading border-b border-gray-200">End Time</th>
+                                <th class="py-2 px-3 columnheading border-b border-gray-200">Clinic Name</th>
+                                <th class="py-2 px-3 columnheading border-b border-gray-200">Clinic Address</th>
+                                <!-- <th class="py-2 px-3 columnheading border-b border-gray-200">Well</th> -->
+                                <th class="py-2 px-3 columnheading border-b border-gray-200">Result</th>
+                                <th class="py-2 px-3 columnheading border-b border-gray-200">BI Type</th>
+                                <th class="py-2 px-3 columnheading border-b border-gray-200">Control</th>
+                                <th class="py-2 px-3 columnheading border-b border-gray-200">Implant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let record of records; let i = index">
+                                <td class="py-2 px-4 border-b border-gray-200">{{ i+1 }}</td>
+                                <td class="py-2 px-4 border-b border-gray-200">{{ record.startTime | date:'dd-MM-yy HH:mm' }}</td>
+                                <td class="py-2 px-4 border-b border-gray-200">{{ record.endTime | date:'dd-MM-yy HH:mm:ss' }}</td>
+                                <td class="py-2 px-4 border-b border-gray-200">{{ record.clinicName }}</td>
+                                <td class="py-2 px-4 border-b border-gray-200">{{ record.clinicAddress }}</td>
+                                <!-- <td class="py-2 px-1 border-b border-gray-200">{{ record.wellNumber }}</td> -->
+                                <td class="py-2 px-4 border-b border-gray-200">{{ record.result }}</td>
+                                <td class="py-2 px-4 border-b border-gray-200">{{ record.biType }}</td>
+                                <td class="py-2 px-4 border-b border-gray-200">
+                                    <button class="text-purple-600 controldiv px-4 py-1"
+                                            [disabled]="!record.isControlTest"
+                                            [ngClass]="{'opacity-50 cursor-not-allowed': !record.isControlTest}">
+                                        Control
+                                    </button>
+                                </td>
+                                <td class="py-2 px-4 border-b border-gray-200">
+                                    <button class="text-purple-600 controldiv px-4 py-1"
+                                            [disabled]="!record.isImplant"
+                                            [ngClass]="{'opacity-50 cursor-not-allowed': !record.isImplant}">
+                                        Implant
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex flex-col lg:flex-row justify-between items-center mt-4">
+                    <span class="mb-4 lg:mb-0">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+                    <div class="flex gap-2">
+                        <button class="px-4 py-2 bg-purple-600 text-white rounded disabled:opacity-50"
+                                (click)="changePage(currentPage - 1)" 
+                                [disabled]="currentPage === 0">
+                            Previous
+                        </button>
+                        <button class="px-4 py-2 bg-purple-600 text-white rounded disabled:opacity-50"
+                                (click)="changePage(currentPage + 1)" 
+                                [disabled]="currentPage === totalPages - 1">
+                            Next
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <app-notification-popup
+        [isOpen]="showPopup"
+        [message]="popupMessage"
+        [type]="popupType"
+        (onClose)="closePopup()">
+    </app-notification-popup>
+</div>

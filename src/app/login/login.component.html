@@ -1,0 +1,78 @@
+<div class="container-fluid d-flex align-items-center justify-content-center mainContainer">
+  <div class="row w-100">
+    <!-- Left Section -->
+    <div class="col-md-8 d-none d-md-flex align-items-center justify-content-center">
+      <img src="assets/loginLeft.png" alt="" class="col-12 loginbgImg">
+      <img src="assets/logo_icon.png" alt="" class="logoImg">
+    </div>
+    
+    <!-- Right Section -->
+    <div class="col-md-4 col-12 d-flex align-items-center justify-content-center rightSection">
+      <div class="login-form w-60">
+        <h2 class="fw-bold text-xl">Hello Again!</h2>
+        <p class="text-muted mt-2">Welcome Back</p>
+        
+        <!-- Updated form with proper bindings -->
+        <form [formGroup]="loginForm" class="pt-4" (ngSubmit)="onLoginClick()">
+          <div class="mb-4 fieldContainer">
+            <div class="input-group">
+              <span class="input-group-text fieldIcons border-0" style="background-color: transparent;">
+                <i class="bi bi-envelope"></i>
+              </span>
+              <input 
+                type="email" 
+                formControlName="email"
+                class="form-control border-0" 
+                placeholder="Email Address"
+                [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+              >
+            </div>
+           
+          </div>
+
+          <div class="mb-4 fieldContainer">
+            <div class="input-group">
+              <span class="input-group-text fieldIcons border-0">
+                <i class="bi bi-lock"></i>
+              </span>
+              <input 
+                type="password" 
+                formControlName="password"
+                class="form-control border-0" 
+                placeholder="Password"
+                [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+              >
+            </div>
+          
+          </div>
+
+          <button 
+            type="submit" 
+            class="btn btn-primary w-100 py-2"
+            [disabled]="loginForm.invalid"
+          >
+            Login
+          </button>
+
+          <div class="mb-3 mt-3 ml-2 d-flex justify-content-between align-items-center">
+            <div class="form-check">
+              <input 
+                type="checkbox" 
+                class="form-check-input" 
+                id="rememberMe"
+                formControlName="rememberMe"
+              >
+              <label class="form-check-label ml-2 mt-1 text-gray-500" for="rememberMe">Remember me</label>
+            </div>
+           
+          </div>
+        </form>
+
+        <p class="mt-4 text-muted" style="font-size: small;">
+          Don’t have an account?
+          <span class="text-purple cursor-pointer" (click)="onCreateAccount()">Create Account</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

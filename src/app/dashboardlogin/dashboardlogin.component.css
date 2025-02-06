@@ -1,0 +1,12 @@
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+.float-icon {
+    animation: float 3s ease-in-out infinite;
+}
+.input-glow:focus {
+    box-shadow: 0 0 15px rgba(147, 51, 234, 0.3);
+}

@@ -1,0 +1,27 @@
+<div class="relative">
+    <input
+      [(ngModel)]="inputValue"
+      (input)="filterItems()"
+      (keydown.enter)="addNewItem()"
+      (focus)="onFocus()"
+      (ngModelChange)="onInputChange($event)"
+      (blur)="onBlur()"
+      class="w-full p-2 fields mt-2 fields"
+      [placeholder]="placeholder"
+    />
+    
+    <!-- Dropdown -->
+    <ul
+      class="absolute z-10 bg-gray-100 border w-full max-h-40 overflow-auto rounded-lg"
+      *ngIf="showDropdown && filteredItems.length > 0"
+    >
+      <li
+        *ngFor="let item of filteredItems"
+        (mousedown)="selectItem(item)"
+        class="cursor-pointer p-2 hover:bg-gray-200"
+      >
+        {{ item }}
+      </li>
+    </ul>
+  </div>
+  

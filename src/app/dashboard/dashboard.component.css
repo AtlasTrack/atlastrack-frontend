@@ -1,0 +1,10 @@
+.columnheading {
+    color: rgba(113, 142, 191, 1);
+  }
+  .controldiv {
+    border: 0.3px solid rgba(145, 110, 201, 1);
+    border-radius: 30px;
+  }
+  td {
+    font-size: 14px;
+  }

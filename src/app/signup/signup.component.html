@@ -1,0 +1,126 @@
+<div class="container-fluid d-flex align-items-center justify-content-center mainContainer">
+  <div class="row w-100">
+    <!-- Left Section -->
+    <div class="col-md-8 d-none d-md-flex align-items-center justify-content-center">
+      <img src="assets/loginLeft.png" alt="" class="col-12 loginbgImg">
+      <img src="assets/logo_icon.png" alt="" class="logoImg">
+    </div>
+    <!-- Right Section -->
+    <div class="col-md-4 col-12 d-flex align-items-center justify-content-center rightSection">
+      <div class="login-form text-center w-90">
+        <p class="title mb-4">CREATE AN ACCOUNT</p>
+    
+        <form [formGroup]="signupForm" (ngSubmit)="onSignupClick()" class="pt-3">
+          <!-- Email Field -->
+          <div class="mb-4 fieldContainer">
+            <div class="input-group" [class.invalid-border]="isFieldInvalid('email')">
+              <span class="input-group-text fieldIcons border-0">
+                <i class="bi bi-envelope"></i>
+              </span>
+              <input 
+                type="email" 
+                class="form-control border-0" 
+                placeholder="Email Address"
+                formControlName="email">
+            </div>
+          </div>
+
+          <!-- Full Name Field -->
+          <div class="mb-4 fieldContainer">
+            <div class="input-group" [class.invalid-border]="isFieldInvalid('fullName')">
+              <span class="input-group-text fieldIcons border-0">
+                <i class="bi bi-person"></i>
+              </span>
+              <input 
+                type="text" 
+                class="form-control border-0" 
+                placeholder="Full Name"
+                formControlName="fullName">
+            </div>
+          </div>
+
+          <div class="mb-4 fieldContainer">
+            <div class="input-group" [class.invalid-border]="isFieldInvalid('phoneNumber')">
+              <span class="input-group-text fieldIcons border-0 text-muted text-xs">
+                <select 
+                  formControlName="countryCode"
+                  (change)="onCountryCodeChange($event)">
+                  <option value="+92">+92</option>
+                  <option value="+41">+41</option>
+                </select>
+              </span>
+              <input 
+                type="tel" 
+                class="form-control border-0" 
+                placeholder="Phone Number"
+                formControlName="phoneNumber">
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div class="mb-4 fieldContainer">
+            <div class="input-group" [class.invalid-border]="isFieldInvalid('password')">
+              <span class="input-group-text fieldIcons border-0">
+                <i class="bi bi-lock"></i>
+              </span>
+              <input 
+                [type]="showPassword ? 'text' : 'password'"
+                class="form-control border-0" 
+                placeholder="Password"
+                formControlName="password">
+              <span class="input-group-text fieldIcons border-0 cursor-pointer" (click)="togglePasswordVisibility('password')">
+                <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+              </span>
+            </div>
+          </div>
+
+          <!-- Confirm Password Field -->
+          <div class="mb-4 fieldContainer">
+            <div class="input-group" [class.invalid-border]="isFieldInvalid('confirmPassword')">
+              <span class="input-group-text fieldIcons border-0">
+                <i class="bi bi-lock"></i>
+              </span>
+              <input 
+                [type]="showConfirmPassword ? 'text' : 'password'"
+                class="form-control border-0" 
+                placeholder="Confirm Password"
+                formControlName="confirmPassword">
+              <span class="input-group-text fieldIcons border-0 cursor-pointer" (click)="togglePasswordVisibility('confirmPassword')">
+                <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+              </span>
+            </div>
+          </div>
+
+          <!-- Clinic Name Field -->
+          <div class="mb-4 fieldContainer">
+            <div class="input-group" [class.invalid-border]="isFieldInvalid('clinicName')">
+              <input 
+                type="text" 
+                class="form-control border-0" 
+                placeholder="Clinic Name"
+                formControlName="clinicName">
+            </div>
+          </div>
+
+          <!-- Clinic Address Field -->
+          <div class="mb-4 fieldContainer">
+            <div class="input-group" [class.invalid-border]="isFieldInvalid('clinicAddress')">
+              <input 
+                type="text" 
+                class="form-control border-0" 
+                placeholder="Clinic Address"
+                formControlName="clinicAddress">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 py-2">
+            Sign Up
+          </button>
+        </form>
+        <p class="mt-3 text-muted">
+          Forget Password
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

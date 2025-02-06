@@ -1,0 +1,258 @@
+<!-- dashboard.component.html -->
+<div class="bg-gray-100 font-sans antialiased">
+    <!-- Header Section -->
+    <div class="flex">
+        <div class="flex items-center justify-center mt-5 ml-10 mb-6">
+            <img alt="Logo" class="h-100 w-200" height="150" src="assets/companyLogo.png" width="230"/>
+        </div>
+        <div class="flex justify-between items-center mb-6 col-5 ml-60 mt-4">
+            <div class="flex ml-40 bg-white pl-4 pr-10" style="border-radius: 50px;">
+                <input [(ngModel)]="searchQuery" (input)="onSearch()" 
+                       class="p-2 border-0 w-60 h-8 text-center" 
+                       placeholder="Try Searching" type="text"/>
+                <i class="fas fa-search text-gray-200 mt-2"></i>
+            </div>
+            <div class="flex items-center space-x-10 ml-40">
+                <i class="fas fa-bell text-purple-700 relative">
+                    <span class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
+                </i>
+                <i class="fas fa-envelope text-gray-400"></i>
+                <i class="fas fa-user text-gray-400"></i>
+                <i class="fas fa-sign-out-alt text-gray-400 text-xl cursor-pointer" (click)="onLogoutClick()"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-80 ml-8 h-screen bg-gray-200 shadow-lg pr-10 pl-10">
+            <nav class="mt-10">
+                <a class="flex items-center py-3 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg" >
+                    <i class="fas fa-home text-purple-600"></i>
+                    <span class="mx-4 font-medium">Dashboard</span>
+                    <i class="fas fa-caret-down ml-8"></i>
+                </a>
+
+                <a class="flex items-center mt-4 py-3 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg"  (click)="onclinicClick()">
+                    <i class="fas fa-home text-purple-600"></i>
+                    <span class="mx-4 font-medium">Clinics</span>
+                    <i class="fas fa-caret-down ml-16"></i>
+                </a>
+              
+                <!-- Additional sidebar items -->
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 pr-10 pl-10">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <!-- Total Reports Card -->
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-500">Total Reports</p>
+                            <p class="text-3xl font-bold text-purple-600">{{stats.totalReports | number}}</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-file-alt text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-sm text-green-500 mt-2" *ngIf="stats.previousMonthReports">
+                        ↑ {{((stats.totalReports - stats.previousMonthReports) / stats.previousMonthReports * 100) | number:'1.0-0'}}% from last month
+                    </p>
+                </div>
+
+                <!-- Success Rate Card -->
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-500">Control Tests</p>
+                            <p class="text-3xl font-bold text-purple-600">{{controlTest}}</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-check-circle text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Last 30 days</p>
+                </div>
+
+                <!-- Processing Time Card -->
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-500">Implant Test</p>
+       
+        <p class="text-3xl font-bold text-purple-600">{{ implantTest }}</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-clock text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-sm" [class]="stats.avgProcessingTime > stats.avgProcessingTimeBaseline ? 'text-red-500' : 'text-green-500'" *ngIf="stats.avgProcessingTimeBaseline">
+                        <!-- {{stats.avgProcessingTime > stats.avgProcessingTimeBaseline ? '↑' : '↓'}} 
+                        {{abs(stats.avgProcessingTime - stats.avgProcessingTimeBaseline) | number:'1.1-1'}}h from average -->
+                    </p>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-xl font-semibold text-purple-600 mb-4">Weekly Test Summary</h2>
+                    <div class="w-full h-64">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-xl font-semibold text-purple-600 mb-4">Test Type Distribution</h2>
+                    <div class="w-full h-64">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white p-6 vh-90 rounded-lg shadow-lg">
+                <div class="flex mb-4 ml-1 ">
+
+                    <div class="flex ml-2">
+                        <label class="mt-2 text-purple-700">Start Time</label>
+                        <div class="relative">
+                            <input 
+                                class="w-full p-2 fields ml-2 text-gray-600" 
+                                type="date" 
+                                [(ngModel)]="startTime"
+                                (change)="onDateChange()"
+                            />
+                        </div>
+                    </div>
+                
+                    <div class="flex ml-4 ">
+                        <label class="mt-2 text-purple-700">End Time</label>
+                        <div class="relative">
+                            <input 
+                                class="w-full p-2 fields ml-2 text-gray-600" 
+                                type="date" 
+                                [(ngModel)]="endTime"
+                                (change)="onDateChange()"
+                            />
+                        </div>
+                    </div>
+                
+                    <button 
+                        class="flex items-center py-2  px-4 mt-1 ml-56 text-white bg-gray-500 rounded-lg hover:bg-purple-700"
+                        (click)="exportExcel()">
+                        <span class="mx-1 font-medium">Excel</span>
+                    </button>
+                
+                    <button 
+                        class="flex items-center py-2  px-4 mt-1 ml-5 text-white bg-purple-500 rounded-lg hover:bg-purple-700"
+                        (click)="exportPDF()">
+                        <span class="mx-1 font-medium">PDF</span>
+                    </button>
+                   </div>
+                <div class="flex justify-between items-center mb-6">
+                    
+               <h2 class="text-xl font-semibold mb-4">
+                Reports
+               </h2>
+               <div class="flex items-center">
+                <div class="px-4 py-2 border rounded-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600">
+                <i class="fas fa-search text-gray-400 ">
+                </i>
+                <input class="ml-2" placeholder="Try searching 'NewProducts'" type="text"/>
+                </div>
+                <div class="flex justify-between items-center mb-1 border px-2 py-1 ml-4">
+                 <div class="flex items-center">
+                  <i class="fas fa-filter text-gray-600 ml-2">
+                  </i>
+                  <P class="">Filter</P>
+                 </div>
+                </div>
+               </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white">
+                  <thead>
+                    <tr>
+                      <th class="py-2 px-1 columnheading border-b border-gray-200">Record</th>
+                      <th class="py-2 px-3 columnheading border-b border-gray-200">Start Time</th>
+                      <th class="py-2 px-3 columnheading border-b border-gray-200">End Time</th>
+                      <th class="py-2 px-3 columnheading border-b border-gray-200">Clinic Name</th>
+                      <th class="py-2 px-3 columnheading border-b border-gray-200">Clinic Address</th>
+                      <th class="py-2 px-3 columnheading border-b border-gray-200">Well</th>
+                      <th class="py-2 px-3 columnheading border-b border-gray-200">Result</th>
+                      <th class="py-2 px-3 columnheading border-b border-gray-200">BI Type</th>
+                      <th class="py-2 px-3 columnheading border-b border-gray-200">Control</th>
+                      <th class="py-2 px-3 columnheading border-b border-gray-200">Implant</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let record of records; let i = index">
+                      <td class="py-2 px-4 border-b border-gray-200">{{ i+1 }}</td>
+                      <td class="py-2 px-4 border-b border-gray-200">{{ record.startTime | date:'dd-MM-yy HH:mm:ss' }}</td>
+                      <td class="py-2 px-4 border-b border-gray-200">{{ record.endTime | date:'dd-MM-yy HH:mm:ss' }}</td>
+                      <td class="py-2 px-4 border-b border-gray-2">{{ record.clinicName }} </td>
+                      <td class="py-2 px-4 border-b border-gray-200">{{ record.clinicAddress}}</td>
+                      <td class="py-2 px-4 border-b border-gray-200">{{ record.wellNumber }}</td>
+                      <td class="py-2 px-4 border-b border-gray-200">{{ record.result }}</td>
+                      <td class="py-2 px-4 border-b border-gray-200">{{ record.biType }}</td>
+                      <td class="py-2 px-4 border-b border-gray-200">
+                        <button 
+                          class="text-purple-600 controldiv px-4 py-1"
+                          [disabled]="!record.isControlTest"
+                          [ngClass]="{
+                            'opacity-50 cursor-not-allowed': !record.isControlTest
+                          }">
+                          Control
+                        </button>
+                      </td>
+        
+        
+                      <td class="py-2 px-4 border-b border-gray-200">
+                        <button 
+                          class="text-purple-600 controldiv px-4 py-1"
+                          [disabled]="!record.isImplant"
+                          [ngClass]="{
+                            'opacity-50 cursor-not-allowed': !record.isImplant
+                          }">
+                          Implant
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            
+              <div class="flex justify-between items-center mt-4">
+                <div>
+                  <span class="mr-2">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+                </div>
+                <div class="flex space-x-2">
+                  <button 
+                    class="px-4 py-2 bg-purple-600 text-white rounded disabled:opacity-50"
+                    (click)="changePage(currentPage - 1)" 
+                    [disabled]="currentPage === 0">
+                    Previous
+                  </button>
+                  <button 
+                    class="px-4 py-2 bg-purple-600 text-white rounded disabled:opacity-50"
+                    (click)="changePage(currentPage + 1)" 
+                    [disabled]="currentPage === totalPages - 1">
+                    Next
+                  </button>
+                </div>
+              </div>
+              </div>
+        </div>
+    </div>
+
+    <app-notification-popup
+        [isOpen]="showPopup"
+        [message]="popupMessage"
+        [type]="popupType"
+        (onClose)="closePopup()">
+    </app-notification-popup>
+</div>

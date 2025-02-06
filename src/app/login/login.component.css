@@ -1,0 +1,85 @@
+.mainContainer {
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+    background-color: #f1eeee;
+}
+  
+  .login-form input {
+    border-radius: 50px;
+    padding: 10px 10px;
+    border: 1px solid #ddd;
+    font-size: small;
+  }
+
+  .fieldContainer {
+    border: 1px solid lightgray;
+    border-radius: 25px;
+  }
+
+  .emailField {
+    border-radius: 30px;
+  }
+  
+  .btn-primary {
+    background-color: rgba(126, 33, 184, 1);
+    border: none;
+    border-radius: 50px;
+  }
+  
+  
+ .text-purple {
+    color: rgba(126, 33, 184, 1);
+  }
+
+
+ .fieldIcons {
+  background-color: transparent;
+ }
+
+ .loginbgImg {
+    height: 680px;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+ }
+
+ .logoImg {
+  height: 250px;
+  position: absolute;
+  width: 250px;
+
+ }
+
+
+
+ .rightSection {
+    background: #fff;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    margin-left: -10px;
+ }
+
+  .form-check-input {
+    background-color: transparent;
+    height: 3px;
+    width: 3px;
+    margin-top: 5px;
+  }
+
+ .form-check-input:checked {
+  background-color: #6f42c1;
+  border-color: #6f42c1;
+  height: 5px;
+  width: 5px;
+  
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+ 

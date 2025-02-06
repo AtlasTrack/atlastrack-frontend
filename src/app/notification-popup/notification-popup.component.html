@@ -1,0 +1,29 @@
+<div *ngIf="isOpen" 
+     class="popup-overlay fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+     (click)="onOverlayClick($event)">
+  <div [ngClass]="{
+    'bg-purple-100 border-purple-400 text-purple-800': type === 'success',
+    'bg-red-100 border-red-400 text-red-800': type === 'error'
+  }" class="border-l-4 p-4 rounded shadow-lg max-w-md relative">
+    <!-- Close button -->
+    <button (click)="closePopup()" 
+            class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+      <svg xmlns="http://www.w3.org/2000/svg" 
+           class="h-5 w-5" 
+           viewBox="0 0 20 20" 
+           fill="currentColor">
+        <path fill-rule="evenodd" 
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" 
+              clip-rule="evenodd" />
+      </svg>
+    </button>
+
+    <!-- Message content -->
+    <div class="ml-3 mr-7">
+      <p class="text-lg font-medium">
+        {{ type === 'success' ? 'Success!' : 'Error' }}
+      </p>
+      <p class="mt-1">{{ message }}</p>
+    </div>
+  </div>
+</div>
