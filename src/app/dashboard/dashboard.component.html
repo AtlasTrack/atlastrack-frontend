@@ -175,11 +175,11 @@
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full bg-white">
-                  <thead>
+                  <thead class="text-center">
                     <tr>
                       <th class="py-2 px-1 columnheading border-b border-gray-200">Record</th>
-                      <th class="py-2 px-3 columnheading border-b border-gray-200">Start Time</th>
-                      <th class="py-2 px-3 columnheading border-b border-gray-200">End Time</th>
+                      <th class="py-2 px-4 columnheading border-b border-gray-200">Start Time</th>
+                      <th class="py-2 px-4 columnheading border-b border-gray-200">End Time</th>
                       <th class="py-2 px-3 columnheading border-b border-gray-200">Clinic Name</th>
                       <th class="py-2 px-3 columnheading border-b border-gray-200">Clinic Address</th>
                       <th class="py-2 px-3 columnheading border-b border-gray-200">Well</th>
@@ -190,37 +190,29 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let record of records; let i = index">
-                      <td class="py-2 px-4 border-b border-gray-200">{{ i+1 }}</td>
-                      <td class="py-2 px-4 border-b border-gray-200">{{ record.startTime | date:'dd-MM-yy HH:mm:ss' }}</td>
-                      <td class="py-2 px-4 border-b border-gray-200">{{ record.endTime | date:'dd-MM-yy HH:mm:ss' }}</td>
-                      <td class="py-2 px-4 border-b border-gray-2">{{ record.clinicName }} </td>
-                      <td class="py-2 px-4 border-b border-gray-200">{{ record.clinicAddress}}</td>
-                      <td class="py-2 px-4 border-b border-gray-200">{{ record.wellNumber }}</td>
-                      <td class="py-2 px-4 border-b border-gray-200">{{ record.result }}</td>
-                      <td class="py-2 px-4 border-b border-gray-200">{{ record.biType }}</td>
-                      <td class="py-2 px-4 border-b border-gray-200">
-                        <button 
-                          class="text-purple-600 controldiv px-4 py-1"
-                          [disabled]="!record.isControlTest"
-                          [ngClass]="{
-                            'opacity-50 cursor-not-allowed': !record.isControlTest
-                          }">
-                          Control
-                        </button>
-                      </td>
-        
-        
-                      <td class="py-2 px-4 border-b border-gray-200">
-                        <button 
-                          class="text-purple-600 controldiv px-4 py-1"
-                          [disabled]="!record.isImplant"
-                          [ngClass]="{
-                            'opacity-50 cursor-not-allowed': !record.isImplant
-                          }">
-                          Implant
-                        </button>
-                      </td>
+                    <tr *ngFor="let record of records; let i = index" class="text-center">
+                        <td class="py-2 text-sm px-1 border-b border-gray-200">{{ i+1 }}</td>
+                                <td class="py-2 px-4 text-xs border-b border-gray-200">{{ record.startTime | date:'dd-MM-yy HH:mm' }}</td>
+                                <td class="py-2 px-4 text-xs border-b border-gray-200">{{ record.endTime | date:'dd-MM-yy HH:mm:ss' }}</td>
+                                <td class="py-2 px-2 border-b border-gray-200">{{ record.clinicName }}</td>
+                                <td class="py-2 px-2 border-b border-gray-200">{{ record.clinicAddress }}</td>
+                                <!-- <td class="py-2 px-1 border-b border-gray-200">{{ record.wellNumber }}</td> -->
+                                <td class="py-2 px-1 border-b border-gray-200">{{ record.result }}</td>
+                                <td class="py-2 px-1 border-b border-gray-200">{{ record.biType }}</td>
+                                <td class="py-2 px-1 border-b border-gray-200">
+                                    <button class="text-purple-600 controldiv px-4 py-1"
+                                            [disabled]="!record.isControlTest"
+                                            [ngClass]="{'opacity-50 cursor-not-allowed': !record.isControlTest}">
+                                        Control
+                                    </button>
+                                </td>
+                                <td class="py-2 px-1 border-b border-gray-200">
+                                    <button class="text-purple-600 controldiv px-4 py-1"
+                                            [disabled]="!record.isImplant"
+                                            [ngClass]="{'opacity-50 cursor-not-allowed': !record.isImplant}">
+                                        Implant
+                                    </button>
+                                </td>
                     </tr>
                   </tbody>
                 </table>

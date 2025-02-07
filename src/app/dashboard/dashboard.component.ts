@@ -244,6 +244,12 @@ export class DashboardComponent implements OnInit {
   
     const startDate = `${this.startTime}T00:00:00`;
     const endDate = `${this.endTime}T23:59:59`;
+    if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
+      this.showPopup = true;
+      this.popupMessage = 'Select the valid date';
+      this.popupType = 'error'
+       return;
+     }
   
     this.apiService.exportExcel(startDate, endDate).subscribe(blob => {
       saveAs(blob, `report-${this.startTime}-to-${this.endTime}.xlsx`);
@@ -255,7 +261,13 @@ export class DashboardComponent implements OnInit {
   
     const startDate = `${this.startTime}T00:00:00`;
     const endDate = `${this.endTime}T23:59:59`;
-  
+
+    if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
+      this.showPopup = true;
+      this.popupMessage = 'Select the valid date';
+      this.popupType = 'error'
+       return;
+     }
     this.apiService.exportPDF(startDate, endDate).subscribe(blob => {
       saveAs(blob, `report-${this.startTime}-to-${this.endTime}.pdf`);
     });

@@ -36,14 +36,16 @@
                 <i class="bi bi-lock"></i>
               </span>
               <input 
-                type="password" 
+                [type]="showPassword ? 'text' : 'password'"
                 formControlName="password"
                 class="form-control border-0" 
                 placeholder="Password"
                 [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
               >
+              <span class="input-group-text fieldIcons border-0 cursor-pointer" (click)="togglePasswordVisibility()">
+                <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+              </span>
             </div>
-          
           </div>
 
           <button 
@@ -75,4 +77,5 @@
       </div>
     </div>
   </div>
+  <app-notification-popup [isOpen]="showPopup" [message]="popupMessage" [type]="popupType" (onClose)="closePopup()"></app-notification-popup>
 </div>

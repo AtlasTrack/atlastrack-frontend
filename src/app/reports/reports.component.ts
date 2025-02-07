@@ -16,6 +16,7 @@ import { AutoReadRecord } from '../apiinterfaces';
 })
 export class ReportsComponent implements OnInit {
   records: AutoReadRecord[] = [];
+  filteredRecords: AutoReadRecord[] = [];
   currentPage = 0;
   totalPages = 0;
   startTime!: string;
@@ -24,6 +25,9 @@ export class ReportsComponent implements OnInit {
   popupMessage = '';
   showSidebar: boolean = false;
   popupType: 'success' | 'error' = 'success';
+  searchText: string = '';
+  showFilterOptions: boolean = false;
+  filterCriteria: string = 'all';
   constructor(private router: Router, private apiService: ApiService) { }
 
 
@@ -95,6 +99,14 @@ export class ReportsComponent implements OnInit {
   
     const startDate = `${this.startTime}T00:00:00`;
     const endDate = `${this.endTime}T23:59:59`;
+
+
+  if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
+    this.showPopup = true;
+    this.popupMessage = 'Select the valid date';
+    this.popupType = 'error'
+     return;
+   }
   
     this.apiService.exportExcel(startDate, endDate).subscribe(blob => {
       saveAs(blob, `report-${this.startTime}-to-${this.endTime}.xlsx`);
@@ -106,6 +118,14 @@ export class ReportsComponent implements OnInit {
   
     const startDate = `${this.startTime}T00:00:00`;
     const endDate = `${this.endTime}T23:59:59`;
+
+
+  if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
+   this.showPopup = true;
+   this.popupMessage = 'Select the valid date';
+   this.popupType = 'error'
+    return;
+  }
   
     this.apiService.exportPDF(startDate, endDate).subscribe(blob => {
       saveAs(blob, `report-${this.startTime}-to-${this.endTime}.pdf`);
@@ -138,5 +158,47 @@ export class ReportsComponent implements OnInit {
 
   toggleSidebar(): void {
     this.showSidebar = !this.showSidebar;
+  }
+
+
+  applySearchAndFilter() {
+    // If no search text, show all records
+    if (!this.searchText) {
+      this.filteredRecords = this.records;
+      return;
+    }
+
+    // Convert search text to lowercase for case-insensitive search
+    const searchLower = this.searchText.toLowerCase();
+
+    // Filter based on search text and selected filter criteria
+    this.filteredRecords = this.records.filter(record => {
+      switch(this.filterCriteria) {
+        case 'clinicName':
+          return record.clinicName.toLowerCase().includes(searchLower);
+        case 'result':
+          return record.result.toLowerCase().includes(searchLower);
+        case 'biType':
+          return record.biType.toLowerCase().includes(searchLower);
+        default: // 'all'
+          return (
+            record.clinicName.toLowerCase().includes(searchLower) ||
+            record.result.toLowerCase().includes(searchLower) ||
+            record.biType.toLowerCase().includes(searchLower)
+          );
+      }
+    });
+  }
+
+  // Toggle filter options dropdown
+  toggleFilterOptions() {
+    this.showFilterOptions = !this.showFilterOptions;
+  }
+
+  // Set filter criteria
+  setFilterCriteria(criteria: string) {
+    this.filterCriteria = criteria;
+    this.showFilterOptions = false;
+    this.applySearchAndFilter();
   }
 }

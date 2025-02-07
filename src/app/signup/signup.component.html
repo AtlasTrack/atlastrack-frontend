@@ -44,16 +44,22 @@
               <span class="input-group-text fieldIcons border-0 text-muted text-xs">
                 <select 
                   formControlName="countryCode"
-                  (change)="onCountryCodeChange($event)">
-                  <option value="+92">+92</option>
-                  <option value="+41">+41</option>
+                  (change)="onCountryCodeChange($event)"
+                  class="form-select border-0 bg-transparent">
+                  <option *ngFor="let country of countrycode" [value]="country.code">
+                    {{country.code}}
+                  </option>
                 </select>
               </span>
               <input 
                 type="tel" 
                 class="form-control border-0" 
                 placeholder="Phone Number"
-                formControlName="phoneNumber">
+                formControlName="phoneNumber"
+                (input)="onPhoneInput($event)">
+            </div>
+            <div *ngIf="isFieldInvalid('phoneNumber')" class="invalid-feedback d-block">
+              Please enter a valid phone number (10-15 digits)
             </div>
           </div>
 
@@ -123,4 +129,5 @@
       </div>
     </div>
   </div>
+  <app-notification-popup [isOpen]="showPopup" [message]="popupMessage" [type]="popupType" (onClose)="closePopup()"></app-notification-popup>
 </div>

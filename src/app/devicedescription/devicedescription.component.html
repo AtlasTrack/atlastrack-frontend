@@ -58,4 +58,8 @@
       </div>
     </div>
   </div>
+
+  <app-notification-popup [isOpen]="showPopup" [message]="popupMessage" [type]="popupType" (onClose)="closePopup()"></app-notification-popup>
+
+
 </div>
