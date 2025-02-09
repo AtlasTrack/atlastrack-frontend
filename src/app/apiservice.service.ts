@@ -10,7 +10,10 @@ import {
   RegisterRequest, 
   DashboardStats, 
   WeeklyTestData, 
-  TestDistribution 
+  TestDistribution, 
+  LoginResponse,
+  UserProfile,
+  LoginRequestDTO
 } from './apiinterfaces';
 
 @Injectable({
@@ -143,22 +146,15 @@ export class ApiService {
     );
   }
 
-  login(username: string, password: string): Observable<boolean> {
-    console.log('Starting login process for user:', username);
+  login(email: string, password: string): Observable<boolean> {
+    console.log('Starting login process for user:', email);
     
-    const params = new URLSearchParams();
-    params.append('grant_type', 'client_credentials');
-    params.append('client_id', this.clientId);
-    params.append('client_secret', this.clientSecret);
-  
-    const headers = new HttpHeaders()
-      .set('Content-Type', 'application/x-www-form-urlencoded');
-  
-    return this.http.post<TokenResponse>(
-      `${this.keycloakUrl}/realms/${this.realmName}/protocol/openid-connect/token`,
-      params.toString(),
-      { headers }
-    ).pipe(
+    const loginRequest: LoginRequestDTO = {
+      email,
+      password
+    };
+
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, loginRequest).pipe(
       tap(response => {
         console.log('Login response received, tokens present:', {
           accessToken: !!response.access_token,
@@ -167,49 +163,48 @@ export class ApiService {
         localStorage.setItem('access_token', response.access_token);
         localStorage.setItem('refresh_token', response.refresh_token);
       }),
-      switchMap(() => this.loadUserProfile(username, password)),
+      switchMap(() => this.loadUserProfile(email)),
       catchError(error => {
-        console.error('Login error details:', {
-          status: error.status,
-          statusText: error.statusText,
-          error: error.error
-        });
+        console.error('Login error:', error);
         return throwError(() => ({
-          message: error.error?.error_description || 'Login failed'
+          message: error.error || 'Login failed'
         }));
       })
     );
   }
 
-  private loadUserProfile(name: string, password: string): Observable<boolean> {
+  private loadUserProfile(email: string): Observable<boolean> {
     const token = localStorage.getItem('access_token');
     if (!token) return of(false);
-  
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-  
-    return this.http.get<any[]>(
-      `${this.keycloakUrl}/admin/realms/${this.realmName}/users?email=${name}`,
+
+    return this.http.get<UserProfile>(
+      `${this.apiUrl}/auth/profile?email=${email}`,
       { headers }
     ).pipe(
-      map(profile => {
-        const match = profile[0]?.attributes?.Passwordd?.[0] === password;
-        if (match) {
-          localStorage.setItem('profile', JSON.stringify(profile[0].id));
-          localStorage.setItem('clinic', profile[0].attributes?.clinicname);
-          localStorage.setItem('clinicAddress', profile[0].attributes?.ClinicAddress);
-          console.log("Clinic ", profile[0].attributes?.clinicname)
-          this.currentUserSubject.next(profile[0]);
-        }
-        return match;
+      tap(profile => {
+        console.log('Profile loaded:', profile);
+        this.currentUserSubject.next(profile);
+        localStorage.setItem('clinic', profile.clinicName);
+        localStorage.setItem('clinicAddress', profile.clinicAddress);
+        console.log("Clinic ", profile.clinicName);
       }),
-      catchError(() => {
+      map(() => true),
+      catchError(error => {
+        console.error('Profile loading error:', error);
         this.logout();
-        return of(false);
+        return throwError(() => ({
+          message: error.error?.message || 'Failed to load user profile'
+        }));
       })
     );
   }
+
+
+
 
   logout(): void {
     localStorage.removeItem('access_token');
