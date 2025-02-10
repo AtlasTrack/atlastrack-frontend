@@ -22,10 +22,7 @@ import {
 export class ApiService {
   private baseUrl = environment.baseUrl;
   private apiUrl = environment.apiUrl;
-  private keycloakUrl = environment.keycloakUrl;
-  private realmName = environment.realmName;
-  private clientId = environment.clientId;
-  private clientSecret = environment.clientSecret; // Replace with your client secret
+
 
   private currentUserSubject = new BehaviorSubject<any>(null);
 
@@ -163,17 +160,17 @@ export class ApiService {
         localStorage.setItem('access_token', response.access_token);
         localStorage.setItem('refresh_token', response.refresh_token);
       }),
-      switchMap(() => this.loadUserProfile(email)),
+      switchMap(() => this.loadUserProfile(email, password)),
       catchError(error => {
         console.error('Login error:', error);
         return throwError(() => ({
-          message: error.error || 'Login failed'
+          message: error.message || 'Login failed'
         }));
       })
     );
   }
 
-  private loadUserProfile(email: string): Observable<boolean> {
+  private loadUserProfile(email: string, password: string): Observable<boolean> {
     const token = localStorage.getItem('access_token');
     if (!token) return of(false);
 
@@ -182,7 +179,7 @@ export class ApiService {
     });
 
     return this.http.get<UserProfile>(
-      `${this.apiUrl}/auth/profile?email=${email}`,
+      `${this.apiUrl}/auth/profile?email=${email}&password=${password}`,
       { headers }
     ).pipe(
       tap(profile => {
