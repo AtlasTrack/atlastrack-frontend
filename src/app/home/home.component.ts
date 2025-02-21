@@ -14,7 +14,7 @@ export class HomeComponent {
   username: any = localStorage.getItem('clinic');
   isLogoutOpen: boolean = false;
   isMobile = window.innerWidth < 1024; // Initial check for screen size
-  menuOpen = false;
+  menuOpen = true;
   constructor(private router: Router) {}
 
   bilogformOpen() {
@@ -38,7 +38,7 @@ export class HomeComponent {
    localStorage.removeItem('profile');
    localStorage.removeItem('clinic');
    localStorage.removeItem('clinicAddress');
-   this.router.navigate(['/atlasindex']);
+   this.router.navigate(['/login']);
   }
 
   toggleMenu() {

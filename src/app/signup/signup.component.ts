@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../apiservice.service';
 import { NotificationPopupComponent } from '../notification-popup/notification-popup.component';
@@ -43,14 +43,18 @@ export class SignupComponent implements OnInit {
       {
         email: ['', [Validators.required, Validators.email]],
         fullName: ['', [Validators.required, Validators.minLength(3)]],
-        countryCode: ['+92'], // New form control for country code
+        countryCode: ['+92'], // Default country code (Pakistan)
         phoneNumber: ['', [
           Validators.required,
           Validators.pattern('^[0-9]*$'),
           Validators.minLength(10),
           Validators.maxLength(15)
         ]],
-        password: ['', [Validators.required, Validators.minLength(8)]],
+        password: ['', [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/)
+        ]],
         confirmPassword: ['', [Validators.required]],
         clinicName: ['', [Validators.required]],
         clinicAddress: ['', [Validators.required]],
@@ -64,6 +68,11 @@ export class SignupComponent implements OnInit {
     this.signupForm.patchValue({
       countryCode: event.target.value
     });
+  }
+
+  getSelectedCountryName(): string {
+    const selectedCountry = this.countrycode.find(c => c.code === this.selectedCountryCode);
+    return selectedCountry ? selectedCountry.country : '';
   }
 
   passwordMatchValidator(g: FormGroup) {
@@ -82,8 +91,13 @@ export class SignupComponent implements OnInit {
     if (control?.errors) {
       if (control.errors['required']) return `${fieldName} is required`;
       if (control.errors['email']) return 'Invalid email format';
-      if (control.errors['minlength'])
+      if (control.errors['minlength']) 
         return `${fieldName} must be at least ${control.errors['minlength'].requiredLength} characters`;
+      if (control.errors['pattern']) {
+        if (fieldName === 'password') {
+          return 'At least one uppercase, lowercase, digit and one special character.';
+        }
+      }
     }
     return '';
   }
@@ -97,7 +111,6 @@ export class SignupComponent implements OnInit {
   }
 
   onSignupClick() {
-
     if (this.signupForm.get('password')?.value !== this.signupForm.get('confirmPassword')?.value) {
       this.showPopup = true;
       this.popupMessage = 'Passwords do not match';
@@ -146,7 +159,6 @@ export class SignupComponent implements OnInit {
           this.showPopup = true;
           this.popupMessage = errorMessage;
           this.popupType = 'error';
-          // alert(errorMessage);
         },
         complete: () => {
           console.log('Signup process completed');
@@ -154,8 +166,6 @@ export class SignupComponent implements OnInit {
         }
       });
     } else {
-
- 
       console.log('Form validation failed:', 
         Object.keys(this.signupForm.controls)
           .filter(key => this.signupForm.get(key)?.invalid)

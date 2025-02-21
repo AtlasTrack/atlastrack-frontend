@@ -1,105 +1,161 @@
-<div class="bg-white flex items-center justify-center min-h-screen p-4 md:p-10">
-  <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 w-full max-w-3xl">
-    <div class="text-center mb-4 mt-5">
-      <img alt="Atlas Track Logo" class="mx-auto mb-4 w-20 h-20 md:w-48 md:h-48" src="assets/companyLogo.png"/>
-    </div>
-    
-    <div class="flex flex-col md:flex-row justify-between items-center mb-3">
-      <p class="title mt-1 text-center md:text-left">Auto-reader Values</p>
-      <a class="printbtn text-white px-16 py-2 shadow-lg mt-2 md:mt-0" href="https://penguinhealth.ca/">
-        Visit More
-      </a>
-    </div>
-    
-    <hr class="border-t-2 border-purple-600 mb-6"/>
-    
-    <div class="title mb-6">
-      <p>Results</p>
-    </div>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <div>
-        <label class="fieldsHeading">Start Time</label>
-        <input class="w-full p-2 fields mt-2" type="datetime-local" [(ngModel)]="startDateTime" (change)="onStartDateTimeChange($event)" step="1"/>
+<div class="bg-gray-100 font-sans antialiased min-h-screen pb-12">
+  <div class="flex flex-col lg:flex-row">
+      <div class="flex items-center justify-center mt-5 lg:ml-10">
+          <img alt="Logo" class="h-24 w-48 lg:h-24 lg:w-60" src="assets/companyLogo.png" />
       </div>
-      
-      <div>
-        <label class="fieldsHeading">End Time</label>
-        <input class="w-full p-2 fields mt-2" type="datetime-local" [(ngModel)]="endDateTime" (change)="onEndDateTimeChange($event)" step="1"/>
-      </div>
-
-      <div>
-        <label class="fieldsHeading">Well Number</label>
-        <app-customcombobox [items$]="wellNumbers$" placeholder="Type or select a well number" (selectionChange)="onWellNumberSelected($event)"></app-customcombobox>
-      </div>
-
-      <div>
-        <label class="fieldsHeading">Serial Number</label>
-        <app-customcombobox [items$]="serialNumbers$" initialValue="{{initialSerialNumber}}" placeholder="Type or select a serial number" (selectionChange)="onSerialNumberSelected($event)"></app-customcombobox>
-      </div>
-
-      <div>
-        <label class="fieldsHeading">Result</label>
-        <app-customcombobox [items$]="results$" placeholder="Select result" (selectionChange)="onResultSelected($event)"></app-customcombobox>
+      <div class="flex flex-col lg:flex-row justify-between items-center mb-6 w-full lg:w-full px-4 lg:px-0">
+          <!-- Add menu toggle button for desktop -->
+          <div class="lg:ml-80"></div>
+          <div class="flex items-center lg:ml-96 lg:mr-8 space-x-8 lg:space-x-10 sm:mt-4 lg:mt-0">
+              <i class="fas fa-bell text-purple-700 relative">
+                  <span class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
+              </i>
+              <i class="fas fa-envelope text-gray-400"></i>
+              <i class="fas fa-user text-gray-400" ></i>
+              <i class="fas fa-sign-out-alt text-gray-400 text-xl cursor-pointer" (click)="onLogoutClick()"></i>
+              <i class="fas fa-bars text-purple-700 text-xl font-bold cursor-pointer " (click)="toggleMenu()">
+              </i>
+          </div>
       </div>
     </div>
-
-    <h2 class="text-lg font-bold text-gray-700 mb-4">User Values</h2>
-    <hr class="border-t-2 border-purple-600 mb-6"/>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <div>
-        <label class="fieldsHeading">BI Type</label>
-        <app-customcombobox [items$]="biTypes$" initialValue="{{initialBIType}}" placeholder="Select BI Type" (selectionChange)="onBITypeSelected($event)"></app-customcombobox>
+  <div class="flex flex-col lg:flex-row">
+      <div class="w-full lg:w-80 bg-gray-200 lg:ml-10 shadow-lg p-6" [class.hidden]="!menuOpen">
+          <nav class="mt-4 lg:mt-10">
+              <a class="flex items-center py-3 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer" (click)="onHomeClick()">
+                  <i class="fas fa-home text-purple-600"></i>
+                  <span class="mx-4 font-medium">Home</span>
+                  <i class="fas fa-caret-down ml-auto"></i>
+              </a>
+              <a class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer" (click)="onReportClick()">
+                  <i class="fas fa-clipboard-list text-purple-600"></i>
+                  <span class="mx-4 font-medium">Reports</span>
+                  <i class="fas fa-caret-down ml-auto"></i>        
+              </a>
+              <a class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer" (click)="onDeviceDetail()">
+                  <i class="fas fa-calendar-alt text-purple-600"></i>
+                  <span class="mx-4 font-medium">Device</span>
+                  <i class="fas fa-caret-down ml-auto"></i>
+              </a>
+              <a class="flex items-center py-3 px-6 mt-10 lg:mt-56 text-white bg-purple-600 rounded-lg hover:bg-purple-700" href="https://penguinhealth.ca/">
+                  <i class="fas fa-external-link-alt mx-8"></i>
+                  <span class="mx-0 font-medium text-center">Visit More</span>
+              </a>
+          </nav>
       </div>
-
-      <div class="flex items-center">
-        <label class="fieldsHeading mr-2">Control</label>
-        <input class="form-checkbox h-4 w-4 ml-4" type="checkbox" [(ngModel)]="formData.control"/>
+      <div class="flex-1 p-4 lg:pt-2">
+        <div class="bg-white flex items-center justify-center min-h-screen p-4 md:p-10">
+          <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 w-full max-w-3xl">
+            <div class="text-center mb-4 mt-5">
+              <img alt="Atlas Track Logo" class="mx-auto mb-4 lg:w-80 lg:h-40 md:w-48 md:h-40" src="assets/companyLogo.png"/>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center mb-3">
+              <p class="title mt-1 text-center md:text-left">Auto-reader Values</p>
+              <a class="printbtn text-white px-16 py-2 shadow-lg mt-2 md:mt-0" href="https://penguinhealth.ca/">
+                Visit More
+              </a>
+            </div>
+            
+            <hr class="border-t-2 border-purple-600 mb-6"/>
+            
+            <div class="title mb-6">
+              <p>Results</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div>
+                <label class="fieldsHeading">Start Time</label>
+                <input class="w-full p-2 fields mt-2" type="datetime-local" [(ngModel)]="startDateTime" (change)="onStartDateTimeChange($event)" step="1"/>
+              </div>
+              
+              <div>
+                <label class="fieldsHeading">End Time</label>
+                <input class="w-full p-2 fields mt-2" type="datetime-local" [(ngModel)]="endDateTime" (change)="onEndDateTimeChange($event)" step="1"/>
+              </div>
+        
+              <div>
+                <label class="fieldsHeading">Well Number</label>
+                
+                <!-- <input type="number" class="w-full p-2 fields mt-2 fields" placeholder="Please Select the Well Number" [(ngModel)]="wellNumber"> -->
+                
+                <app-customcombobox [items$]="wellNumbers$" placeholder="Type or select a well number" (selectionChange)="onWellNumberSelected($event)"></app-customcombobox>
+              </div>
+        
+              <div>
+                <label class="fieldsHeading">Serial Number</label>
+                <input type="text" class="w-full p-2 fields mt-2 fields" placeholder="Enter Serial NUmber" [(ngModel)]= "initialSerialNumber"/>
+                <!-- <app-customcombobox [items$]="serialNumbers$" initialValue="{{initialSerialNumber}}" placeholder="Type or select a serial number" (selectionChange)="onSerialNumberSelected($event)"></app-customcombobox> -->
+              </div>
+        
+              <div>
+                <label class="fieldsHeading">Result</label>
+                <app-customcombobox [items$]="results$" placeholder="Select result" (selectionChange)="onResultSelected($event)"></app-customcombobox>
+              </div>
+            </div>
+        
+            <h2 class="text-lg font-bold text-gray-700 mb-4">User Values</h2>
+            <hr class="border-t-2 border-purple-600 mb-6"/>
+        
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div>
+                <label class="fieldsHeading">BI Type</label>
+                <input type="text" class="w-full p-2 fields mt-2 fields" placeholder="Enter Serial NUmber" [(ngModel)]= "initialBIType"/>
+                <!-- <app-customcombobox [items$]="biTypes$" initialValue="{{initialBIType}}" placeholder="Select BI Type" (selectionChange)="onBITypeSelected($event)"></app-customcombobox> -->
+              </div>
+        
+              <div class="flex items-center lg:mt-5">
+                <label class="fieldsHeading mr-2">Control</label>
+                <input class="form-checkbox h-4 w-4 ml-4" type="checkbox" [(ngModel)]="formData.control"/>
+              </div>
+        
+              <div>
+                <label class="fieldsHeading">BI Lot Number</label>
+                <app-customcombobox [items$]="biLotNumbers$" placeholder="Select BI Lot Number" (selectionChange)="onBiLotNumberSelected($event)"></app-customcombobox>
+              </div>
+        
+              <div>
+                <label class="fieldsHeading">Sterilizer Model</label>
+                <app-customcombobox [items$]="sterilizerModels$" placeholder="Select sterilizer model" (selectionChange)="onSterilizerModelSelected($event)"></app-customcombobox>
+              </div>
+        
+              <div>
+                <label class="fieldsHeading">Load Number</label>
+                <app-customcombobox [items$]="loadNumbers$" placeholder="Select Load Number" (selectionChange)="onLoadNumberSelected($event)"></app-customcombobox>
+              </div>
+        
+              <div class="flex items-center lg:mt-5">
+                <label class="fieldsHeading mr-2">Implant</label>
+                <input class="form-checkbox h-4 w-4 ml-4" type="checkbox" [(ngModel)]="formData.implant"/>
+              </div>
+        
+              <div>
+                <label class="fieldsHeading">Team Member</label>
+                <app-customcombobox [items$]="technicians$" placeholder="Select Team Member" (selectionChange)="onTechnicianSelected($event)"></app-customcombobox>
+              </div>
+        
+              <div>
+                <label class="fieldsHeading">Cycle Type / Cycle Parameters</label>
+                <app-customcombobox [items$]="cycleCounts$" placeholder="Select Cycle Type" (selectionChange)="onCycleTypeSelected($event)"></app-customcombobox>
+              </div>
+        
+              <div>
+                <label class="fieldsHeading">Chemical Integrator/Indicator</label>
+                <app-customcombobox [items$]="chemicalIntegrators$" placeholder="Select chemical integrator" (selectionChange)="onChemicalIntegratorSelected($event)"></app-customcombobox>
+              </div>
+            </div>
+        
+            <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-10 mt-10 mb-10">
+              <button class="printbtn text-white px-20 py-2" (click)="generatePDF()">Print</button>
+              <button class="savebtn text-white px-20 py-2" (click)="onSave()">Save</button>
+              <!-- <button class="closebtn text-white px-20 py-2" (click)="onCloseClick()">Home</button> -->
+            </div>
+          </div>
+        
+          <app-notification-popup [isOpen]="showPopup" [message]="popupMessage" [type]="popupType" (onClose)="closePopup()"></app-notification-popup>
+        </div>
       </div>
-
-      <div>
-        <label class="fieldsHeading">BI Lot Number</label>
-        <app-customcombobox [items$]="biLotNumbers$" placeholder="Select BI Lot Number" (selectionChange)="onBiLotNumberSelected($event)"></app-customcombobox>
-      </div>
-
-      <div>
-        <label class="fieldsHeading">Sterilizer Model</label>
-        <app-customcombobox [items$]="sterilizerModels$" placeholder="Select sterilizer model" (selectionChange)="onSterilizerModelSelected($event)"></app-customcombobox>
-      </div>
-
-      <div>
-        <label class="fieldsHeading">Load Number</label>
-        <app-customcombobox [items$]="loadNumbers$" placeholder="Select Load Number" (selectionChange)="onLoadNumberSelected($event)"></app-customcombobox>
-      </div>
-
-      <div class="flex items-center">
-        <label class="fieldsHeading mr-2">Implant</label>
-        <input class="form-checkbox h-4 w-4 ml-4" type="checkbox" [(ngModel)]="formData.implant"/>
-      </div>
-
-      <div>
-        <label class="fieldsHeading">Technician</label>
-        <app-customcombobox [items$]="technicians$" placeholder="Select technician" (selectionChange)="onTechnicianSelected($event)"></app-customcombobox>
-      </div>
-
-      <div>
-        <label class="fieldsHeading">Cycle Type / Cycle Parameters</label>
-        <app-customcombobox [items$]="cycleCounts$" placeholder="Select Cycle Type" (selectionChange)="onCycleTypeSelected($event)"></app-customcombobox>
-      </div>
-
-      <div>
-        <label class="fieldsHeading">Chemical Integrator/Indicator</label>
-        <app-customcombobox [items$]="chemicalIntegrators$" placeholder="Select chemical integrator" (selectionChange)="onChemicalIntegratorSelected($event)"></app-customcombobox>
-      </div>
-    </div>
-
-    <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-10 mt-10 mb-10">
-      <button class="printbtn text-white px-20 py-2" (click)="generatePDF()">Print</button>
-      <button class="savebtn text-white px-20 py-2" (click)="onSave()">Save</button>
-      <button class="closebtn text-white px-20 py-2" (click)="onCloseClick()">Close</button>
-    </div>
   </div>
-
-  <app-notification-popup [isOpen]="showPopup" [message]="popupMessage" [type]="popupType" (onClose)="closePopup()"></app-notification-popup>
 </div>
+
+
+

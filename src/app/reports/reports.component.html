@@ -1,102 +1,55 @@
-<div class="bg-gray-100 font-sans antialiased">
-    <!-- Desktop Header -->
-    <div class="hidden lg:flex">
-        <div class="flex items-center justify-center mt-5 ml-10 mb-6">
-            <img alt="Logo" class="h-24 w-60" src="assets/companyLogo.png"/>
+<div class="bg-gray-100 font-sans antialiased min-h-screen pb-12">
+    <div class="flex flex-col lg:flex-row">
+        <div class="flex items-center justify-center mt-5 lg:ml-10 mb-6">
+            <img alt="Logo" class="h-24 w-48 lg:h-24 lg:w-60" src="assets/companyLogo.png" />
         </div>
-        
-        <div class="flex justify-between items-center mb-6 col-5 ml-60 mt-4">
-            <div class="flex ml-40 bg-white pl-4 pr-10" style="border-radius: 50px;">
-                <input class="p-2 border-0 w-60 h-8 text-center" placeholder="Try Searching" type="text"/>
-                <i class="fas fa-search text-gray-200 mt-2"></i>
-            </div>
-            <div class="flex items-center space-x-10 ml-40">
-                <div class="relative">
-                    <i class="fas fa-bell text-purple-700"></i>
-                    <span class="absolute top-0 right-0 h-2 w-2 bg-red-600 rounded-full"></span>
-                </div>
+        <div class="flex flex-col lg:flex-row justify-between items-center mb-6 w-full lg:w-full px-4 lg:px-0">
+            <!-- Add menu toggle button for desktop -->
+            <div class="lg:ml-80"></div>
+            <div class="flex items-center lg:ml-96 lg:mr-8 space-x-8 lg:space-x-10 sm:mt-4 lg:mt-0">
+                <i class="fas fa-bell text-purple-700 relative">
+                    <span class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
+                </i>
                 <i class="fas fa-envelope text-gray-400"></i>
-                <i class="fas fa-user text-gray-400"></i>
-                <i class="fas fa-chart-line text-gray-400"></i>
+                <i class="fas fa-user text-gray-400" ></i>
+                <i class="fas fa-sign-out-alt text-gray-400 text-xl cursor-pointer" (click)="onLogoutClick()"></i>
+                <i class="fas fa-bars text-purple-700 text-xl font-bold cursor-pointer " (click)="toggleMenu()">
+                </i>
             </div>
         </div>
-    </div>
+      </div>
 
-    <!-- Mobile Header -->
-    <div class="lg:hidden flex justify-between items-center p-4">
-        <img alt="Logo" class="h-12" src="assets/companyLogo.png"/>
-        <button (click)="toggleSidebar()" class="text-gray-600">
-            <i class="fas fa-bars"></i>
-        </button>
-    </div>
-
-    <div class="flex">
+    <div class="flex flex-col lg:flex-row">
         <!-- Sidebar -->
-        <div class="hidden lg:block w-80 ml-8 h-screen bg-gray-200 shadow-lg pr-10 pl-10">
-            <nav class="mt-10">
-                <!-- Sidebar content from your original code -->
-                <a (click)="onHomeClick()" class="flex items-center py-3 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer">
+        <div class="w-full lg:w-80 bg-gray-200 lg:ml-10 shadow-lg p-6" [class.hidden]="!menuOpen">
+            <nav class="mt-4 lg:mt-10">
+                <a class="flex items-center py-3 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer" (click)="onHomeClick()">
                     <i class="fas fa-home text-purple-600"></i>
                     <span class="mx-4 font-medium">Home</span>
-                    <i class="fas fa-caret-down ml-16"></i>
+                    <i class="fas fa-caret-down ml-auto"></i>
                 </a>
-                <a class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer">
+                <a class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer" (click)="onreportClick()">
                     <i class="fas fa-clipboard-list text-purple-600"></i>
                     <span class="mx-4 font-medium">Reports</span>
-                    <i class="fas fa-caret-down ml-14"></i>
+                    <i class="fas fa-caret-down ml-auto"></i>        
                 </a>
-                <a (click)="onDeviceDetailClick()" class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer">
+                <a class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer" (click)="onDeviceDetailClick()">
                     <i class="fas fa-calendar-alt text-purple-600"></i>
                     <span class="mx-4 font-medium">Device</span>
-                    <i class="fas fa-caret-down ml-16"></i>
+                    <i class="fas fa-caret-down ml-auto"></i>
                 </a>
-                <a class="flex items-center py-2 px-8 mt-56 text-white bg-purple-600 rounded-lg hover:bg-purple-700">
-                    <i class="fas fa-external-link-alt"></i>
-                    <span class="mx-4 font-medium">Visit More</span>
-                </a>
-            </nav>
-        </div>
-
-        <!-- Mobile Sidebar -->
-        <div *ngIf="showSidebar" 
-             class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
-             (click)="toggleSidebar()">
-        </div>
-        <div [class.translate-x-0]="showSidebar"
-             [class.translate-x-full]="!showSidebar"
-             class="lg:hidden fixed right-0 top-0 w-64 h-full bg-gray-200 z-50 transform transition-transform duration-300 ease-in-out p-4">
-            <!-- Mobile sidebar content -->
-            <nav class="mt-10">
-            
-                <!-- Sidebar content from your original code -->
-                <a (click)="onHomeClick()" class="flex items-center py-3 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer">
-                    <i class="fas fa-home text-purple-600"></i>
-                    <span class="mx-4 font-medium">Home</span>
-                    <i class="fas fa-caret-down ml-16"></i>
-                </a>
-                <a class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer">
-                    <i class="fas fa-clipboard-list text-purple-600"></i>
-                    <span class="mx-4 font-medium">Reports</span>
-                    <i class="fas fa-caret-down ml-14"></i>
-                </a>
-                <a (click)="onDeviceDetailClick()" class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer">
-                    <i class="fas fa-calendar-alt text-purple-600"></i>
-                    <span class="mx-4 font-medium">Device</span>
-                    <i class="fas fa-caret-down ml-16"></i>
-                </a>
-                <a class="flex items-center py-2 px-8 mt-56 text-white bg-purple-600 rounded-lg hover:bg-purple-700">
-                    <i class="fas fa-external-link-alt"></i>
-                    <span class="mx-4 font-medium">Visit More</span>
+                <a class="flex items-center py-3 px-6 mt-10 lg:mt-56 text-white bg-purple-600 rounded-lg hover:bg-purple-700" href="https://penguinhealth.ca/">
+                    <i class="fas fa-external-link-alt mx-8"></i>
+                    <span class="mx-0 font-medium text-center">Visit More</span>
                 </a>
             </nav>
-           
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 pr-10 pl-10">
+        <div class="flex-1 pt-4 pr-10 pl-10 lg:w-1/2">
             <div class="flex flex-col lg:flex-row mb-4 ml-5 gap-4">
                 <div class="flex flex-col lg:flex-row gap-4">
-                    <div class="flex flex-col lg:flex-row items-center">
+                    <div class="flex">
                         <label class="lg:mt-2">Start Time</label>
                         <div class="relative ml-4 ">
                             <input class="p-2 fields" 
@@ -105,10 +58,10 @@
                                    (change)="onDateChange()"/>
                         </div>
                     </div>
-                    <div class="flex flex-col lg:flex-row items-center lg:ml-8">
+                    <div class="flex   lg:ml-8">
                         <label class="lg:mt-2">End Time</label>
-                        <div class="relative ml-2">
-                            <input class="p-1 fields" 
+                        <div class="relative ml-4">
+                            <input class="p-2 fields" 
                                    type="date" 
                                    [(ngModel)]="endTime"
                                    (change)="onDateChange()"/>
@@ -130,36 +83,16 @@
             <div class="bg-white p-6 rounded-lg shadow-lg">
                 <div class="flex flex-col lg:flex-row justify-between items-center mb-6">
                     <h2 class="text-xl font-semibold mb-4 lg:mb-0">Reports</h2>
-                    <div class="flex flex-col lg:flex-row gap-4 w-full lg:w-auto">
+                    <!-- <div class="flex flex-col lg:flex-row gap-4 w-full lg:w-auto">
                         <div class="relative w-full lg:w-64">
                             <input type="text" 
                                    [(ngModel)]="searchText"
                                    (input)="applySearchAndFilter()"
-                                   placeholder="Try searching 'NewProducts'" 
-                                   class="w-full ml-1 p-2 pl-10 border rounded-lg"/>
+                                   placeholder="Search" 
+                                   class="w-full ml-1 p-2 pl-10 border text-center rounded-lg"/>
                         </div>
-                        <div class="relative">
-                            <div class="flex items-center border px-4 py-2 rounded-lg cursor-pointer"
-                                 (click)="toggleFilterOptions()">
-                                <i class="fas fa-filter text-gray-600"></i>
-                                <span class="ml-2">Filter: {{ filterCriteria }}</span>
-                            </div>
-                            <!-- Dropdown for filter options -->
-                            <div *ngIf="showFilterOptions" 
-                                 class="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-10">
-                                <div class="py-1">
-                                    <a (click)="setFilterCriteria('all')" 
-                                       class="block px-4 py-2 hover:bg-gray-100 cursor-pointer">All Fields</a>
-                                    <a (click)="setFilterCriteria('clinicName')" 
-                                       class="block px-4 py-2 hover:bg-gray-100 cursor-pointer">Clinic Name</a>
-                                    <a (click)="setFilterCriteria('result')" 
-                                       class="block px-4 py-2 hover:bg-gray-100 cursor-pointer">Result</a>
-                                    <a (click)="setFilterCriteria('biType')" 
-                                       class="block px-4 py-2 hover:bg-gray-100 cursor-pointer">BI Type</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        
+                    </div> -->
                 </div>
                 
                 <div class="overflow-x-auto">
@@ -170,11 +103,18 @@
                                 <th class="py-1 px-1 columnheading border-b border-gray-200">Record</th>
                                 <th class="py-1 px-4 columnheading border-b border-gray-200">Start Time</th>
                                 <th class="py-1 px-4 columnheading border-b border-gray-200">End Time</th>
-                                <th class="py-1 px-3 columnheading border-b border-gray-200">Clinic Name</th>
-                                <th class="py-1 px-3 columnheading border-b border-gray-200">Clinic Address</th>
-                                <!-- <th class="py-2 px-3 columnheading border-b border-gray-200">Well</th> -->
+                                <!-- <th class="py-1 px-3 columnheading border-b border-gray-200">Clinic Name</th> -->
+                                <!-- <th class="py-1 px-3 columnheading border-b border-gray-200">Clinic Address</th> -->
+                                <th class="py-2 px-3 columnheading border-b border-gray-200">Well</th>
+                                <th class="py-2 px-3 columnheading border-b border-gray-200">Serial</th>
                                 <th class="py-1 px-3 columnheading border-b border-gray-200">Result</th>
                                 <th class="py-1 px-3 columnheading border-b border-gray-200">BI Type</th>
+                                <th class="py-1 px-3 columnheading border-b border-gray-200">BI Lot Number</th>
+                                <th class="py-1 px-3 columnheading border-b border-gray-200">Sterilizer Model</th>
+                                <th class="py-1 px-3 columnheading border-b border-gray-200">Load Number</th>
+                                <th class="py-1 px-3 columnheading border-b border-gray-200">Team Member</th>
+                                <th class="py-1 px-3 columnheading border-b border-gray-200">Cycle</th>
+                                <th class="py-1 px-3 columnheading border-b border-gray-200">Chemical Integrator</th>
                                 <th class="py-1 px-3 columnheading border-b border-gray-200">Control</th>
                                 <th class="py-1 px-3 columnheading border-b border-gray-200">Implant</th>
                             </tr>
@@ -184,11 +124,18 @@
                                 <td class="py-2 text-sm px-1 border-b border-gray-200">{{ i+1 }}</td>
                                 <td class="py-2 px-4 text-xs border-b border-gray-200">{{ record.startTime | date:'dd-MM-yy HH:mm' }}</td>
                                 <td class="py-2 px-4 text-xs border-b border-gray-200">{{ record.endTime | date:'dd-MM-yy HH:mm:ss' }}</td>
-                                <td class="py-2 px-2 border-b border-gray-200">{{ record.clinicName }}</td>
-                                <td class="py-2 px-2 border-b border-gray-200">{{ record.clinicAddress }}</td>
-                                <!-- <td class="py-2 px-1 border-b border-gray-200">{{ record.wellNumber }}</td> -->
+                                <!-- <td class="py-2 px-2 border-b border-gray-200">{{ record.clinicName }}</td> -->
+                                <!-- <td class="py-2 px-2 border-b border-gray-200">{{ record.clinicAddress }}</td> -->
+                                <td class="py-2 px-1 border-b border-gray-200">{{ record.wellNumber }}</td>
+                                <td class="py-2 px-1 border-b border-gray-200">{{ record.serialNumber }}</td>
                                 <td class="py-2 px-1 border-b border-gray-200">{{ record.result }}</td>
                                 <td class="py-2 px-1 border-b border-gray-200">{{ record.biType }}</td>
+                                <td class="py-2 px-1 border-b border-gray-200">{{ record.biLotNumber }} </td>
+                                <td class="py-2 px-1 border-b border-gray-200">{{ record.sterilizerModels }} </td>
+                                <td class="py-2 px-1 border-b border-gray-200">{{ record.loadNumber }} </td>
+                                <td class="py-2 px-1 border-b border-gray-200">{{ record.technicianNames }} </td>
+                                <td class="py-2 px-1 border-b border-gray-200">{{ record.cycleCount }} </td>
+                                <td class="py-2 px-1 border-b border-gray-200">{{ record.chemicalIntegrators }} </td>
                                 <td class="py-2 px-1 border-b border-gray-200">
                                     <button class="text-purple-600 controldiv px-4 py-1"
                                             [disabled]="!record.isControlTest"

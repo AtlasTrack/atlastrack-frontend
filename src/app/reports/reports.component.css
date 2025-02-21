@@ -10,15 +10,3 @@ td {
   font-size: 14px;
 }
 
-@media (max-width: 1024px) {
-  .flex { flex-direction: column; }
-  .ml-60 { margin-left: 1rem; }
-  .w-80 { width: 100%; }
-  .ml-40 { margin-left: 1rem; }
-  .space-x-10 > * { margin-left: 1rem; }
-}
-
-@media (max-width: 768px) {
-  .vh-90 { height: auto; }
-  .fields { width: 100%; }
-}

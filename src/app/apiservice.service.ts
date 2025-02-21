@@ -13,7 +13,8 @@ import {
   TestDistribution, 
   LoginResponse,
   UserProfile,
-  LoginRequestDTO
+  LoginRequestDTO,
+  ResetPasswordDTO
 } from './apiinterfaces';
 
 @Injectable({
@@ -295,6 +296,45 @@ export class ApiService {
 
   createRecord(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/createRecord`, data);
+  }
+
+  getFilteredClinicRecords(clinicName: string, startDate: string, endDate: string, page: number) {
+    return this.http.get<any>(`${this.baseUrl}/filter/clinic`, {
+      params: {
+        clinicName,
+        start: startDate,
+        end: endDate,
+        page: page.toString()
+      }
+    });
+  }
+
+  exportClinicExcel(clinicName: string, startDate: string, endDate: string) {
+    return this.http.get(`${this.baseUrl}/export/clinic/excel`, {
+      params: { clinicName, start: startDate, end: endDate },
+      responseType: 'blob'
+    });
+  }
+
+  exportClinicPDF(clinicName: string, startDate: string, endDate: string) {
+    return this.http.get(`${this.baseUrl}/export/clinic/pdf`, {
+      params: { clinicName, start: startDate, end: endDate },
+      responseType: 'blob'
+    });
+  }
+
+  resetPassword(resetPasswordData: ResetPasswordDTO): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/reset-password`, resetPasswordData).pipe(
+      tap(response => {
+        console.log('Password reset response:', response);
+      }),
+      catchError(error => {
+        console.error('Password reset error:', error);
+        return throwError(() => ({
+          message: error.error?.message || 'Failed to reset password'
+        }));
+      })
+    );
   }
 }
 

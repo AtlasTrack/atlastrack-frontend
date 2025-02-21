@@ -35,7 +35,7 @@ interface FormData {
   styleUrl: './rendervalueform.component.css'
 })
 export class RendervalueformComponent {
-
+  menuOpen = false;
   private apiService=inject(ApiService);
 
   serialNumbers$ = new BehaviorSubject<string[]>([]);
@@ -121,8 +121,18 @@ export class RendervalueformComponent {
     });
 
     this.apiService.getResults().subscribe({
-      next: (data) => this.results$.next(data),
-      error: (error) => console.error('Error fetching results:', error)
+      next: (data) => {
+        // Start with default values
+        const initialResults = ['Positive', 'Negative'];
+        // Combine with API results, removing duplicates
+        const combinedResults = [...new Set([...initialResults, ...data])];
+        this.results$.next(combinedResults);
+      },
+      error: (error) => {
+        console.error('Error fetching results:', error);
+        // On error, fall back to initial values
+        this.results$.next(['Positive', 'Negative']);
+      }
     });
 
     this.apiService.getBiTypes().subscribe({
@@ -141,8 +151,18 @@ export class RendervalueformComponent {
     });
 
     this.apiService.getChemicalIntegrators().subscribe({
-      next: (data) => this.chemicalIntegrators$.next(data),
-      error: (error) => console.error('Error fetching chemical integrators:', error)
+      next: (data) => {
+        // Start with default values
+        const initialResults = ['Pass', 'Fail'];
+        // Combine with API results, removing duplicates
+        const combinedResults = [...new Set([...initialResults, ...data])];
+        this.chemicalIntegrators$.next(combinedResults);
+      },
+      error: (error) => {
+        console.error('Error fetching chemical integrators:', error);
+        // On error, fall back to initial values
+        this.chemicalIntegrators$.next(['Pass', 'Fail']);
+      }
     });
 
     this.apiService.getBiLotNumbers().subscribe({
@@ -360,6 +380,7 @@ export class RendervalueformComponent {
         this.popupMessage = 'Record saved successfully!';
         this.popupType = 'success';
         this.resetForm();
+        this.ngOnInit();
       },
       error: (error) => {
         console.error('Error creating record:', error);
@@ -406,7 +427,7 @@ export class RendervalueformComponent {
         second: '2-digit',
         hour12: false
       }),
-      wellNumber: '',
+      wellNumber: '0',
       serialNumber: '',
       result: '',
       biType: '',
@@ -426,5 +447,28 @@ export class RendervalueformComponent {
     comboboxInputs.forEach(input => {
       input.value = '';
     });
+  }
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  onHomeClick() {
+    this.router.navigate(['/home']);
+  }
+  onReportClick() {
+    this.router.navigate(['/report']);
+  }
+  onDeviceDetail() {
+    this.router.navigate(['/devicedescription']);
+  }
+
+
+  onLogoutClick() {
+    localStorage.removeItem('access_token');
+   localStorage.removeItem('profile');
+   localStorage.removeItem('clinic');
+   localStorage.removeItem('clinicAddress');
+   this.router.navigate(['/login']);
   }
 }

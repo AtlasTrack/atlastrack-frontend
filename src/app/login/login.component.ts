@@ -94,4 +94,8 @@ export class LoginComponent {
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
+
+  onForgetPassword() {
+    this.router.navigate(['forgetpasswordemail']);
+  }
 }

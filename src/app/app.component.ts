@@ -23,10 +23,10 @@ export class AppComponent {
     const authToken = localStorage.getItem('access_token');
     const userInfo = localStorage.getItem('profile');
 
-    // if (!authToken && !userInfo) {
-    //   // User is logged in, you can continue to the main app
-    //   this.router.navigate(['/login']);
-    // } 
+    if (!authToken && !userInfo) {
+      // User is logged in, you can continue to the main app
+      this.router.navigate(['/login']);
+    } 
   }
 
 }
