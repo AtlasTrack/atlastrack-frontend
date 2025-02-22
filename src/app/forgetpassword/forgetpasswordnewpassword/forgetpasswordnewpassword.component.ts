@@ -18,6 +18,7 @@ export class ForgetpasswordnewpasswordComponent {
   phoneNumber: string = '';
   isVerified: boolean = false;
   showError = false;
+  showPassword = false;
   errorMessage = '';
   showSuccess = false;
   successMessage = '';
@@ -78,5 +79,9 @@ export class ForgetpasswordnewpasswordComponent {
         this.passwordForm.get(key)?.markAsTouched();
       });
     }
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 }
