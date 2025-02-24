@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { countryCodes } from '../../countrycode';
+import { ApiService } from '../../apiservice.service';
 
 @Component({
   selector: 'app-forgetpasswordemailpage',
@@ -12,38 +13,40 @@ import { countryCodes } from '../../countrycode';
   styleUrl: './forgetpasswordemailpage.component.css'
 })
 export class ForgetpasswordemailpageComponent {
-  phoneForm: FormGroup;
+  emailForm: FormGroup;
+  showError = false;
+  errorMessage = '';
   countrycode = countryCodes;
-  
+  isLoading = false; 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private apiService: ApiService
   ) {
-    this.phoneForm = this.fb.group({
-      countryCode: ['+92', Validators.required],
-      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10,12}$')]]
+    this.emailForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]]
     });
   }
 
-  getSelectedCountryName() {
-    const selectedCode = this.phoneForm.get('countryCode')?.value;
-    const country = this.countrycode.find(c => c.code === selectedCode);
-    return country ? country.country : '';
-  }
-
   onSendOTPClick() {
-    if (this.phoneForm.valid) {
-      const fullPhoneNumber = this.phoneForm.get('countryCode')?.value + this.phoneForm.get('phoneNumber')?.value;
-      
-      // Navigate to OTP page with phone number as query param
-      this.router.navigate(['forgetpasswordotp'], { 
-        queryParams: { phone: fullPhoneNumber } 
+    if (this.emailForm.valid) {
+      this.isLoading = true; 
+      const email = this.emailForm.get('email')?.value;
+      this.apiService.sendOtp(email).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.router.navigate(['/forgetpasswordotp'], { 
+            queryParams: { email: email } 
+          });
+          // Optionally show success message
+        },
+        error: (error) => {
+          this.isLoading = false; 
+          this.showError = true;
+          this.errorMessage = error.message || 'Failed to send OTP';
+          
+        }
       });
-    } else {
-      // Mark form controls as touched to show validation errors
-      Object.keys(this.phoneForm.controls).forEach(key => {
-        this.phoneForm.get(key)?.markAsTouched();
-      });
-    }
   }
+}
 }

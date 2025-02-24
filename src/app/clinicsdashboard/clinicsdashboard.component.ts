@@ -71,7 +71,7 @@ export class ClinicsdashboardComponent implements AfterViewInit{
   }
 
   onLogoutClick() {
-    this.router.navigate(['/atlasindex']);
+    this.router.navigate(['/dashboardlogin']);
   }
 
 

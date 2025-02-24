@@ -75,21 +75,37 @@
         
               <div>
                 <label class="fieldsHeading">Well Number</label>
-                
-                <!-- <input type="number" class="w-full p-2 fields mt-2 fields" placeholder="Please Select the Well Number" [(ngModel)]="wellNumber"> -->
-                
-                <app-customcombobox [items$]="wellNumbers$" placeholder="Type or select a well number" (selectionChange)="onWellNumberSelected($event)"></app-customcombobox>
+                <app-customcombobox 
+                  [items$]="wellNumbers$" 
+                  placeholder="Type Or Select Well Number" 
+                  (selectionChange)="onWellNumberSelected($event)"
+                  [hasError]="hasError('wellNumber')"
+                ></app-customcombobox>
               </div>
         
+
               <div>
                 <label class="fieldsHeading">Serial Number</label>
-                <input type="text" class="w-full p-2 fields mt-2 fields" placeholder="Enter Serial NUmber" [(ngModel)]= "initialSerialNumber"/>
-                <!-- <app-customcombobox [items$]="serialNumbers$" initialValue="{{initialSerialNumber}}" placeholder="Type or select a serial number" (selectionChange)="onSerialNumberSelected($event)"></app-customcombobox> -->
+                <input 
+                  type="text" 
+                  class="w-full p-2 fields mt-2 fields" 
+                  [class.border-red-500]="hasError('serialNumber')"
+                  [class.border-2]="hasError('serialNumber')"
+                  placeholder="Enter Serial Number" 
+                  [(ngModel)]="initialSerialNumber"
+                />
+              <!-- <app-customcombobox [items$]="serialNumbers$" initialValue="{{initialSerialNumber}}" placeholder="Type or select a serial number" (selectionChange)="onSerialNumberSelected($event)"></app-customcombobox> -->
+
               </div>
         
               <div>
                 <label class="fieldsHeading">Result</label>
-                <app-customcombobox [items$]="results$" placeholder="Select result" (selectionChange)="onResultSelected($event)"></app-customcombobox>
+                <app-customcombobox 
+                  [items$]="results$" 
+                  placeholder="Type Or Select Result" 
+                  (selectionChange)="onResultSelected($event)"
+                  [hasError]="hasError('result')"
+                ></app-customcombobox>
               </div>
             </div>
         
@@ -97,31 +113,58 @@
             <hr class="border-t-2 border-purple-600 mb-6"/>
         
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div>
-                <label class="fieldsHeading">BI Type</label>
-                <input type="text" class="w-full p-2 fields mt-2 fields" placeholder="Enter Serial NUmber" [(ngModel)]= "initialBIType"/>
-                <!-- <app-customcombobox [items$]="biTypes$" initialValue="{{initialBIType}}" placeholder="Select BI Type" (selectionChange)="onBITypeSelected($event)"></app-customcombobox> -->
-              </div>
+
+
+            <div>
+              <label class="fieldsHeading">BI Type</label>
+              <input 
+                type="text" 
+                class="w-full p-2 fields mt-2 fields" 
+                [class.border-red-500]="hasError('biType')"
+                [class.border-2]="hasError('biType')"
+                placeholder="Enter BI Type" 
+                [(ngModel)]="initialBIType"
+              />
+              <!-- <app-customcombobox [items$]="biTypes$" initialValue="{{initialBIType}}" placeholder="Select BI Type" (selectionChange)="onBITypeSelected($event)"></app-customcombobox> -->
+
+            </div>
         
               <div class="flex items-center lg:mt-5">
                 <label class="fieldsHeading mr-2">Control</label>
                 <input class="form-checkbox h-4 w-4 ml-4" type="checkbox" [(ngModel)]="formData.control"/>
               </div>
-        
+
+
               <div>
                 <label class="fieldsHeading">BI Lot Number</label>
-                <app-customcombobox [items$]="biLotNumbers$" placeholder="Select BI Lot Number" (selectionChange)="onBiLotNumberSelected($event)"></app-customcombobox>
+                <app-customcombobox 
+                  [items$]="biLotNumbers$" 
+                  placeholder="Type Or Select BI Lot Number" 
+                  (selectionChange)="onBiLotNumberSelected($event)"
+                  [hasError]="hasError('biLotNumber')"
+                ></app-customcombobox>
               </div>
         
-              <div>
+                <div>
                 <label class="fieldsHeading">Sterilizer Model</label>
-                <app-customcombobox [items$]="sterilizerModels$" placeholder="Select sterilizer model" (selectionChange)="onSterilizerModelSelected($event)"></app-customcombobox>
+                <app-customcombobox 
+                  [items$]="sterilizerModels$" 
+                  placeholder="Type Or Select Sterilizer Model" 
+                  (selectionChange)="onSterilizerModelSelected($event)"
+                  [hasError]="hasError('sterilizerModel')"
+                ></app-customcombobox>
               </div>
-        
-              <div>
-                <label class="fieldsHeading">Load Number</label>
-                <app-customcombobox [items$]="loadNumbers$" placeholder="Select Load Number" (selectionChange)="onLoadNumberSelected($event)"></app-customcombobox>
-              </div>
+
+
+                   <div>
+                  <label class="fieldsHeading">Load Number</label>
+                  <app-customcombobox 
+                    [items$]="loadNumbers$" 
+                    placeholder="Type Or Select Load Number" 
+                    (selectionChange)="onLoadNumberSelected($event)"
+                    [hasError]="hasError('loadNumber')"
+                  ></app-customcombobox>
+                </div>
         
               <div class="flex items-center lg:mt-5">
                 <label class="fieldsHeading mr-2">Implant</label>
@@ -130,23 +173,40 @@
         
               <div>
                 <label class="fieldsHeading">Team Member</label>
-                <app-customcombobox [items$]="technicians$" placeholder="Select Team Member" (selectionChange)="onTechnicianSelected($event)"></app-customcombobox>
+                <app-customcombobox 
+                  [items$]="technicians$" 
+                  placeholder="Type Or Select Team Member" 
+                  (selectionChange)="onTechnicianSelected($event)"
+                  [hasError]="hasError('technician')"
+                ></app-customcombobox>
               </div>
-        
-              <div>
-                <label class="fieldsHeading">Cycle Type / Cycle Parameters</label>
-                <app-customcombobox [items$]="cycleCounts$" placeholder="Select Cycle Type" (selectionChange)="onCycleTypeSelected($event)"></app-customcombobox>
-              </div>
-        
+
+
+                   <div>
+                  <label class="fieldsHeading">Cycle Type / Cycle Parameters</label>
+                  <app-customcombobox 
+                    [items$]="cycleCounts$" 
+                    placeholder="Type Or Select Cycle Type" 
+                    (selectionChange)="onCycleTypeSelected($event)"
+                    [hasError]="hasError('cycleType')"
+                  ></app-customcombobox>
+                </div>
+                        
+              
               <div>
                 <label class="fieldsHeading">Chemical Integrator/Indicator</label>
-                <app-customcombobox [items$]="chemicalIntegrators$" placeholder="Select chemical integrator" (selectionChange)="onChemicalIntegratorSelected($event)"></app-customcombobox>
+                <app-customcombobox 
+                  [items$]="chemicalIntegrators$" 
+                  placeholder="Type Or Select Chemical Integrator" 
+                  (selectionChange)="onChemicalIntegratorSelected($event)"
+                  [hasError]="hasError('chemicalIntegrator')"
+                ></app-customcombobox>
               </div>
             </div>
         
             <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-10 mt-10 mb-10">
               <button class="printbtn text-white px-20 py-2" (click)="generatePDF()">Print</button>
-              <button class="savebtn text-white px-20 py-2" (click)="onSave()">Save</button>
+              <button class="printbtn text-white px-20 py-2" (click)="onSave()">Save</button>
               <!-- <button class="closebtn text-white px-20 py-2" (click)="onCloseClick()">Home</button> -->
             </div>
           </div>

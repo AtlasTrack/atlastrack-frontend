@@ -15,7 +15,7 @@ import { ApiService } from '../../apiservice.service';
 })
 export class ForgetpasswordnewpasswordComponent {
   passwordForm: FormGroup;
-  phoneNumber: string = '';
+  email: string = '';
   isVerified: boolean = false;
   showError = false;
   showPassword = false;
@@ -42,10 +42,10 @@ export class ForgetpasswordnewpasswordComponent {
   ngOnInit(): void {
     // Get phone number and verification status from query params
     this.route.queryParams.subscribe(params => {
-      this.phoneNumber = params['phone'] || '';
+      this.email = params['email'] || '';
       this.isVerified = params['verified'] === 'true';
       
-      if (!this.phoneNumber || !this.isVerified) {
+      if (!this.email || !this.isVerified) {
         this.router.navigate(['/forgetpasswordemail']);
       }
     });
@@ -56,7 +56,7 @@ export class ForgetpasswordnewpasswordComponent {
       const newPassword = this.passwordForm.get('newPassword')?.value;
       
       const resetPasswordData: ResetPasswordDTO = {
-        phoneNumber: this.phoneNumber,
+        email: this.email,
         newPassword: newPassword
       };
       

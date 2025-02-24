@@ -85,6 +85,6 @@ export interface LoginRequestDTO {
   password: string;
 }
 export interface ResetPasswordDTO {
-  phoneNumber: string;
+  email: string;
   newPassword: string;
 }

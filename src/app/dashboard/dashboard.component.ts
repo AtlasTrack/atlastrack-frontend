@@ -183,7 +183,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onLogoutClick() {
-    this.router.navigate(['/atlasindex']);
+    this.router.navigate(['/dashboardlogin']);
   }
 
 

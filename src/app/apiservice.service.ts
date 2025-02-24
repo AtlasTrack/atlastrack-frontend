@@ -262,36 +262,36 @@ export class ApiService {
     return this.http.get<string[]>(`${this.baseUrl}/serialNumbers`);
   }
 
-  getResults(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/results`);
+  getResults(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/results/clinic/${clinicName}`);
   }
 
   getBiTypes(): Observable<string[]> {    
     return this.http.get<string[]>(`${this.baseUrl}/biTypes`);
   }
 
-  getBiLotNumbers(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/biLotNumbers`);
+  getBiLotNumbers(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/biLotNumbers/clinic/${clinicName}`);
   }
 
-  getSterilizerModels(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/sterilizerModels`);
+  getSterilizerModels(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/sterilizerModels/clinic/${clinicName}`);
   }
 
-  getTechnicians(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/technicians`);
+  getTechniciansByClinic(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/technicians/clinic/${clinicName}`);
   }
 
-  getChemicalIntegrators(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/chemicalIntegrators`);
+  getChemicalIntegrators(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/chemicalIntegrators/clinic/${clinicName}`);
   }
 
-  getCycleCounts(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/cycleCounts`);
+  getCycleCounts(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/cycleCounts/clinic/${clinicName}`);
   }
 
-  getLoadNumbers(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/loadNumbers`);
+  getLoadNumbers(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/loadNumbers/clinic/${clinicName}`);
   }
 
   createRecord(data: any): Observable<any> {
@@ -322,6 +322,33 @@ export class ApiService {
       responseType: 'blob'
     });
   }
+
+  sendOtp(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/send-otp`, null, {
+        params: { email }
+    }).pipe(
+        catchError(error => {
+            console.error('Send OTP error:', error);
+            return throwError(() => ({
+                message: error.error?.message || 'Failed to send OTP'
+            }));
+        })
+    );
+}
+
+verifyOtp(email: string, otp: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/verify-otp`, {
+        email,
+        otp
+    }).pipe(
+        catchError(error => {
+            console.error('Verify OTP error:', error);
+            return throwError(() => ({
+                message: error.error?.message || 'Failed to verify OTP'
+            }));
+        })
+    );
+}
 
   resetPassword(resetPasswordData: ResetPasswordDTO): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/reset-password`, resetPasswordData).pipe(

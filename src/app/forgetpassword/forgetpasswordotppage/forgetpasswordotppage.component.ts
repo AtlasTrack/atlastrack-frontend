@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ApiService } from '../../apiservice.service';
 
 @Component({
   selector: 'app-forgetpasswordotppage',
@@ -16,14 +17,16 @@ export class ForgetpasswordotppageComponent {
   showError = false;
   errorMessage = '';
   correctOtp = '1234';
-  phoneNumber: string = '';
+  email: string = '';
+  isResending = false;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private http: HttpClient
-  ) {
+    private http: HttpClient,
+    private apiService: ApiService
+    ) {
     this.otpForm = this.fb.group({
       digit1: ['', [Validators.required, Validators.pattern('^[0-9]$')]],
       digit2: ['', [Validators.required, Validators.pattern('^[0-9]$')]],
@@ -35,8 +38,8 @@ export class ForgetpasswordotppageComponent {
   ngOnInit(): void {
     // Get phone number from query params
     this.route.queryParams.subscribe(params => {
-      this.phoneNumber = params['phone'] || '';
-      if (!this.phoneNumber) {
+      this.email = params['email'] || '';
+      if (!this.email) {
         this.router.navigate(['/forgetpasswordemail']);
       }
     });
@@ -86,42 +89,38 @@ export class ForgetpasswordotppageComponent {
     }
   }
 
-  // Verify OTP
   verifyOtp(isAutoVerify: boolean = false) {
-    if (!this.otpForm.valid) {
-      return;
-    }
+    if (this.otpForm.valid) {
+      const enteredOtp = 
+        this.otpForm.get('digit1')?.value +
+        this.otpForm.get('digit2')?.value +
+        this.otpForm.get('digit3')?.value +
+        this.otpForm.get('digit4')?.value;
 
-    const enteredOtp = 
-      this.otpForm.get('digit1')?.value +
-      this.otpForm.get('digit2')?.value +
-      this.otpForm.get('digit3')?.value +
-      this.otpForm.get('digit4')?.value;
-
-    // In a real app, verify with backend API
-    if (enteredOtp === this.correctOtp) {
-      // For real implementation:
-      // this.http.post('/api/auth/verify-otp', {
-      //   phoneNumber: this.phoneNumber,
-      //   otp: enteredOtp
-      // }).subscribe(...)
-
-      // OTP is correct
-      this.showError = false;
-      this.router.navigate(['/forgetpasswordnewpass'], { 
-        queryParams: { phone: this.phoneNumber, verified: 'true' } 
+      this.apiService.verifyOtp(this.email, enteredOtp).subscribe({
+        next: () => {
+          // Clear error if it was showing
+          this.showError = false;
+          this.errorMessage = '';
+          
+          // Navigate to new password page
+          this.router.navigate(['/forgetpasswordnewpass'], { 
+            queryParams: { 
+              email: this.email, 
+              verified: 'true' 
+            } 
+          });
+        },
+        error: (error) => {
+          if (!isAutoVerify || this.isAllDigitsFilled()) {
+            this.showError = true;
+            this.errorMessage = error.message || 'Invalid OTP';
+          }
+        }
       });
-    } else {
-      // OTP is incorrect
-      this.showError = true;
-      this.errorMessage = 'Invalid OTP. Please try again.';
-      
-      // Don't show error for auto-verify unless all digits are filled
-      if (isAutoVerify && !this.isAllDigitsFilled()) {
-        this.showError = false;
-      }
     }
   }
+
   // Check if all digits are filled
   isAllDigitsFilled(): boolean {
     return (
@@ -132,11 +131,24 @@ export class ForgetpasswordotppageComponent {
     );
   }
 
-  // Resend OTP logic
-  resendOtp() {
-    // Reset form
-    this.otpForm.reset();
-    this.showError = false;
-    
-  }
+    // Resend OTP logic
+    resendOtp() {
+      if (!this.isResending) {
+        this.isResending = true; // Set resending state to true
+        
+        this.apiService.sendOtp(this.email).subscribe({
+          next: () => {
+            this.isResending = false; // Reset loading state
+            this.otpForm.reset();
+            this.showError = false;
+            // Optionally show success message
+          },
+          error: (error) => {
+            this.isResending = false; // Reset loading state
+            this.showError = true;
+            this.errorMessage = error.message || 'Failed to resend OTP';
+          }
+        });
+      }
+    }
 }
