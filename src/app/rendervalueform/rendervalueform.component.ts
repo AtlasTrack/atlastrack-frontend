@@ -375,7 +375,7 @@ export class RendervalueformComponent {
 
     if (endDate <= startDate) {
       this.showPopup = true;
-      this.popupMessage = 'End Time Cannot be Equal to Or Before Start Time.';
+      this.popupMessage = 'Your start time and end time can’t be the same';
       this.popupType = 'error';
       return;
     }
