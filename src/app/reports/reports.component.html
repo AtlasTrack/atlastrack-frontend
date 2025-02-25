@@ -165,7 +165,7 @@
                         </button>
                         <button class="px-4 py-2 bg-purple-600 text-white rounded disabled:opacity-50"
                                 (click)="changePage(currentPage + 1)" 
-                                [disabled]="currentPage === totalPages - 1">
+                                [disabled]="currentPage === totalPages || totalPages == currentPage + 1">
                             Next
                         </button>
                     </div>

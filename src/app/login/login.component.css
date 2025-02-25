@@ -142,6 +142,9 @@
     padding-left: 0.5rem;
     font-size: 0.9rem;
   }
+  .forgetpassword {
+    margin-left: 10px;
+  }
 }
 
 /* Ensure proper input field appearance on mobile */
@@ -154,13 +157,17 @@
   .input-group-text {
     padding: 0.5rem 0.75rem;
   }
+  .forgetpassword {
+    margin-left: 80px;
+  }
 
+  .createAccount {
+    margin-left: 0px;
+  }
   /* Improve touch targets */
   .cursor-pointer {
     min-width: 44px;
     min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
   }
 }

@@ -47,47 +47,22 @@
   <div class="flex-1 pl-6  lg:pt-2">
     <div class="bg-gray-200 min-h-screen  sm:pl-10 sm:pr-10 md:px-20  pt-10 lg:pr-8">
 
-      <div class="bg-white flex flex-col lg:flex-row items-center justify-center mainContainer pb-10">
+      <div class="bg-white flex flex-col lg:flex-row items-center justify-center mainContainer pb-10 pt-10">
         <div class="flex flex-col items-center text-center lg:text-left lg:ml-16">
           <div class="flex items-center mb-4">
             <img alt="Atlas Track Logo" class="mr-2" height="150" src="assets/companyLogo.png" width="250"/>
           </div>
           <img 
   alt="Device Image" 
-  class="mb-4 w-3/4 sm:w-2/3 md:w-1/2 lg:w-[350px]" 
-  [src]="incubatorModel === 'Atlas Rapid Mini' ? 'assets/deviceDefualt.png' : 'assets/yettoupload.png'"
+  class="mb-2 w-3/4 sm:w-2/3 md:w-1/2 lg:w-[250px] lg:h-[200px]" 
+  [src]="incubatorModel === 'Atlas Rapid Mini' ? 'assets/deviceDefualt.png' : 'assets/yettouplaod.png'"
 />
           <a class="bg-purple-600 text-white py-2 px-4 rounded-full mt-4" >
             Upload Image
           </a>
         </div>
         <div class="rounded-lg shadow-lg p-6 mt-8 w-full max-w-md lg:ml-32 lg:mr-8" style="background-color: rgba(214, 214, 214, 0.76);">
-          <div class="flex items-center justify-between mb-8">
-            <span class="text-lg font-semibold">Alarm</span>
-            <div class="flex items-center">
-              <input class="mr-2" name="alarm" type="radio"/>
-              <label class="mr-2">Enable</label>
-              <input name="alarm" type="radio"/>
-              <label class="ml-2">Disable</label>
-            </div>
-          </div>
-          <div class="mb-4 flex flex-col lg:flex-row items-center">
-            <label class="block text-gray-700 w-full lg:w-1/2">490M Date / Time</label>
-            <input class="w-full lg:w-2/3 fields p-2 rounded" type="text" value="02/28/2020 | 11:09:18"/>
-          </div>
-          <div class="mb-4 flex flex-col lg:flex-row items-center">
-            <label class="block text-gray-700 w-full lg:w-1/2">PC Date / Time</label>
-            <input class="w-full lg:w-2/3 fields p-2 rounded" type="text" value="02/28/2020 | 11:09:18"/>
-          </div>
-          <div class="flex flex-col lg:flex-row items-center justify-between mb-8 lg: mt-8">
-            <button class="bg-purple-600 text-white py-2 px-4 rounded-full w-full lg:w-auto mb-2">
-              Synchronize Time
-            </button>
-            <div class="flex items-center  lg:mt-0">
-              <input class="mr-2 lg:mr-2" type="checkbox"/>
-              <label class="lg:mr-8">Synchronize Time</label>
-            </div>
-          </div>
+        
           <div class="mb-4 flex flex-col lg:flex-row items-center">
             <label class="block text-gray-700 w-full lg:w-1/2">Incubator</label>
             <input 
@@ -97,11 +72,11 @@
           />
           </div>
           <div class="mb-4 flex flex-col lg:flex-row items-center">
-            <label class="block text-gray-700 w-full lg:w-1/2">Incubator serial number</label>
+            <label class="block text-gray-700 w-full lg:w-1/2">Incubator Serial Number</label>
             <input class="w-full lg:w-2/3 fields p-2 rounded" [(ngModel)]="incubatorSerialNumber" value="SN-111 222 333"/>
           </div>
           <div class="mb-4 flex flex-col lg:flex-row items-center">
-            <label class="block text-gray-700 w-full lg:w-1/2">BI type</label>
+            <label class="block text-gray-700 w-full lg:w-1/2">BI Type</label>
             <input class="w-full lg:w-2/3 fields p-2 rounded" [(ngModel)]="biType" value="Atlas Rapid AX224"/>
           </div>
           <div class="flex flex-col lg:flex-row items-center justify-between">

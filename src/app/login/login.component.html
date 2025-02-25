@@ -8,7 +8,7 @@
     
     <!-- Right Section -->
     <div class="col-md-4 col-12 d-flex align-items-center justify-content-center rightSection">
-      <div class="login-form w-60">
+      <div class="login-form w-80">
         <h2 class="fw-bold text-xl">Hello Again!</h2>
         <p class="text-muted mt-2">Welcome Back</p>
         
@@ -58,23 +58,24 @@
 
           <div class="mb-3 mt-3 ml-2 d-flex justify-content-between align-items-center">
             <div class="form-check">
+              
               <input 
                 type="checkbox" 
                 class="form-check-input" 
                 id="rememberMe"
                 formControlName="rememberMe"
               >
-              <label class="form-check-label ml-2 mt-1 text-gray-500" for="rememberMe">Remember me</label>
+              <label class="form-check-label ml-2 mt-1 text-gray-500 " for="rememberMe">Remember me <span class="ml-8 text-purple" (click)="onForgetPassword()">Forgot Password?</span></label>
+
+             
             </div>
            
           </div>
         </form>
-        <p class="mt-3 text-purple text-sm text-center cursor-pointer" (click)="onForgetPassword()">
-          Forget Password
-        </p>
+       
         <p class="mt-4 text-muted" style="font-size: small;">
           Don’t have an account?
-          <span class="text-purple cursor-pointer" (click)="onCreateAccount()">Create Account</span>
+          <span class="text-purple createAccount cursor-pointer" (click)="onCreateAccount()">Create Account</span>
         </p>
 
         

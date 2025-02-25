@@ -23,7 +23,7 @@
 .fields {
     background-color: rgba(171, 171, 171, 0.2);
     border-radius: 30px;
-    border: 0.3px solid rgba(171, 171, 171, 0.2);
+    /* border: 0.3px solid rgba(171, 171, 171, 0.2); */
     font-family: 'Poppins';
     font-size: 12px;
     font-weight: 400;
@@ -45,7 +45,7 @@ hr {
 input[type="datetime-local"] {
     background-color: rgba(171, 171, 171, 0.2);
     border-radius: 30px;
-    border: 0.3px solid rgba(171, 171, 171, 0.2);
+    /* border: 0.3px solid rgba(171, 171, 171, 0.2); */
     font-family: 'Poppins';
     font-size: 12px;
     font-weight: 400;

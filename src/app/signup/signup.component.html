@@ -64,7 +64,7 @@
     Selected: {{ getSelectedCountryName() }} ({{ selectedCountryCode }})
   </div> -->
 </div>
-          <div *ngIf="isFieldInvalid('phoneNumber')" class="mb-2 invalid-feedback d-block">
+          <div *ngIf="isFieldInvalid('phoneNumber')" class="mb-4 invalid-feedback d-block">
             Please enter a valid phone number (10-15 digits)
           </div>
 
@@ -85,7 +85,7 @@
             </div>
           </div>
 
-          <div *ngIf="isFieldInvalid('password')" class="mb-2 text-xs invalid-feedback d-block">
+          <div *ngIf="isFieldInvalid('password')" class="mb-4 text-xs invalid-feedback d-block">
             {{ getErrorMessage('password') }}
           </div>
           <!-- Confirm Password Field -->
