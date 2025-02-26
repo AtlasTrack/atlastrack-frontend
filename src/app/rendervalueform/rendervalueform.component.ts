@@ -415,6 +415,9 @@ export class RendervalueformComponent {
         this.popupType = 'success';
         this.resetForm();
         this.ngOnInit();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       },
       error: (error) => {
         console.error('Error creating record:', error);
