@@ -9,9 +9,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AtlastrackerindexComponent } from './atlastrackerindex/atlastrackerindex.component';
 import { DashboardloginComponent } from './dashboardlogin/dashboardlogin.component';
 import { ClinicsdashboardComponent } from './clinicsdashboard/clinicsdashboard.component';
+import { ForgetpasswordemailpageComponent } from './forgetpassword/forgetpasswordemailpage/forgetpasswordemailpage.component';
+import { ForgetpasswordotppageComponent } from './forgetpassword/forgetpasswordotppage/forgetpasswordotppage.component';
+import { ForgetpasswordnewpasswordComponent } from './forgetpassword/forgetpasswordnewpassword/forgetpasswordnewpassword.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: '/atlasindex', pathMatch: 'full' }, // First page is login
+    { path: '', redirectTo: '/login', pathMatch: 'full' }, // First page is login
     { path: 'home', component: HomeComponent },
     { path: 'login', component: LoginComponent },
     { path: 'signup', component: SignupComponent },
@@ -22,6 +25,10 @@ export const routes: Routes = [
     { path: 'dashboardlogin', component: DashboardloginComponent},
     { path: 'clinicdashboard', component: ClinicsdashboardComponent},
     { path: 'devicedescription', component: DevicedescriptionComponent},
+    { path: 'forgetpasswordemail', component: ForgetpasswordemailpageComponent},
+    { path: 'forgetpasswordotp', component: ForgetpasswordotppageComponent},
+    { path: 'forgetpasswordnewpass', component: ForgetpasswordnewpasswordComponent},
+
 
 
     

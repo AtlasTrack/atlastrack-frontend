@@ -1,61 +1,98 @@
-<div class="bg-gray-200 min-h-screen  sm:pl-10 sm:pr-10 md:px-20  pt-10 lg:pl-40 lg:pr-40">
-  <div class="bg-white flex flex-col lg:flex-row items-center justify-center mainContainer pb-10">
-    <div class="flex flex-col items-center text-center lg:text-left">
-      <div class="flex items-center mb-8">
-        <img alt="Atlas Track Logo" class="mr-2" height="150" src="assets/companyLogo.png" width="250"/>
-      </div>
-      <img alt="Device Image" class="mb-4 w-3/4 sm:w-2/3 md:w-1/2 lg:w-[400px]" src="assets/deviceDefualt.png"/>
-      <a class="bg-purple-600 text-white py-2 px-4 rounded-full mt-4">
-        Visit More
-      </a>
+<div class="bg-gray-100 font-sans antialiased min-h-screen pb-12">
+
+  <div class="flex flex-col lg:flex-row">
+    <div class="flex items-center justify-center mt-5 lg:ml-10 mb-6">
+        <img alt="Logo" class="h-24 w-48 lg:h-24 lg:w-60" src="assets/companyLogo.png" />
     </div>
-    <div class="rounded-lg shadow-lg p-6 mt-8 w-full max-w-md lg:ml-32" style="background-color: rgba(214, 214, 214, 0.76);">
-      <div class="flex items-center justify-between mb-8">
-        <span class="text-lg font-semibold">Alarm</span>
-        <div class="flex items-center">
-          <input class="mr-2" name="alarm" type="radio"/>
-          <label class="mr-2">Enable</label>
-          <input name="alarm" type="radio"/>
-          <label class="ml-2">Disable</label>
+    <div class="flex flex-col lg:flex-row justify-between items-center mb-6 w-full lg:w-full px-4 lg:px-0">
+        <!-- Add menu toggle button for desktop -->
+        <div class="lg:ml-80"></div>
+        <div class="flex items-center lg:ml-96 lg:mr-8 space-x-8 lg:space-x-10 sm:mt-4 lg:mt-0">
+            <i class="fas fa-bell text-purple-700 relative">
+                <span class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
+            </i>
+            <i class="fas fa-envelope text-gray-400"></i>
+            <i class="fas fa-user text-gray-400" ></i>
+            <i class="fas fa-sign-out-alt text-gray-400 text-xl cursor-pointer" ></i>
+            <i class="fas fa-bars text-purple-700 text-xl font-bold " (click)="toggleMenu()">
+            </i>
         </div>
-      </div>
-      <div class="mb-4 flex flex-col lg:flex-row items-center">
-        <label class="block text-gray-700 w-full lg:w-1/2">490M Date / Time</label>
-        <input class="w-full lg:w-2/3 fields p-2 rounded" type="text" value="02/28/2020 | 11:09:18"/>
-      </div>
-      <div class="mb-4 flex flex-col lg:flex-row items-center">
-        <label class="block text-gray-700 w-full lg:w-1/2">PC Date / Time</label>
-        <input class="w-full lg:w-2/3 fields p-2 rounded" type="text" value="02/28/2020 | 11:09:18"/>
-      </div>
-      <div class="flex flex-col lg:flex-row items-center justify-between mb-8 lg: mt-8">
-        <button class="bg-purple-600 text-white py-2 px-4 rounded-full w-full lg:w-auto mb-2">
-          Synchronize Time
-        </button>
-        <div class="flex items-center  lg:mt-0">
-          <input class="mr-2 lg:mr-2" type="checkbox"/>
-          <label class="lg:mr-8">Synchronize Time</label>
-        </div>
-      </div>
-      <div class="mb-4 flex flex-col lg:flex-row items-center">
-        <label class="block text-gray-700 w-full lg:w-1/2">Incubator</label>
-        <input class="w-full lg:w-2/3 fields p-2 rounded" type="text" value="Atlas Rapid Mini"/>
-      </div>
-      <div class="mb-4 flex flex-col lg:flex-row items-center">
-        <label class="block text-gray-700 w-full lg:w-1/2">Incubator serial number</label>
-        <input class="w-full lg:w-2/3 fields p-2 rounded" [(ngModel)]="incubatorSerialNumber" value="SN-111 222 333"/>
-      </div>
-      <div class="mb-4 flex flex-col lg:flex-row items-center">
-        <label class="block text-gray-700 w-full lg:w-1/2">BI type</label>
-        <input class="w-full lg:w-2/3 fields p-2 rounded" [(ngModel)]="biType" value="Atlas Rapid AX224"/>
-      </div>
-      <div class="flex flex-col lg:flex-row items-center justify-between">
-        <button class="bg-purple-600 text-white py-2 px-8 rounded-full w-full lg:w-2/3 mb-3" (click)="onServicePackClick()">
-          Service Pack
-        </button>
-        <button class="bg-gray-800 text-white py-2 px-12 lg:ml-8 rounded-full w-full lg:w-2/3  lg:mt-0 mb-3">
-          Close
-        </button>
-      </div>
     </div>
   </div>
+
+<div class="flex flex-col lg:flex-row">
+  <div class="w-full lg:w-80 bg-gray-200 lg:ml-10 shadow-lg p-6" [class.hidden]="!menuOpen">
+    <nav class="mt-4 lg:mt-10">
+        <a class="flex items-center py-3 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer" (click)="onHomeClick()">
+            <i class="fas fa-home text-purple-600"></i>
+            <span class="mx-4 font-medium">Home</span>
+            <i class="fas fa-caret-down ml-auto"></i>
+        </a>
+        <a class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer" (click)="onReportClick()">
+            <i class="fas fa-clipboard-list text-purple-600"></i>
+            <span class="mx-4 font-medium">Reports</span>
+            <i class="fas fa-caret-down ml-auto"></i>        
+        </a>
+        <a class="flex items-center py-3 mt-4 px-6 border rounded-lg bg-white text-gray-400 hover:shadow-lg cursor-pointer" (click)="onDeviceDetail()">
+            <i class="fas fa-calendar-alt text-purple-600"></i>
+            <span class="mx-4 font-medium">Device</span>
+            <i class="fas fa-caret-down ml-auto"></i>
+        </a>
+        <a class="flex items-center py-3 px-6 mt-10 lg:mt-56 text-white bg-purple-600 rounded-lg hover:bg-purple-700" href="https://penguinhealth.ca/">
+            <i class="fas fa-external-link-alt mx-8"></i>
+            <span class="mx-0 font-medium text-center">Visit More</span>
+        </a>
+    </nav>
+</div>
+  <div class="flex-1 pl-6  lg:pt-2">
+    <div class="bg-gray-200 min-h-screen  sm:pl-10 sm:pr-10 md:px-20  pt-10 lg:pr-8">
+
+      <div class="bg-white flex flex-col lg:flex-row items-center justify-center mainContainer pb-10 pt-10">
+        <div class="flex flex-col items-center text-center lg:text-left lg:ml-16">
+          <div class="flex items-center mb-4">
+            <img alt="Atlas Track Logo" class="mr-2" height="150" src="assets/companyLogo.png" width="250"/>
+          </div>
+          <img 
+  alt="Device Image" 
+  class="mb-2 w-3/4 sm:w-2/3 md:w-1/2 lg:w-[250px] lg:h-[200px]" 
+  [src]="incubatorModel === 'Atlas Rapid Mini' ? 'assets/deviceDefualt.png' : 'assets/yettouplaod.png'"
+/>
+          <a class="bg-purple-600 text-white py-2 px-4 rounded-full mt-4" >
+            Upload Image
+          </a>
+        </div>
+        <div class="rounded-lg shadow-lg p-6 mt-8 w-full max-w-md lg:ml-32 lg:mr-8" style="background-color: rgba(214, 214, 214, 0.76);">
+        
+          <div class="mb-4 flex flex-col lg:flex-row items-center">
+            <label class="block text-gray-700 w-full lg:w-1/2">Incubator</label>
+            <input 
+            class="w-full lg:w-2/3 fields p-2 rounded" 
+            type="text" 
+            [(ngModel)]="incubatorModel"
+          />
+          </div>
+          <div class="mb-4 flex flex-col lg:flex-row items-center">
+            <label class="block text-gray-700 w-full lg:w-1/2">Incubator Serial Number</label>
+            <input class="w-full lg:w-2/3 fields p-2 rounded" [(ngModel)]="incubatorSerialNumber" value="SN-111 222 333"/>
+          </div>
+          <div class="mb-4 flex flex-col lg:flex-row items-center">
+            <label class="block text-gray-700 w-full lg:w-1/2">BI Type</label>
+            <input class="w-full lg:w-2/3 fields p-2 rounded" [(ngModel)]="biType" value="Atlas Rapid AX224"/>
+          </div>
+          <div class="flex flex-col lg:flex-row items-center justify-between">
+            <button class="bg-purple-600 text-white py-2  rounded-full w-full lg:ml-28 lg:mt-4 lg:w-1/2 mb-3" (click)="onServicePackClick()">
+              Save
+            </button>
+           
+          </div>
+        </div>
+      </div>
+    
+      <app-notification-popup [isOpen]="showPopup" [message]="popupMessage" [type]="popupType" (onClose)="closePopup()"></app-notification-popup>
+    
+    
+    </div>
+  </div>
+</div>
+
 </div>

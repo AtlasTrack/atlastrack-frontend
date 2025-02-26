@@ -16,6 +16,7 @@ import { AutoReadRecord } from '../apiinterfaces';
 })
 export class ReportsComponent implements OnInit {
   records: AutoReadRecord[] = [];
+  filteredRecords: AutoReadRecord[] = [];
   currentPage = 0;
   totalPages = 0;
   startTime!: string;
@@ -24,11 +25,18 @@ export class ReportsComponent implements OnInit {
   popupMessage = '';
   showSidebar: boolean = false;
   popupType: 'success' | 'error' = 'success';
+  searchText: string = '';
+  showFilterOptions: boolean = false;
+  filterCriteria: string = 'all';
+  selectedClinic!: string;
+  isMobile = window.innerWidth < 1024; // Initial check for screen size
+  menuOpen = true;
   constructor(private router: Router, private apiService: ApiService) { }
 
 
   ngOnInit(): void {
-    this.fetchRecords();
+    this.selectedClinic = localStorage.getItem('clinic') ?? ''; // Provide default empty string
+    this.fetchClinicRecords();
   }
 
   onDateChange() {
@@ -61,8 +69,11 @@ export class ReportsComponent implements OnInit {
     return true;
   }
 
-  fetchRecords() {
-    this.apiService.getPaginatedRecords(this.currentPage).subscribe({
+  fetchClinicRecords() {
+    this.apiService.getRecordsByClinic(
+      this.selectedClinic, 
+      this.currentPage
+    ).subscribe({
       next: (response) => {
         this.records = response.content;
         this.totalPages = response.totalPages;
@@ -70,15 +81,26 @@ export class ReportsComponent implements OnInit {
     });
   }
 
+  // fetchRecords() {
+  //   this.apiService.getPaginatedRecords(this.currentPage).subscribe({
+  //     next: (response) => {
+  //       this.records = response.content;
+  //       this.totalPages = response.totalPages;
+  //     }
+  //   });
+  // }
+
   fetchFilteredRecords() {
     if (!this.validateDates()) return;
+
+  const startDate = `${this.startTime}T00:00:00`;
+  const endDate = `${this.endTime}T23:59:59`;
+
+  this.currentPage = 0; // Reset to first page
   
-    // Append time to dates
-    const startDate = `${this.startTime}T00:00:00`;
-    const endDate = `${this.endTime}T23:59:59`;
   
-    this.currentPage = 0; // Reset to first page
-    this.apiService.getFilteredRecords(startDate, endDate, this.currentPage)
+    // Use clinic-specific filter if a clinic is selected
+    this.apiService.getFilteredClinicRecords(this.selectedClinic, startDate, endDate, this.currentPage)
       .subscribe({
         next: (response) => {
           this.records = response.content;
@@ -88,28 +110,53 @@ export class ReportsComponent implements OnInit {
           console.error('Error fetching filtered records:', err);
         }
       });
+  
   }
   
   exportExcel() {
     if (!this.validateDates()) return;
-  
-    const startDate = `${this.startTime}T00:00:00`;
-    const endDate = `${this.endTime}T23:59:59`;
-  
-    this.apiService.exportExcel(startDate, endDate).subscribe(blob => {
-      saveAs(blob, `report-${this.startTime}-to-${this.endTime}.xlsx`);
+
+  const startDate = `${this.startTime}T00:00:00`;
+  const endDate = `${this.endTime}T23:59:59`;
+
+  if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
+    this.showPopup = true;
+    this.popupMessage = 'Select the valid date';
+    this.popupType = 'error'
+    return;
+  }
+
+    this.apiService.exportClinicExcel(this.selectedClinic, startDate, endDate).subscribe(blob => {
+      saveAs(blob, `${this.selectedClinic}-report-${this.startTime}-to-${this.endTime}.xlsx`);
     });
   }
   
   exportPDF() {
+   
     if (!this.validateDates()) return;
-  
-    const startDate = `${this.startTime}T00:00:00`;
-    const endDate = `${this.endTime}T23:59:59`;
-  
-    this.apiService.exportPDF(startDate, endDate).subscribe(blob => {
-      saveAs(blob, `report-${this.startTime}-to-${this.endTime}.pdf`);
+
+  const startDate = `${this.startTime}T00:00:00`;
+  const endDate = `${this.endTime}T23:59:59`;
+
+  if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
+    this.showPopup = true;
+    this.popupMessage = 'Select the valid date';
+    this.popupType = 'error'
+    return;
+  }
+
+    this.apiService.exportClinicPDF(this.selectedClinic, startDate, endDate).subscribe(blob => {
+      saveAs(blob, `${this.selectedClinic}-report-${this.startTime}-to-${this.endTime}.pdf`);
     });
+  
+  
+  }
+  onLogoutClick() {
+    localStorage.removeItem('access_token');
+   localStorage.removeItem('profile');
+   localStorage.removeItem('clinic');
+   localStorage.removeItem('clinicAddress');
+   this.router.navigate(['/login']);
   }
 
   onHomeClick() {
@@ -122,13 +169,14 @@ export class ReportsComponent implements OnInit {
   onreportClick() {
     this.router.navigate(['/report']);
   }
+
   isControlButtonEnabled(record: AutoReadRecord): boolean {
     return record.isControlTest === true;
   }
 
   changePage(page: number) {
     this.currentPage = page;
-    this.fetchRecords();
+    this.fetchClinicRecords();
   }
 
   closePopup() {
@@ -139,4 +187,58 @@ export class ReportsComponent implements OnInit {
   toggleSidebar(): void {
     this.showSidebar = !this.showSidebar;
   }
+
+
+  applySearchAndFilter() {
+    // If no search text, show all records
+    if (!this.searchText || this.searchText.trim() === '') {
+      this.filteredRecords = [];
+      return;
+    }
+  
+    // Convert search text to lowercase for case-insensitive search
+    const searchLower = this.searchText.toLowerCase().trim();
+  
+    // Filter records across all columns
+    this.filteredRecords = this.records.filter(record => {
+      // Search in all string properties of the record
+      return (
+        // Basic info
+        (record.wellNumber?.toString() || '').toLowerCase().includes(searchLower) ||
+        (record.serialNumber || '').toLowerCase().includes(searchLower) ||
+        (record.result || '').toLowerCase().includes(searchLower) ||
+        (record.biType || '').toLowerCase().includes(searchLower) ||
+        (record.biLotNumber || '').toLowerCase().includes(searchLower) ||
+        (record.sterilizerModels || '').toLowerCase().includes(searchLower) ||
+        (record.loadNumber?.toString() || '').toLowerCase().includes(searchLower) ||
+        (record.cycleCount?.toString() || '').toLowerCase().includes(searchLower) ||
+        (record.chemicalIntegrators || '').toLowerCase().includes(searchLower) ||
+        
+        // Additional fields if they exist in your data model
+        (record.clinicName || '').toLowerCase().includes(searchLower) ||
+        (record.clinicAddress || '').toLowerCase().includes(searchLower) ||
+        
+        // Date fields - convert to string format for searching
+        (record.startTime ? new Date(record.startTime).toLocaleString() : '').toLowerCase().includes(searchLower) ||
+        (record.endTime ? new Date(record.endTime).toLocaleString() : '').toLowerCase().includes(searchLower)
+      );
+    });
+  }
+
+  // Toggle filter options dropdown
+  toggleFilterOptions() {
+    this.showFilterOptions = !this.showFilterOptions;
+  }
+
+  // Set filter criteria
+  setFilterCriteria(criteria: string) {
+    this.filterCriteria = criteria;
+    this.showFilterOptions = false;
+    this.applySearchAndFilter();
+  }
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
 }

@@ -4,16 +4,24 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '../apiservice.service';
+import { NotificationPopupComponent } from '../notification-popup/notification-popup.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, NotificationPopupComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
   loginForm!: FormGroup;
+  showPassword = false;
+  showPopup = false;
+  popupMessage = '';
+  showSidebar: boolean = false;
+  popupType: 'success' | 'error' = 'success';
+
+
   constructor(private router: Router, private apiService: ApiService, private fb: FormBuilder) { 
    
   }
@@ -61,14 +69,33 @@ export class LoginComponent {
             }
             this.router.navigate(['/home']);
           } else {
-            alert('Invalid credentials');
+            this.showPopup = true;
+            this.popupMessage = 'Invalid Credentials';
+            this.popupType = 'error';
+            
           }
         },
         error: (error) => {
-          alert(error.message);
+          this.showPopup = true;
+            this.popupMessage = error.message;
+            this.popupType = 'error';
+         
         }
       });
     }
   }
-  
+
+
+  closePopup() {
+    this.showPopup = false;
+    this.popupMessage = '';
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  onForgetPassword() {
+    this.router.navigate(['forgetpasswordemail']);
+  }
 }

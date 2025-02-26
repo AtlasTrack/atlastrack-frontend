@@ -62,3 +62,29 @@ export interface PaginatedResponse<T> {
     implantTests: number;
     otherTests: number;
   }
+
+
+export interface LoginResponse {
+  access_token: string;
+  refresh_token: string;
+  token_type: string;
+  expires_in: number;
+  scope: string;
+}
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  fullName: string;
+  clinicName: string;
+  clinicAddress: string;
+  phoneNumber: string;
+}
+export interface LoginRequestDTO {
+  email: string;
+  password: string;
+}
+export interface ResetPasswordDTO {
+  email: string;
+  newPassword: string;
+}

@@ -35,7 +35,7 @@ interface FormData {
   styleUrl: './rendervalueform.component.css'
 })
 export class RendervalueformComponent {
-
+  menuOpen = false;
   private apiService=inject(ApiService);
 
   serialNumbers$ = new BehaviorSubject<string[]>([]);
@@ -54,6 +54,7 @@ export class RendervalueformComponent {
   showPopup = false;
   popupMessage = '';
   popupType: 'success' | 'error' = 'success';
+  formErrors: Record<string, boolean> = {};
 
   formData: FormData = {
     startTime: new Date().toLocaleString('en-US', { 
@@ -115,14 +116,27 @@ export class RendervalueformComponent {
 
 
   private fetchDropdownData(): void {
+    if(!this.username) {
+      this.router.navigate(['/login']);
+    }
     this.apiService.getSerialNumbers().subscribe({
       next: (data) => this.serialNumbers$.next(data),
       error: (error) => console.error('Error fetching serial numbers:', error)
     });
 
-    this.apiService.getResults().subscribe({
-      next: (data) => this.results$.next(data),
-      error: (error) => console.error('Error fetching results:', error)
+    this.apiService.getResults(this.username).subscribe({
+      next: (data) => {
+        // Start with default values
+        const initialResults = ['Positive', 'Negative'];
+        // Combine with API results, removing duplicates
+        const combinedResults = [...new Set([...initialResults, ...data])];
+        this.results$.next(combinedResults);
+      },
+      error: (error) => {
+        console.error('Error fetching results:', error);
+        // On error, fall back to initial values
+        this.results$.next(['Positive', 'Negative']);
+      }
     });
 
     this.apiService.getBiTypes().subscribe({
@@ -130,32 +144,44 @@ export class RendervalueformComponent {
       error: (error) => console.error('Error fetching BI types:', error)
     });
 
-    this.apiService.getSterilizerModels().subscribe({
+    this.apiService.getSterilizerModels(this.username).subscribe({
       next: (data) => this.sterilizerModels$.next(data),
       error: (error) => console.error('Error fetching sterilizer models:', error)
     });
 
-    this.apiService.getTechnicians().subscribe({
-      next: (data) => this.technicians$.next(data),
-      error: (error) => console.error('Error fetching technicians:', error)
+    
+      this.apiService.getTechniciansByClinic(this.username).subscribe({
+        next: (data) => this.technicians$.next(data),
+        error: (error) => console.error('Error fetching clinic technicians:', error)
+      });
+    
+
+    this.apiService.getChemicalIntegrators(this.username).subscribe({
+      next: (data) => {
+        // Start with default values
+        const initialResults = ['Pass', 'Fail'];
+        // Combine with API results, removing duplicates
+        const combinedResults = [...new Set([...initialResults, ...data])];
+        this.chemicalIntegrators$.next(combinedResults);
+      },
+      error: (error) => {
+        console.error('Error fetching chemical integrators:', error);
+        // On error, fall back to initial values
+        this.chemicalIntegrators$.next(['Pass', 'Fail']);
+      }
     });
 
-    this.apiService.getChemicalIntegrators().subscribe({
-      next: (data) => this.chemicalIntegrators$.next(data),
-      error: (error) => console.error('Error fetching chemical integrators:', error)
-    });
-
-    this.apiService.getBiLotNumbers().subscribe({
+    this.apiService.getBiLotNumbers(this.username).subscribe({
       next: (data) => this.biLotNumbers$.next(data),
       error: (error) => console.error('Error fetching BI lot numbers:', error)
     });
 
-    this.apiService.getLoadNumbers().subscribe({
+    this.apiService.getLoadNumbers(this.username).subscribe({
       next: (data) => this.loadNumbers$.next(data),
       error: (error) => console.error('Error fetching load numbers:', error)
     });
 
-    this.apiService.getCycleCounts().subscribe({
+    this.apiService.getCycleCounts(this.username).subscribe({
       next: (data) => this.cycleCounts$.next(data),
       error: (error) => console.error('Error fetching cycle counts:', error)
     });
@@ -326,10 +352,38 @@ export class RendervalueformComponent {
   onSave() {
     const startDate = new Date(this.startDateTime);
     const endDate = new Date(this.endDateTime);
+     // Reset all form errors
+    this.formErrors = {};
+  
+  // Check if all required fields are filled
+     let hasErrors = false;
 
-    if (endDate < startDate) {
+     // Validate all required fields
+  const requiredFields: (keyof FormData)[] = [
+    'wellNumber', 'serialNumber', 'result', 'biType', 
+    'biLotNumber', 'sterilizerModel', 'loadNumber',
+    'technician', 'cycleType', 'chemicalIntegrator'
+  ];
+  
+  // Mark empty fields as errors
+  requiredFields.forEach(field => {
+    if (!this.formData[field]) {
+      this.formErrors[field] = true;
+      hasErrors = true;
+    }
+  });
+
+    if (endDate <= startDate) {
       this.showPopup = true;
-      this.popupMessage = 'End time cannot be before start time';
+      this.popupMessage = 'Your start time and end time can’t be the same';
+      this.popupType = 'error';
+      return;
+    }
+
+
+    if (hasErrors) {
+      this.showPopup = true;
+      this.popupMessage = 'Please fill all required fields';
       this.popupType = 'error';
       return;
     }
@@ -360,6 +414,7 @@ export class RendervalueformComponent {
         this.popupMessage = 'Record saved successfully!';
         this.popupType = 'success';
         this.resetForm();
+        this.ngOnInit();
       },
       error: (error) => {
         console.error('Error creating record:', error);
@@ -369,6 +424,11 @@ export class RendervalueformComponent {
       }
     });
   }
+
+  // Add this method to check if a field has an error
+hasError(fieldName: string): boolean {
+  return this.formErrors[fieldName] === true;
+}
 
   // Add this method to close the popup
   closePopup() {
@@ -381,6 +441,7 @@ export class RendervalueformComponent {
 
 
   private resetForm() {
+    this.formErrors = {};
     // Reset dates to current time
     const now = new Date();
     this.startDateTime = this.formatDateTimeForInput(now);
@@ -406,7 +467,7 @@ export class RendervalueformComponent {
         second: '2-digit',
         hour12: false
       }),
-      wellNumber: '',
+      wellNumber: '0',
       serialNumber: '',
       result: '',
       biType: '',
@@ -426,5 +487,28 @@ export class RendervalueformComponent {
     comboboxInputs.forEach(input => {
       input.value = '';
     });
+  }
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  onHomeClick() {
+    this.router.navigate(['/home']);
+  }
+  onReportClick() {
+    this.router.navigate(['/report']);
+  }
+  onDeviceDetail() {
+    this.router.navigate(['/devicedescription']);
+  }
+
+
+  onLogoutClick() {
+    localStorage.removeItem('access_token');
+   localStorage.removeItem('profile');
+   localStorage.removeItem('clinic');
+   localStorage.removeItem('clinicAddress');
+   this.router.navigate(['/login']);
   }
 }

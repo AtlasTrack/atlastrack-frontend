@@ -14,6 +14,7 @@ export class CustomcomboboxComponent implements OnInit {
   @Input() items$?: Observable<string[]>;  // Items passed to the combobox (can be dynamic)
   @Input() placeholder: string = ''; // Placeholder text for the input field
   @Input() initialValue: string = ''; // Initial value to show in the input field
+  @Input() hasError: boolean = false; // New input to indicate validation error
   @Output() selectionChange = new EventEmitter<string>(); // Emit the selected value
   
   inputValue: string = '';
@@ -40,7 +41,6 @@ export class CustomcomboboxComponent implements OnInit {
     }
   }
 
-
   // Method to filter items based on user input
   filterItems() {
     this.filteredItems = this.allItems.filter(item => 
@@ -48,7 +48,6 @@ export class CustomcomboboxComponent implements OnInit {
     );
   }
   // Method to select an item from the dropdown
-  
   selectItem(item: string) {
     this.inputValue = item;
     this.showDropdown = false;
@@ -57,15 +56,14 @@ export class CustomcomboboxComponent implements OnInit {
 
   // Method to add a new item (if applicable)
   addNewItem() {
-  
-      if (this.inputValue && !this.allItems.includes(this.inputValue)) {
-        this.allItems.push(this.inputValue);
-        this.filteredItems = [...this.allItems];
-        this.selectItem(this.inputValue);
-      } else if (this.inputValue) {
-        this.selectItem(this.inputValue);
-      }
-      this.showDropdown = false;
+    if (this.inputValue && !this.allItems.includes(this.inputValue)) {
+      this.allItems.push(this.inputValue);
+      this.filteredItems = [...this.allItems];
+      this.selectItem(this.inputValue);
+    } else if (this.inputValue) {
+      this.selectItem(this.inputValue);
+    }
+    this.showDropdown = false;
   }
 
   onFocus() {

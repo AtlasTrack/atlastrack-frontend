@@ -10,7 +10,11 @@ import {
   RegisterRequest, 
   DashboardStats, 
   WeeklyTestData, 
-  TestDistribution 
+  TestDistribution, 
+  LoginResponse,
+  UserProfile,
+  LoginRequestDTO,
+  ResetPasswordDTO
 } from './apiinterfaces';
 
 @Injectable({
@@ -19,10 +23,7 @@ import {
 export class ApiService {
   private baseUrl = environment.baseUrl;
   private apiUrl = environment.apiUrl;
-  private keycloakUrl = environment.keycloakUrl;
-  private realmName = environment.realmName;
-  private clientId = environment.clientId;
-  private clientSecret = environment.clientSecret; // Replace with your client secret
+
 
   private currentUserSubject = new BehaviorSubject<any>(null);
 
@@ -143,22 +144,15 @@ export class ApiService {
     );
   }
 
-  login(username: string, password: string): Observable<boolean> {
-    console.log('Starting login process for user:', username);
+  login(email: string, password: string): Observable<boolean> {
+    console.log('Starting login process for user:', email);
     
-    const params = new URLSearchParams();
-    params.append('grant_type', 'client_credentials');
-    params.append('client_id', this.clientId);
-    params.append('client_secret', this.clientSecret);
-  
-    const headers = new HttpHeaders()
-      .set('Content-Type', 'application/x-www-form-urlencoded');
-  
-    return this.http.post<TokenResponse>(
-      `${this.keycloakUrl}/realms/${this.realmName}/protocol/openid-connect/token`,
-      params.toString(),
-      { headers }
-    ).pipe(
+    const loginRequest: LoginRequestDTO = {
+      email,
+      password
+    };
+
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, loginRequest).pipe(
       tap(response => {
         console.log('Login response received, tokens present:', {
           accessToken: !!response.access_token,
@@ -167,49 +161,48 @@ export class ApiService {
         localStorage.setItem('access_token', response.access_token);
         localStorage.setItem('refresh_token', response.refresh_token);
       }),
-      switchMap(() => this.loadUserProfile(username, password)),
+      switchMap(() => this.loadUserProfile(email, password)),
       catchError(error => {
-        console.error('Login error details:', {
-          status: error.status,
-          statusText: error.statusText,
-          error: error.error
-        });
+        console.error('Login error:', error);
         return throwError(() => ({
-          message: error.error?.error_description || 'Login failed'
+          message: error.message || 'Login failed'
         }));
       })
     );
   }
 
-  private loadUserProfile(name: string, password: string): Observable<boolean> {
+  private loadUserProfile(email: string, password: string): Observable<boolean> {
     const token = localStorage.getItem('access_token');
     if (!token) return of(false);
-  
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-  
-    return this.http.get<any[]>(
-      `${this.keycloakUrl}/admin/realms/${this.realmName}/users?email=${name}`,
+
+    return this.http.get<UserProfile>(
+      `${this.apiUrl}/auth/profile?email=${email}&password=${password}`,
       { headers }
     ).pipe(
-      map(profile => {
-        const match = profile[0]?.attributes?.Passwordd?.[0] === password;
-        if (match) {
-          localStorage.setItem('profile', JSON.stringify(profile[0].id));
-          localStorage.setItem('clinic', profile[0].attributes?.clinicname);
-          localStorage.setItem('clinicAddress', profile[0].attributes?.ClinicAddress);
-          console.log("Clinic ", profile[0].attributes?.clinicname)
-          this.currentUserSubject.next(profile[0]);
-        }
-        return match;
+      tap(profile => {
+        console.log('Profile loaded:', profile);
+        this.currentUserSubject.next(profile);
+        localStorage.setItem('clinic', profile.clinicName);
+        localStorage.setItem('clinicAddress', profile.clinicAddress);
+        console.log("Clinic ", profile.clinicName);
       }),
-      catchError(() => {
+      map(() => true),
+      catchError(error => {
+        console.error('Profile loading error:', error);
         this.logout();
-        return of(false);
+        return throwError(() => ({
+          message: error.error?.message || 'Failed to load user profile'
+        }));
       })
     );
   }
+
+
+
 
   logout(): void {
     localStorage.removeItem('access_token');
@@ -269,40 +262,106 @@ export class ApiService {
     return this.http.get<string[]>(`${this.baseUrl}/serialNumbers`);
   }
 
-  getResults(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/results`);
+  getResults(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/results/clinic/${clinicName}`);
   }
 
   getBiTypes(): Observable<string[]> {    
     return this.http.get<string[]>(`${this.baseUrl}/biTypes`);
   }
 
-  getBiLotNumbers(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/biLotNumbers`);
+  getBiLotNumbers(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/biLotNumbers/clinic/${clinicName}`);
   }
 
-  getSterilizerModels(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/sterilizerModels`);
+  getSterilizerModels(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/sterilizerModels/clinic/${clinicName}`);
   }
 
-  getTechnicians(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/technicians`);
+  getTechniciansByClinic(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/technicians/clinic/${clinicName}`);
   }
 
-  getChemicalIntegrators(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/chemicalIntegrators`);
+  getChemicalIntegrators(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/chemicalIntegrators/clinic/${clinicName}`);
   }
 
-  getCycleCounts(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/cycleCounts`);
+  getCycleCounts(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/cycleCounts/clinic/${clinicName}`);
   }
 
-  getLoadNumbers(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/loadNumbers`);
+  getLoadNumbers(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/loadNumbers/clinic/${clinicName}`);
   }
 
   createRecord(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/createRecord`, data);
+  }
+
+  getFilteredClinicRecords(clinicName: string, startDate: string, endDate: string, page: number) {
+    return this.http.get<any>(`${this.baseUrl}/filter/clinic`, {
+      params: {
+        clinicName,
+        start: startDate,
+        end: endDate,
+        page: page.toString()
+      }
+    });
+  }
+
+  exportClinicExcel(clinicName: string, startDate: string, endDate: string) {
+    return this.http.get(`${this.baseUrl}/export/clinic/excel`, {
+      params: { clinicName, start: startDate, end: endDate },
+      responseType: 'blob'
+    });
+  }
+
+  exportClinicPDF(clinicName: string, startDate: string, endDate: string) {
+    return this.http.get(`${this.baseUrl}/export/clinic/pdf`, {
+      params: { clinicName, start: startDate, end: endDate },
+      responseType: 'blob'
+    });
+  }
+
+  sendOtp(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/send-otp`, null, {
+        params: { email }
+    }).pipe(
+        catchError(error => {
+            console.error('Send OTP error:', error);
+            return throwError(() => ({
+                message: error.error?.message || 'Failed to send OTP'
+            }));
+        })
+    );
+}
+
+verifyOtp(email: string, otp: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/verify-otp`, {
+        email,
+        otp
+    }).pipe(
+        catchError(error => {
+            console.error('Verify OTP error:', error);
+            return throwError(() => ({
+                message: error.error?.message || 'Failed to verify OTP'
+            }));
+        })
+    );
+}
+
+  resetPassword(resetPasswordData: ResetPasswordDTO): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/reset-password`, resetPasswordData).pipe(
+      tap(response => {
+        console.log('Password reset response:', response);
+      }),
+      catchError(error => {
+        console.error('Password reset error:', error);
+        return throwError(() => ({
+          message: error.error?.message || 'Failed to reset password'
+        }));
+      })
+    );
   }
 }
 
