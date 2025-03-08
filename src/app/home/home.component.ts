@@ -13,10 +13,19 @@ import { Router } from '@angular/router';
 export class HomeComponent {
   username: any = localStorage.getItem('clinic');
   isLogoutOpen: boolean = false;
+  showSettings = false;
   isMobile = window.innerWidth < 1024; // Initial check for screen size
-  menuOpen = true;
+  menuOpen = false;
   constructor(private router: Router) {}
 
+  toggleSettings(event: Event): void {
+    event.stopPropagation();
+    this.showSettings = !this.showSettings;
+  }
+
+  closeSettings(): void {
+    this.showSettings = false;
+  }
   bilogformOpen() {
     this.router.navigate(['/rendervalueform']);
   }
@@ -29,9 +38,7 @@ export class HomeComponent {
   onDeviceDetail() {
     this.router.navigate(['/devicedescription']);
   }
-  openLogout() {
-    this.isLogoutOpen = !this.isLogoutOpen;
-  }
+
 
   onLogoutClick() {
     localStorage.removeItem('access_token');
@@ -39,6 +46,7 @@ export class HomeComponent {
    localStorage.removeItem('clinic');
    localStorage.removeItem('clinicAddress');
    this.router.navigate(['/login']);
+   this.closeSettings();
   }
 
   toggleMenu() {
@@ -49,4 +57,14 @@ export class HomeComponent {
   onResize() {
     this.isMobile = window.innerWidth < 1024;
   }
+
+  onManageAccount() {
+    this.router.navigate(['/manageaccount']);
+    this.closeSettings();
+  }
+
+  onForgetPassword() {
+    this.router.navigate(['forgetpasswordemail']);
+  }
+
 }

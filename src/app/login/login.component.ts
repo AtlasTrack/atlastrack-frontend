@@ -9,17 +9,16 @@ import { NotificationPopupComponent } from '../notification-popup/notification-p
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, NotificationPopupComponent],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
   loginForm!: FormGroup;
   showPassword = false;
-  showPopup = false;
-  popupMessage = '';
+  errorMessage = '';
   showSidebar: boolean = false;
-  popupType: 'success' | 'error' = 'success';
+
 
 
   constructor(private router: Router, private apiService: ApiService, private fb: FormBuilder) { 
@@ -69,16 +68,12 @@ export class LoginComponent {
             }
             this.router.navigate(['/home']);
           } else {
-            this.showPopup = true;
-            this.popupMessage = 'Invalid Credentials';
-            this.popupType = 'error';
+            this.errorMessage = 'Invalid Credentials'; 
             
           }
         },
         error: (error) => {
-          this.showPopup = true;
-            this.popupMessage = error.message;
-            this.popupType = 'error';
+          this.errorMessage = 'Invalid Credentials'; 
          
         }
       });
@@ -86,10 +81,6 @@ export class LoginComponent {
   }
 
 
-  closePopup() {
-    this.showPopup = false;
-    this.popupMessage = '';
-  }
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;

@@ -1,0 +1,173 @@
+
+<div class="maincontainer font-sans">
+       <!-- Transparent overlay layer - shown only when settings popup is open -->
+       <div *ngIf="showSettings" class="fixed inset-0 bg-opacity-30 z-10" (click)="closeSettings()"></div>
+    
+       <div class="flex flex-col md:flex-row h-screen">
+           <!-- Mobile Header with Menu Toggle -->
+           <div class="block md:hidden bg-white p-4 shadow-sm">
+               <div class="flex items-center justify-between">
+                   <img alt="Atlas Track Logo" class="h-8" src="assets/newui/atlasnewlogo.png"/>
+                   <button class="text-gray-600" (click)="toggleMenu()">
+                       <i class="fas fa-bars text-xl"></i>
+                   </button>
+               </div>
+           </div>
+   
+           <!-- Sidebar - Hidden on mobile by default, shown when toggled -->
+           <div class="w-full md:w-64 bg-white p-4 sidebar-menu" [ngClass]="{'hidden': !menuOpen, 'block': menuOpen, 'md:block': true}">
+               <div class="flex items-center justify-center h-12 md:h-16 mb-6">
+                   <img alt="Atlas Track Logo" class="max-w-full h-auto" src="assets/newui/atlasnewlogo.png" width="180"/>
+               </div>
+               <div class="mt-4 md:mt-10">
+                   <a class="flex items-center py-2 px-4 md:px-8 hover:bg-purple-50 hover:rounded-lg text-gray-900 hover:text-purple-700 cursor-pointer" (click)="onHomeClick()">
+                       <i class="fas fa-th-large mr-3"></i>
+                       <span>Home</span>
+                   </a>
+                   <a class="flex items-center py-2 px-4 md:px-8 text-gray-600 mt-3 hover:bg-purple-50 hover:rounded-lg hover:text-purple-700 cursor-pointer" (click)="onReportClick()">
+                       <i class="fas fa-file-alt mr-3"></i>
+                       <span>Report</span>
+                   </a>
+                   <a class="flex items-center py-2 mt-3 px-4 md:px-8 text-gray-600 hover:bg-purple-50 hover:text-purple-700 hover:rounded-lg" (click)="onDeviceDetail()">
+                       <i class="fas fa-database mr-3"></i>
+                       <span>Device</span>
+                   </a>
+               </div>
+           </div>
+           
+           <!-- Main Content -->
+           <div class="flex-1 flex flex-col">
+               <!-- Header -->
+               <header class="flex items-center justify-between h-16 md:h-24 px-4 md:px-6 bg-white shadow-sm md:shadow-none">
+                   <div class="flex items-center">
+                       <h1 class="text-gray-600 text-sm font-medium">
+                           Manage Account
+                       </h1>
+                   </div>
+                   <div class="flex items-center">
+                       <div class="relative">
+                       </div>
+                       <div class="flex items-center gap-2 md:gap-4">
+                           <i class="fas fa-bell text-gray-400 mr-2 md:mr-4"></i>
+                       
+                           <div class="relative">
+                               <div class="flex items-center gap-2 cursor-pointer z-20" (click)="toggleSettings($event)">
+                                   <img alt="User Avatar" class="rounded-full w-8 h-8 md:w-10 md:h-10" src="assets/newui/demoprofile.png"/>
+                                   <span class="text-gray-600 hidden sm:inline">{{username}}</span>
+                                   <i class="fas fa-caret-down ml-auto"></i>
+                               </div>
+                               
+                               <!-- Setting popup with relative positioning and higher z-index -->
+                               <div *ngIf="showSettings" class="bg-white shadow-xl rounded-lg p-3 absolute right-0 top-full mt-2 z-20 w-48 md:w-64">
+                                   <div class="flex gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer" (click)="onManageAccount()">
+                                       <img src="assets/newui/icons/manageAccountIcon.png" class="w-4 h-4" alt="">
+                                       <p class="text-sm"> Manage Account </p>
+                                   </div>
+                                   <hr class="mt-2">
+                                   <div class="flex gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer" (click)="onForgetPassword()">
+                                       <img src="assets/newui/icons/changePasswordIcon.png" class="w-4 h-4 mt-1" alt="">
+                                       <p class="text-sm"> Change Password </p>
+                                   </div>
+                                   <hr class="mt-2">
+                                   <div class="flex gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer">
+                                       <img src="assets/newui/icons/activityLogIcon.png" class="w-4 h-4 mt-1" alt="">
+                                       <p class="text-sm"> Activity Log </p>
+                                   </div>
+                                   <hr class="mt-2">
+                                   <div class="flex gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer" (click)="onLogoutClick()">
+                                       <img src="assets/newui/icons/logoutIcon.png" class="w-5 h-4 mt-1" alt="">
+                                       <p class="text-sm"> Logout </p>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </header>
+        <!-- Main Section -->
+        <main class="flex-1 p-4 md:p-6 overflow-auto">
+          <h2 class="text-xl md:text-xl font-semibold mt-4 lg:ml-8 md:mt-8">
+            Edit Profile
+          </h2>
+          <div class="mt-2 md:mt-2 bg-white p-4 sm:p-8 md:p-16 rounded-lg shadow-md">
+            <div class="flex flex-col items-center">
+              <img alt="Upload Photo" class="w-16 h-16 md:w-20 mt-4 md:h-20 rounded-full mb-2" src="assets/newui/demoprofile.png"/>
+              <a class="text-blue-500 mt-3 text-sm" href="#">
+                Upload Photo
+              </a>
+            </div>
+            <form class="mt-4 md:mt-6 grid lg:ml-32 lg:mr-32 grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <div>
+                  <label class="block text-gray-700 text-sm">
+                    Email
+                  </label>
+                  <input 
+                    class="w-full px-3 fields py-3 md:px-4 md:py-2 mt-1 md:mt-2 border rounded-lg text-sm" 
+                    placeholder="Enter New Email" 
+                    type="email"
+                    [(ngModel)]="email"
+                    name="email"/>
+                </div>
+              
+                <div>
+                  <label class="block text-gray-700 text-sm">
+                    Username
+                  </label>
+                  <input 
+                    class="w-full px-3 py-3 fields md:px-4 md:py-2 mt-1 md:mt-2 border rounded-lg text-sm" 
+                    placeholder="Enter New Username" 
+                    type="text"
+                    [(ngModel)]="userName"
+                    name="userName"/>
+                </div>
+              
+                <div>
+                  <label class="block text-gray-700 text-sm">
+                    PhoneNumber
+                  </label>
+                  <input 
+                    class="w-full px-3 py-3 fields md:px-4 md:py-2 mt-1 md:mt-2 border rounded-lg text-sm" 
+                    placeholder="Enter New Phone Number" 
+                    type="text"
+                    [(ngModel)]="phoneNumber"
+                    name="phoneNumber"
+                    (input)="onPhoneInput($event)"/>
+                </div>
+              
+                <div>
+                  <label class="block text-gray-700 text-sm">
+                    Clinic Name
+                  </label>
+                  <input 
+                    class="w-full px-3 py-3 fields md:px-4 md:py-2 mt-1 md:mt-2 border rounded-lg text-sm" 
+                    placeholder="Enter New Clinic Name" 
+                    type="text"
+                    [(ngModel)]="clinicName"
+                    name="clinicName"/>
+                </div>
+                
+                <div>
+                  <label class="block text-gray-700 text-sm">
+                    Clinic Address
+                  </label>
+                  <input 
+                    class="w-full px-3 py-3 fields md:px-4 md:py-2 mt-1 md:mt-2 border rounded-lg text-sm" 
+                    placeholder="Enter New Clinic Address" 
+                    type="text"
+                    [(ngModel)]="clinicAddress"
+                    name="clinicAddress"/>
+                </div>
+              </form>
+              
+              <div class="flex justify-center mt-12 md:mt-12">
+                <button 
+                  class="px-16 py-2 md:px-16 md:py-2 text-sm text-white bg-purple-600 rounded-full"
+                  (click)="saveChanges()">
+                  Update Profile
+                </button>
+              </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <app-notification-popup [isOpen]="showPopup" [message]="popupMessage" [type]="popupType" (onClose)="closePopup()"></app-notification-popup>
+  </div>

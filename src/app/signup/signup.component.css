@@ -15,7 +15,8 @@
 
   .fieldContainer {
     border: 0.3px solid lightgray;
-    border-radius: 25px;
+    background-color: #F1F4F9;
+    border-radius: 10px;
   }
 
   .title {
@@ -25,9 +26,9 @@
   }
   
   .btn-primary {
-    background-color: rgba(126, 33, 184, 1);
+    background-color: #CF6AFF;
     border: none;
-    border-radius: 50px;
+    border-radius: 10px;
   }
   
   
@@ -37,7 +38,7 @@
 
 
  .fieldIcons {
-  background-color: transparent;
+  background-color: #F1F4F9
  }
 
  .loginbgImg {
@@ -77,111 +78,9 @@
   background-color: #f8d7da;
 }
 
+.formcontainer {
+  border-radius: 10px;
+}
 
  
-@media (max-width: 991px) {
-  .rightSection {
-    padding: 1.5rem;
-  }
 
-  .login-form {
-    max-width: 350px;
-  }
-}
-
-/* Mobile styles (less than 768px) */
-@media (max-width: 767px) {
-  .mainContainer {
-    background-color: #f8f9fa;
-  }
-
-  .rightSection {
-    min-height: 100vh;
-    padding: 1rem;
-    background-color: #fff;
-  }
-
-  .login-form {
-    width: 100%;
-    max-width: 100%;
-    padding: 1rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-  }
-
-  .fieldContainer {
-    margin-bottom: 1rem !important;
-  }
-
-  .btn-primary {
-    padding: 0.75rem !important;
-  }
-
-  /* Adjust form elements spacing */
-  .mb-4 {
-    margin-bottom: 1rem !important;
-  }
-
-  .mt-4 {
-    margin-top: 1rem !important;
-  }
-
-  /* Make checkbox and label more touch-friendly */
-  .form-check-input {
-    width: 1.2em;
-    height: 1.2em;
-  }
-
-  .form-check-label {
-    padding-left: 0.5rem;
-    font-size: 0.9rem;
-  }
-}
-
-.form-select option {
-  font-size: 16px; /* Ensure emoji is visible */
-}
-
-/* Style for better dropdown appearance with flags */
-select.form-select {
-  font-size: 16px;
-  line-height: 1.2;
-  padding-right: 25px;
-}
-
-/* Tooltip for country name on hover */
-.form-select option[title]:hover::after {
-  content: attr(title);
-  position: absolute;
-  right: 100%;
-  top: 0;
-  background: #333;
-  color: white;
-  padding: 2px 5px;
-  border-radius: 3px;
-  white-space: nowrap;
-  z-index: 10;
-}
-
-/* Ensure proper input field appearance on mobile */
-@media (max-width: 767px) {
-  .form-control {
-    height: 45px;
-    font-size: 1rem;
-  }
-
-  .input-group-text {
-    padding: 0.5rem 0.75rem;
-  }
-
-  /* Improve touch targets */
-  .cursor-pointer {
-    min-width: 44px;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}

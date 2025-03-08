@@ -12,6 +12,7 @@ import { ClinicsdashboardComponent } from './clinicsdashboard/clinicsdashboard.c
 import { ForgetpasswordemailpageComponent } from './forgetpassword/forgetpasswordemailpage/forgetpasswordemailpage.component';
 import { ForgetpasswordotppageComponent } from './forgetpassword/forgetpasswordotppage/forgetpasswordotppage.component';
 import { ForgetpasswordnewpasswordComponent } from './forgetpassword/forgetpasswordnewpassword/forgetpasswordnewpassword.component';
+import { ManageaccountComponent } from './manageaccount/manageaccount.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // First page is login
@@ -27,6 +28,7 @@ export const routes: Routes = [
     { path: 'devicedescription', component: DevicedescriptionComponent},
     { path: 'forgetpasswordemail', component: ForgetpasswordemailpageComponent},
     { path: 'forgetpasswordotp', component: ForgetpasswordotppageComponent},
+    { path: 'manageaccount', component: ManageaccountComponent},
     { path: 'forgetpasswordnewpass', component: ForgetpasswordnewpasswordComponent},
 
 

@@ -188,6 +188,9 @@ export class ApiService {
         this.currentUserSubject.next(profile);
         localStorage.setItem('clinic', profile.clinicName);
         localStorage.setItem('clinicAddress', profile.clinicAddress);
+        localStorage.setItem('email', profile.email);
+        localStorage.setItem('phoneNumber', profile.phoneNumber);
+        localStorage.setItem('fullName', profile.fullName);
         console.log("Clinic ", profile.clinicName);
       }),
       map(() => true),
@@ -334,6 +337,61 @@ export class ApiService {
             }));
         })
     );
+}
+
+updateUserProfile(updateData: {
+  originalEmail: string;
+  newEmail: string;
+  userName: string;
+  clinicName: string;
+  clinicAddress: string;
+  phoneNumber: string;
+  password: string;
+}): Observable<any> {
+  const token = localStorage.getItem('access_token');
+  
+  if (!token) {
+    return throwError(() => ({
+      message: 'Authentication token not found'
+    }));
+  }
+  
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${token}`
+  });
+  
+  return this.http.post(`${this.apiUrl}/auth/update-profile`, updateData, { headers }).pipe(
+    tap(response => {
+      console.log('Profile update response:', response);
+      
+      // Update localStorage with new values
+      localStorage.setItem('clinic', updateData.clinicName);
+      localStorage.setItem('clinicAddress', updateData.clinicAddress);
+      localStorage.setItem('email', updateData.newEmail);
+      localStorage.setItem('phoneNumber', updateData.phoneNumber);
+      localStorage.setItem('fullName', updateData.userName);
+      
+      // Update the current user subject
+      const currentUser = this.currentUserSubject.getValue();
+      if (currentUser) {
+        const updatedUser = {
+          ...currentUser,
+          email: updateData.newEmail,
+          fullName: updateData.userName,
+          clinicName: updateData.clinicName,
+          clinicAddress: updateData.clinicAddress,
+          phoneNumber: updateData.phoneNumber
+        };
+        this.currentUserSubject.next(updatedUser);
+      }
+    }),
+    catchError(error => {
+      console.error('Profile update error:', error);
+      return throwError(() => ({
+        message: error.error?.message || 'Failed to update profile'
+      }));
+    })
+  );
 }
 
 verifyOtp(email: string, otp: string): Observable<any> {

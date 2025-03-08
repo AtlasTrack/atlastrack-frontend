@@ -1,11 +1,11 @@
-<div class="bg-gray-100 font-sans antialiased min-h-screen pb-12">
+<!-- <div class="bg-gray-100 font-sans antialiased min-h-screen pb-12">
   <div class="flex flex-col lg:flex-row">
       <div class="flex items-center justify-center mt-5 lg:ml-10">
           <img alt="Logo" class="h-24 w-48 lg:h-24 lg:w-60" src="assets/companyLogo.png" />
       </div>
-      <div class="flex flex-col lg:flex-row justify-between items-center mb-6 w-full lg:w-full px-4 lg:px-0">
+      <div class="flex flex-col lg:flex-row justify-between items-center mb-6 w-full lg:w-full px-4 lg:px-0"> -->
           <!-- Add menu toggle button for desktop -->
-          <div class="lg:ml-80"></div>
+          <!-- <div class="lg:ml-80"></div>
           <div class="flex items-center lg:ml-96 lg:mr-8 space-x-8 lg:space-x-10 sm:mt-4 lg:mt-0">
               <i class="fas fa-bell text-purple-700 relative">
                   <span class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
@@ -93,10 +93,10 @@
                   [class.border-2]="hasError('serialNumber')"
                   placeholder="Enter Serial Number" 
                   [(ngModel)]="initialSerialNumber"
-                />
+                /> -->
               <!-- <app-customcombobox [items$]="serialNumbers$" initialValue="{{initialSerialNumber}}" placeholder="Type or select a serial number" (selectionChange)="onSerialNumberSelected($event)"></app-customcombobox> -->
 
-              </div>
+              <!-- </div>
         
               <div>
                 <label class="fieldsHeading">Result</label>
@@ -124,10 +124,10 @@
                 [class.border-2]="hasError('biType')"
                 placeholder="Enter BI Type" 
                 [(ngModel)]="initialBIType"
-              />
+              /> -->
               <!-- <app-customcombobox [items$]="biTypes$" initialValue="{{initialBIType}}" placeholder="Select BI Type" (selectionChange)="onBITypeSelected($event)"></app-customcombobox> -->
 
-            </div>
+            <!-- </div>
         
               <div class="flex items-center lg:mt-5">
                 <label class="fieldsHeading mr-2">Control</label>
@@ -203,19 +203,277 @@
                 ></app-customcombobox>
               </div>
             </div>
-        
-            <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-10 mt-10 mb-10">
+         -->
+            <!-- <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-10 mt-10 mb-10">
               <button class="printbtn text-white px-20 py-2" (click)="generatePDF()">Print</button>
-              <button class="printbtn text-white px-20 py-2" (click)="onSave()">Save</button>
+              <button class="printbtn text-white px-20 py-2" (click)="onSave()">Save</button> -->
               <!-- <button class="closebtn text-white px-20 py-2" (click)="onCloseClick()">Home</button> -->
-            </div>
+            <!-- </div>
           </div>
         
           <app-notification-popup [isOpen]="showPopup" [message]="popupMessage" [type]="popupType" (onClose)="closePopup()"></app-notification-popup>
         </div>
       </div>
   </div>
+</div> -->
+
+
+
+<div class="maincontainer font-sans">
+  <!-- Transparent overlay layer - shown only when settings popup is open -->
+  <div *ngIf="showSettings" class="fixed inset-0 bg-opacity-30 z-10" (click)="closeSettings()"></div>
+  
+  <div class="flex flex-col md:flex-row h-screen">
+    <!-- Mobile Header with Menu Toggle -->
+    <div class="block md:hidden bg-white p-4 shadow-sm">
+      <div class="flex items-center justify-between">
+        <img alt="Atlas Track Logo" class="h-8" src="assets/newui/atlasnewlogo.png"/>
+        <button class="text-gray-600" (click)="toggleMenu()">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Sidebar - Hidden on mobile by default, shown when toggled -->
+    <div class="w-full md:w-64 bg-white p-4 sidebar-menu" [ngClass]="{'hidden': !menuOpen, 'block': menuOpen, 'md:block': true}">
+      <div class="flex items-center justify-center h-12 md:h-16 mb-6">
+        <img alt="Atlas Track Logo" class="max-w-full h-auto" src="assets/newui/atlasnewlogo.png" width="180"/>
+      </div>
+      <div class="mt-4 md:mt-10">
+        <a class="flex items-center py-2 px-4 md:px-8 hover:bg-purple-50 hover:rounded-lg text-gray-900 hover:text-purple-700 cursor-pointer" (click)="onHomeClick()">
+          <i class="fas fa-th-large mr-3"></i>
+          <span>Home</span>
+        </a>
+        <a class="flex items-center py-2 px-4 md:px-8 text-gray-600 mt-3 hover:bg-purple-50 hover:rounded-lg hover:text-purple-700 cursor-pointer" (click)="onReportClick()">
+          <i class="fas fa-file-alt mr-3"></i>
+          <span>Report</span>
+        </a>
+        <a class="flex items-center py-2 mt-3 px-4 md:px-8 text-gray-600 hover:bg-purple-50 hover:text-purple-700 hover:rounded-lg" (click)="onDeviceDetail()">
+          <i class="fas fa-database mr-3"></i>
+          <span>Device</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col">
+      <!-- Header -->
+      <header class="flex items-center justify-between h-16 md:h-24 px-4 md:px-6 bg-white shadow-sm md:shadow-none">
+        <div class="flex items-center">
+          <h1 class="text-gray-600 text-sm font-medium">
+            BI Type Log
+          </h1>
+        </div>
+        <div class="flex items-center">
+          <div class="relative">
+          </div>
+          <div class="flex items-center gap-2 md:gap-4">
+            <i class="fas fa-bell text-gray-400 mr-2 md:mr-4"></i>
+          
+            <div class="relative">
+              <div class="flex items-center gap-2 cursor-pointer z-20" (click)="toggleSettings($event)">
+                <img alt="User Avatar" class="rounded-full w-8 h-8 md:w-10 md:h-10" src="assets/newui/demoprofile.png" />
+                <span class="text-gray-600 hidden sm:inline">{{username}}</span>
+                <i class="fas fa-caret-down ml-auto"></i>
+              </div>
+              
+              <!-- Setting popup with relative positioning and higher z-index -->
+              <div *ngIf="showSettings" class="bg-white shadow-xl rounded-lg p-3 absolute right-0 top-full mt-2 z-20 w-48 md:w-64">
+                <div class="flex gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer" (click)="onManageAccount()">
+                  <img src="assets/newui/icons/manageAccountIcon.png" class="w-4 h-4" alt="">
+                  <p class="text-sm"> Manage Account </p>
+                </div>
+                <hr class="mt-2">
+                <div class="flex gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer" (click)="onForgetPassword()">
+                  <img src="assets/newui/icons/changePasswordIcon.png" class="w-4 h-4 mt-1" alt="">
+                  <p class="text-sm"> Change Password </p>
+                </div>
+                <hr class="mt-2">
+                <div class="flex gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer">
+                  <img src="assets/newui/icons/activityLogIcon.png" class="w-4 h-4 mt-1" alt="">
+                  <p class="text-sm"> Activity Log </p>
+                </div>
+                <hr class="mt-2">
+                <div class="flex gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer" (click)="onLogoutClick()">
+                  <img src="assets/newui/icons/logoutIcon.png" class="w-5 h-4 mt-1" alt="">
+                  <p class="text-sm"> Logout </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Section -->
+      <main class="flex-1 p-4 md:p-6 overflow-auto">
+        <p class="font-bold text-xl md:text-2xl mb-4 md:ml-4">BI Log</p>
+        <div class="bg-white min-h-screen p-4">
+          <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 w-full">
+            
+            <div class="flex flex-col md:flex-row mb-8">
+              <p class="text-lg font-bold mb-4 md:mb-0 md:w-1/3">Auto-reader Values</p>
+              
+              <div class="flex flex-col sm:flex-row gap-2 md:ml-auto">
+                <button class="printbtn text-white text-sm px-6 py-1 shadow-md cursor-pointer hover:shadow-xl" (click)="generatePDF()">
+                  Print
+                  <i class="fas fa-print text-white ml-2"></i>
+                </button>
+                <button class="visitmorebtn text-gray bg-gray-300 px-6 text-sm py-1 shadow-lg" href="https://penguinhealth.ca/">
+                  Visit More
+                </button>
+              </div>
+            </div>
+            
+            <div class="title mb-6">
+              <p>Results</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              <div>
+                <label class="fieldsHeading">Start Time</label>
+                <input class="w-full p-3 md:p-3 fields mt-2" type="datetime-local" [(ngModel)]="startDateTime" (change)="onStartDateTimeChange($event)" step="1"/>
+              </div>
+              
+              <div>
+                <label class="fieldsHeading">End Time</label>
+                <input class="w-full p-3 md:p-3 fields mt-2" type="datetime-local" [(ngModel)]="endDateTime" (change)="onEndDateTimeChange($event)" step="1"/>
+              </div>
+        
+              <div>
+                <label class="fieldsHeading">Well Number</label>
+                <app-customcombobox 
+                  [items$]="wellNumbers$" 
+                  placeholder="Type Or Select Well Number" 
+                  (selectionChange)="onWellNumberSelected($event)"
+                  [hasError]="hasError('wellNumber')"
+                ></app-customcombobox>
+              </div>
+        
+              <div>
+                <label class="fieldsHeading">Serial Number</label>
+                <input 
+                  type="text" 
+                  class="w-full p-3 md:p-3 fields mt-2" 
+                  [class.border-red-500]="hasError('serialNumber')"
+                  [class.border-2]="hasError('serialNumber')"
+                  placeholder="Enter Serial Number" 
+                  [(ngModel)]="initialSerialNumber"
+                /> 
+
+                <div *ngIf="hasError('serialNumber')" class="text-red-500 text-sm mt-1">
+                  {{ errorMessages['serialNumber'] }}  <span class="font-bold ml-2 cursor-pointer" (click)="onDeviceDetail()">Click here to set</span>
+                </div>
+              </div>
+        
+              <div>
+                <label class="fieldsHeading">Result</label>
+                <app-customcombobox 
+                  [items$]="results$" 
+                  placeholder="Type Or Select Result" 
+                  (selectionChange)="onResultSelected($event)"
+                  [hasError]="hasError('result')"
+                ></app-customcombobox>
+              </div>
+            </div>
+        
+            <h2 class="title mb-6">User Values</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div>
+                <label class="fieldsHeading">BI Type</label>
+                <input 
+                  type="text" 
+                  class="w-full p-3 md:p-3 fields mt-2" 
+                  [class.border-red-500]="hasError('biType')"
+                  [class.border-2]="hasError('biType')"
+                  placeholder="Enter BI Type" 
+                  [(ngModel)]="initialBIType"
+                />
+
+                <div *ngIf="hasError('biType')" class="text-red-500 text-sm mt-1">
+                  {{ errorMessages['biType'] }} <span class="font-bold ml-2 cursor-pointer" (click)="onDeviceDetail()">Click here to set</span>
+                </div>
+              </div>
+        
+              <div class="flex items-center mt-4 md:mt-8">
+                <label class="fieldsHeading mr-2">Control</label>
+                <input class="form-checkbox h-4 w-4 ml-4" type="checkbox" [(ngModel)]="formData.control"/>
+              </div>
+
+              <div>
+                <label class="fieldsHeading">BI Lot Number</label>
+                <app-customcombobox 
+                  [items$]="biLotNumbers$" 
+                  placeholder="Type Or Select BI Lot Number" 
+                  (selectionChange)="onBiLotNumberSelected($event)"
+                  [hasError]="hasError('biLotNumber')"
+                ></app-customcombobox>
+              </div>
+        
+              <div>
+                <label class="fieldsHeading">Sterilizer Model</label>
+                <app-customcombobox 
+                  [items$]="sterilizerModels$" 
+                  placeholder="Type Or Select Sterilizer Model" 
+                  (selectionChange)="onSterilizerModelSelected($event)"
+                  [hasError]="hasError('sterilizerModel')"
+                ></app-customcombobox>
+              </div>
+
+              <div>
+                <label class="fieldsHeading">Load Number</label>
+                <app-customcombobox 
+                  [items$]="loadNumbers$" 
+                  placeholder="Type Or Select Load Number" 
+                  (selectionChange)="onLoadNumberSelected($event)"
+                  [hasError]="hasError('loadNumber')"
+                ></app-customcombobox>
+              </div>
+        
+              <div class="flex items-center mt-4 md:mt-8">
+                <label class="fieldsHeading mr-2">Implant</label>
+                <input class="form-checkbox h-4 w-4 ml-4" type="checkbox" [(ngModel)]="formData.implant"/>
+              </div>
+        
+              <div>
+                <label class="fieldsHeading">Team Member</label>
+                <app-customcombobox 
+                  [items$]="technicians$" 
+                  placeholder="Type Or Select Team Member" 
+                  (selectionChange)="onTechnicianSelected($event)"
+                  [hasError]="hasError('technician')"
+                ></app-customcombobox>
+              </div>
+
+              <div>
+                <label class="fieldsHeading">Cycle Type / Cycle Parameters</label>
+                <app-customcombobox 
+                  [items$]="cycleCounts$" 
+                  placeholder="Type Or Select Cycle Type" 
+                  (selectionChange)="onCycleTypeSelected($event)"
+                  [hasError]="hasError('cycleType')"
+                ></app-customcombobox>
+              </div>
+                    
+              <div>
+                <label class="fieldsHeading">Chemical Integrator/Indicator</label>
+                <app-customcombobox 
+                  [items$]="chemicalIntegrators$" 
+                  placeholder="Type Or Select Chemical Integrator" 
+                  (selectionChange)="onChemicalIntegratorSelected($event)"
+                  [hasError]="hasError('chemicalIntegrator')"
+                ></app-customcombobox>
+              </div>
+            </div>
+        
+            <div class="flex flex-col sm:flex-row gap-4 mt-10 mb-6">
+              <button class="printbtn text-white px-8 py-2" (click)="onSave()">Save</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <app-notification-popup [isOpen]="showPopup" [message]="popupMessage" [type]="popupType" (onClose)="closePopup()"></app-notification-popup>
 </div>
-
-
-
