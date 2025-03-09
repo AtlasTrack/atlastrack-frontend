@@ -96,8 +96,8 @@ export class RendervalueformComponent {
 
  
   
-  initialSerialNumber: any ;
-  initialBIType: any ;
+  initialSerialNumber: any = localStorage.getItem('servicePackSerial');
+  initialBIType: any = localStorage.getItem('biType');
   username: any = localStorage.getItem('clinic');
   clinicAddress: any = localStorage.getItem('clinicAddress');
 
