@@ -15,9 +15,10 @@ export class DevicedescriptionComponent {
   incubatorSerialNumber: string = 'SN-111 222 333';
   biType: string = 'Atlas Rapid AX224';
   incubatorModel: string = 'Atlas Rapid Mini'; 
-
+  showSettings = false;
   showPopup = false;
   popupMessage = '';
+  username: any = localStorage.getItem('clinic');
   showSidebar: boolean = false;
   popupType: 'success' | 'error' = 'success';
   isMobile = window.innerWidth < 1024; // Initial check for screen size
@@ -68,8 +69,28 @@ export class DevicedescriptionComponent {
    localStorage.removeItem('clinic');
    localStorage.removeItem('clinicAddress');
    this.router.navigate(['/login']);
+   this.closeSettings();
   }
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }
+
+  onManageAccount() {
+    this.router.navigate(['/manageaccount']);
+    this.closeSettings();
+  }
+
+  toggleSettings(event: Event): void {
+    event.stopPropagation();
+    this.showSettings = !this.showSettings;
+  }
+
+  closeSettings(): void {
+    this.showSettings = false;
+  }
+
+  onForgetPassword() {
+    this.router.navigate(['forgetpasswordemail']);
+  }
+
 }

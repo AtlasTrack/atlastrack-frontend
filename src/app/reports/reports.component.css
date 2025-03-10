@@ -1,12 +1,15 @@
 .columnheading {
-  color: rgba(113, 142, 191, 1);
-  font-size: smaller;
+  background-color: #E6F1FD;
+  font-size: x-small;
+
 }
 .controldiv {
-  border: 0.3px solid rgba(145, 110, 201, 1);
   border-radius: 30px;
 }
 td {
-  font-size: 14px;
+  font-size: x-small;
 }
 
+.maincontainer {
+  background: rgba(248, 249, 250, 1);
+}

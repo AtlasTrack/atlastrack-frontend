@@ -1,18 +1,18 @@
-<div class="container-fluid d-flex align-items-center justify-content-center mainContainer">
-  <div class="row w-100">
+<!-- <div class="container-fluid d-flex align-items-center justify-content-center mainContainer">
+  <div class="row w-100"> -->
     <!-- Left Section -->
-    <div class="col-md-8 d-none d-md-flex align-items-center justify-content-center">
+    <!-- <div class="col-md-8 d-none d-md-flex align-items-center justify-content-center">
       <img src="assets/loginLeft.png" alt="" class="col-12 loginbgImg">
       <img src="assets/logo_icon.png" alt="" class="logoImg">
-    </div>
+    </div> -->
     <!-- Right Section -->
-    <div class="col-md-4 col-12 d-flex align-items-center justify-content-center rightSection">
+    <!-- <div class="col-md-4 col-12 d-flex align-items-center justify-content-center rightSection">
       <div class="login-form text-center w-90">
         <p class="title mb-4">CREATE AN ACCOUNT</p>
     
-        <form [formGroup]="signupForm" (ngSubmit)="onSignupClick()" class="pt-3">
+        <form [formGroup]="signupForm" (ngSubmit)="onSignupClick()" class="pt-3"> -->
           <!-- Email Field -->
-          <div class="mb-4 fieldContainer">
+          <!-- <div class="mb-4 fieldContainer">
             <div class="input-group" [class.invalid-border]="isFieldInvalid('email')">
               <span class="input-group-text fieldIcons border-0">
                 <i class="bi bi-envelope"></i>
@@ -23,10 +23,10 @@
                 placeholder="Email Address"
                 formControlName="email">
             </div>
-          </div>
+          </div> -->
 
           <!-- Full Name Field -->
-          <div class="mb-4 fieldContainer">
+          <!-- <div class="mb-4 fieldContainer">
             <div class="input-group" [class.invalid-border]="isFieldInvalid('fullName')">
               <span class="input-group-text fieldIcons border-0">
                 <i class="bi bi-person"></i>
@@ -37,10 +37,10 @@
                 placeholder="Full Name"
                 formControlName="fullName">
             </div>
-          </div>
+          </div> -->
 
         <!-- Phone Number Field with Country Flag Dropdown (Flag only) -->
-<div class="mb-4 fieldContainer">
+<!-- <div class="mb-4 fieldContainer">
   <div class="input-group" [class.invalid-border]="isFieldInvalid('phoneNumber')">
     <span class="input-group-text fieldIcons border-0 text-muted">
       <select 
@@ -59,17 +59,17 @@
       placeholder="Phone Number"
       formControlName="phoneNumber"
       (input)="onPhoneInput($event)">
-  </div>
+  </div> -->
   <!-- <div class="text-muted mt-1 small" *ngIf="selectedCountryCode">
     Selected: {{ getSelectedCountryName() }} ({{ selectedCountryCode }})
   </div> -->
-</div>
+<!-- </div>
           <div *ngIf="isFieldInvalid('phoneNumber')" class="mb-4 invalid-feedback d-block">
             Please enter a valid phone number (10-15 digits)
-          </div>
+          </div> -->
 
           <!-- Password Field -->
-          <div class="mb-4 fieldContainer">
+          <!-- <div class="mb-4 fieldContainer">
             <div class="input-group" [class.invalid-border]="isFieldInvalid('password')">
               <span class="input-group-text fieldIcons border-0">
                 <i class="bi bi-lock"></i>
@@ -87,9 +87,9 @@
 
           <div *ngIf="isFieldInvalid('password')" class="mb-4 text-xs invalid-feedback d-block">
             {{ getErrorMessage('password') }}
-          </div>
+          </div> -->
           <!-- Confirm Password Field -->
-          <div class="mb-4 fieldContainer">
+          <!-- <div class="mb-4 fieldContainer">
             <div class="input-group" [class.invalid-border]="isFieldInvalid('confirmPassword')">
               <span class="input-group-text fieldIcons border-0">
                 <i class="bi bi-lock"></i>
@@ -103,10 +103,10 @@
                 <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
               </span>
             </div>
-          </div>
+          </div> -->
 
           <!-- Clinic Name Field -->
-          <div class="mb-4 fieldContainer">
+          <!-- <div class="mb-4 fieldContainer">
             <div class="input-group" [class.invalid-border]="isFieldInvalid('clinicName')">
               <input 
                 type="text" 
@@ -114,10 +114,10 @@
                 placeholder="Clinic Name"
                 formControlName="clinicName">
             </div>
-          </div>
+          </div> -->
 
           <!-- Clinic Address Field -->
-          <div class="mb-4 fieldContainer">
+          <!-- <div class="mb-4 fieldContainer">
             <div class="input-group" [class.invalid-border]="isFieldInvalid('clinicAddress')">
               <input 
                 type="text" 
@@ -134,6 +134,124 @@
       
       </div>
     </div>
+  </div>
+</div> -->
+
+
+<div class="maindiv flex items-center justify-center min-h-screen bg-cover bg-center pt-4 pb-4 sm:pt-10 sm:pb-10 px-4" style="background-image: url('assets/newui/background.png');">
+  <div class="bg-white formcontainer shadow-lg p-4 sm:p-8 md:p-12 w-full max-w-md">
+      <h2 class="text-2xl sm:text-3xl font-semibold text-center mb-2">Create Account</h2>
+      <p class="text-center text-gray-600 text-xs sm:text-sm mb-4">Create an account to continue</p>
+      <form [formGroup]="signupForm" (ngSubmit)="onSignupClick()" class="pt-3"> 
+        <!-- Email Field -->
+        <div class="mb-2">
+          <div>
+            <input 
+              type="email" 
+              class="w-full px-3 sm:px-4 py-2 border fieldContainer text-gray-500" 
+              placeholder="Email Address"
+              formControlName="email"
+              [class.invalid-border]="isFieldInvalid('email')">
+          </div>
+        </div>
+
+        <!-- Full Name Field -->
+        <div class="mb-2">
+          <div>
+            <input 
+              type="text" 
+              class="w-full px-3 sm:px-4 py-2 border fieldContainer rounded-lg bg-gray-100 text-gray-500" 
+              placeholder="Full Name"
+              formControlName="fullName"
+              [class.invalid-border]="isFieldInvalid('fullName')">
+          </div>
+        </div>
+
+        <!-- Phone Number Field with Country Flag Dropdown (Flag only) -->
+        <div class="mb-2">
+          <div class="input-group fieldContainer flex" [class.invalid-border]="isFieldInvalid('phoneNumber')">
+            <span class="input-group-text fieldIcons border-0 text-muted">
+              <select 
+                formControlName="countryCode"
+                (change)="onCountryCodeChange($event)"
+                class="form-select border-0 bg-gray-100"
+                style="min-width: 50px;">
+                <option *ngFor="let country of countrycode" [value]="country.code" title="{{ country.country }} ({{ country.code }})">
+                  {{ country.flag }}
+                </option>
+              </select>
+            </span>
+            <input 
+              type="tel" 
+              class="flex-1 px-2 sm:px-4 py-2 border-0 fieldContainer rounded-lg bg-gray-100 text-gray-500" 
+              placeholder="Phone Number"
+              formControlName="phoneNumber"
+              (input)="onPhoneInput($event)">
+          </div>
+        </div>
+        
+        <div *ngIf="isFieldInvalid('phoneNumber')" class="mb-2 invalid-feedback d-block text-xs">
+          Please enter a valid phone number (10-15 digits)
+        </div>
+
+        <!-- Password Field -->
+        <div class="mb-2 fieldContainer" [class.invalid-border]="isFieldInvalid('confirmPassword')">
+          <div class="input-group flex items-center">
+            <input 
+              [type]="showPassword ? 'text' : 'password'"
+              class="flex-1 px-3 sm:px-4 py-2 border-0 fieldContainer rounded-lg bg-gray-100 text-gray-500" 
+              placeholder="Password"
+              formControlName="password">
+            <span class="px-2 pt-2 fieldIcons border-0 cursor-pointer" (click)="togglePasswordVisibility('password')">
+              <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </span>
+          </div>
+        </div>
+
+        <div *ngIf="isFieldInvalid('password')" class="mb-2 text-xs invalid-feedback d-block">
+          {{ getErrorMessage('password') }}
+        </div>
+        
+        <!-- Confirm Password Field -->
+        <div class="mb-2 fieldContainer" [class.invalid-border]="isFieldInvalid('confirmPassword')">
+          <div class="input-group flex items-center">
+            <input 
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              class="flex-1 px-3 sm:px-4 py-2 border-0 fieldContainer rounded-lg bg-gray-100 text-gray-500" 
+              placeholder="Confirm Password"
+              formControlName="confirmPassword">
+            <span class="px-2 pt-2 fieldIcons border-0 cursor-pointer" (click)="togglePasswordVisibility('confirmPassword')">
+              <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- Clinic Name Field -->
+        <div class="mb-2 fieldContainer">
+          <div class="input-group" [class.invalid-border]="isFieldInvalid('clinicName')">
+            <input 
+              type="text" 
+              class="w-full px-3 sm:px-4 py-2 border fieldContainer rounded-lg bg-gray-100 text-gray-500" 
+              placeholder="Clinic Name"
+              formControlName="clinicName">
+          </div>
+        </div>
+
+        <!-- Clinic Address Field -->
+        <div class="mb-4 fieldContainer">
+          <div class="input-group" [class.invalid-border]="isFieldInvalid('clinicAddress')">
+            <input 
+              type="text" 
+              class="w-full px-3 sm:px-4 py-2 border fieldContainer rounded-lg bg-gray-100 text-gray-500" 
+              placeholder="Clinic Address"
+              formControlName="clinicAddress">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full py-2 rounded-lg">
+          Sign Up
+        </button>
+      </form>
   </div>
   <app-notification-popup [isOpen]="showPopup" [message]="popupMessage" [type]="popupType" (onClose)="closePopup()"></app-notification-popup>
 </div>

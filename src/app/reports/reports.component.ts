@@ -16,6 +16,7 @@ import { AutoReadRecord } from '../apiinterfaces';
 })
 export class ReportsComponent implements OnInit {
   records: AutoReadRecord[] = [];
+  showSettings = false;
   filteredRecords: AutoReadRecord[] = [];
   currentPage = 0;
   totalPages = 0;
@@ -31,6 +32,7 @@ export class ReportsComponent implements OnInit {
   selectedClinic!: string;
   isMobile = window.innerWidth < 1024; // Initial check for screen size
   menuOpen = true;
+  username: any = localStorage.getItem('clinic');
   constructor(private router: Router, private apiService: ApiService) { }
 
 
@@ -157,6 +159,7 @@ export class ReportsComponent implements OnInit {
    localStorage.removeItem('clinic');
    localStorage.removeItem('clinicAddress');
    this.router.navigate(['/login']);
+   this.closeSettings();
   }
 
   onHomeClick() {
@@ -241,4 +244,21 @@ export class ReportsComponent implements OnInit {
     this.menuOpen = !this.menuOpen;
   }
 
+  onManageAccount() {
+    this.router.navigate(['/manageaccount']);
+    this.closeSettings();
+  }
+
+  toggleSettings(event: Event): void {
+    event.stopPropagation();
+    this.showSettings = !this.showSettings;
+  }
+
+  closeSettings(): void {
+    this.showSettings = false;
+  }
+
+  onForgetPassword() {
+    this.router.navigate(['forgetpasswordemail']);
+  }
 }

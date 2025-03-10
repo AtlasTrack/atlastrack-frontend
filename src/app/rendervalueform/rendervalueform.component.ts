@@ -36,7 +36,12 @@ interface FormData {
 })
 export class RendervalueformComponent {
   menuOpen = false;
+  showSettings = false;
+  window = window; 
   private apiService=inject(ApiService);
+
+  errorMessages: { [key: string]: string } = {};
+  fieldsChecked = true; 
 
   serialNumbers$ = new BehaviorSubject<string[]>([]);
   results$ = new BehaviorSubject<string[]>([]);
@@ -106,14 +111,44 @@ export class RendervalueformComponent {
     const now = new Date();
     this.startDateTime = this.formatDateTimeForInput(now);
     this.endDateTime = this.formatDateTimeForInput(now);
+   
     this.formData.serialNumber = this.initialSerialNumber;
     this.formData.biType = this.initialBIType;
     this.updateFormTimes();
     this.fetchDropdownData();
+    if (!this.validateFields()) {
+      // Map validation errors to form errors for display
+      if (this.errorMessages['serialNumber']) {
+        this.formErrors['serialNumber'] = true;
+      }
+      if (this.errorMessages['biType']) {
+        this.formErrors['biType'] = true;
+      }
+    }
     console.log("Serial ", this.initialSerialNumber);
     console.log('Bi type', this.initialBIType);
   }
 
+
+  validateFields(): boolean {
+    this.errorMessages = {};
+    this.formErrors = {}; // Reset form errors too
+    let isValid = true;
+    
+    if (!this.initialSerialNumber) {
+      this.errorMessages['serialNumber'] = 'Serial Number is Empty';
+      this.formErrors['serialNumber'] = true; // Set form error directly
+      isValid = false;
+    }
+    
+    if (!this.initialBIType) {
+      this.errorMessages['biType'] = 'BI Type is empty';
+      this.formErrors['biType'] = true; // Set form error directly
+      isValid = false;
+    }
+    
+    return isValid;
+  }
 
   private fetchDropdownData(): void {
     if(!this.username) {
@@ -429,7 +464,7 @@ export class RendervalueformComponent {
   }
 
   // Add this method to check if a field has an error
-hasError(fieldName: string): boolean {
+  hasError(fieldName: string): boolean {
   return this.formErrors[fieldName] === true;
 }
 
@@ -513,5 +548,23 @@ hasError(fieldName: string): boolean {
    localStorage.removeItem('clinic');
    localStorage.removeItem('clinicAddress');
    this.router.navigate(['/login']);
+  }
+ 
+  onManageAccount() {
+    this.router.navigate(['/manageaccount']);
+    this.closeSettings();
+  }
+
+  toggleSettings(event: Event): void {
+    event.stopPropagation();
+    this.showSettings = !this.showSettings;
+  }
+
+  closeSettings(): void {
+    this.showSettings = false;
+  }
+
+  onForgetPassword() {
+    this.router.navigate(['forgetpasswordemail']);
   }
 }
