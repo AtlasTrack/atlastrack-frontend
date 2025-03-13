@@ -481,8 +481,8 @@ verifyOtp(email: string, otp: string): Observable<any> {
     return this.http.get<any[]>(`${this.ultrasonicBaseUrl}/clinic/${clinicName}/technicians`);
   }
 
-  getEfficacyTests(clinicName: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.ultrasonicBaseUrl}/clinic/${clinicName}/efficacy-tests`);
+  getEfficacyTests(clinicName: string, testTypeName:string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.ultrasonicBaseUrl}/clinic/${clinicName}/${testTypeName}/efficacy-tests`);
   }
 
 

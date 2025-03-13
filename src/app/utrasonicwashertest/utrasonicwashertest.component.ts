@@ -87,7 +87,7 @@ export class UtrasonicwashertestComponent implements OnInit {
 
   loadEfficacyTests(): void {
     if (this.clinicName) {
-      this.apiService.getEfficacyTests(this.clinicName).subscribe({
+      this.apiService.getEfficacyTests(this.clinicName, this.formData.logType).subscribe({
         next: (testNames: string[]) => {
           // Get default efficacy tests based on log type
           const defaultTests = this.getDefaultEfficacyTests(this.formData.logType);
