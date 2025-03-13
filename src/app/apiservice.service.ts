@@ -14,7 +14,9 @@ import {
   LoginResponse,
   UserProfile,
   LoginRequestDTO,
-  ResetPasswordDTO
+  ResetPasswordDTO,
+  UltraSonicRequestDTO,
+  WaterTestingRequestDTO
 } from './apiinterfaces';
 
 @Injectable({
@@ -23,8 +25,8 @@ import {
 export class ApiService {
   private baseUrl = environment.baseUrl;
   private apiUrl = environment.apiUrl;
-
-
+private ultrasonicBaseUrl = environment.ultrasonicBaseUrl;
+private waterTestingBaseUrl = environment.waterTestingBaseUrl;
   private currentUserSubject = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) {
@@ -87,6 +89,26 @@ export class ApiService {
     return this.http.get<any>(`${this.baseUrl}/dashboard/records-by-clinic`, {
       params: { 
         clinicName, 
+        page: page.toString(), 
+        size: size.toString() 
+      }
+    });
+  }
+
+
+
+  getUltraSonicRecordsByClinic(
+    clinicName: string, 
+    page: number = 0, 
+    size: number = 10
+  ): Observable<{
+    content: any[],
+    totalPages: number,
+    totalElements: number,
+    number: number
+  }> {
+    return this.http.get<any>(`${this.ultrasonicBaseUrl}/clinic/${clinicName}`, {
+      params: { 
         page: page.toString(), 
         size: size.toString() 
       }
@@ -312,6 +334,17 @@ export class ApiService {
     });
   }
 
+  getUltrasonicFilteredClinicRecords(clinicName: string, startDate: string, endDate: string, page: number) {
+    return this.http.get<any>(`${this.ultrasonicBaseUrl}/clinic/filtered`, {
+      params: {
+        clinicName,
+        start: startDate,
+        end: endDate,
+        page: page.toString()
+      }
+    });
+  }
+
   exportClinicExcel(clinicName: string, startDate: string, endDate: string) {
     return this.http.get(`${this.baseUrl}/export/clinic/excel`, {
       params: { clinicName, start: startDate, end: endDate },
@@ -319,8 +352,24 @@ export class ApiService {
     });
   }
 
+
+  exportUltraSonicClinicExcel(clinicName: string, startDate: string, endDate: string) {
+    return this.http.get(`${this.ultrasonicBaseUrl}/export/clinic/excel`, {
+      params: { clinicName, start: startDate, end: endDate },
+      responseType: 'blob'
+    });
+  }
+
   exportClinicPDF(clinicName: string, startDate: string, endDate: string) {
     return this.http.get(`${this.baseUrl}/export/clinic/pdf`, {
+      params: { clinicName, start: startDate, end: endDate },
+      responseType: 'blob'
+    });
+  }
+
+
+  exportUltraSonicClinicPDF(clinicName: string, startDate: string, endDate: string) {
+    return this.http.get(`${this.ultrasonicBaseUrl}/export/clinic/pdf`, {
       params: { clinicName, start: startDate, end: endDate },
       responseType: 'blob'
     });
@@ -421,6 +470,96 @@ verifyOtp(email: string, otp: string): Observable<any> {
       })
     );
   }
+
+
+   // New methods for the ultrasonic/washer functionality
+   createUltrasonicRecord(data: UltraSonicRequestDTO): Observable<any> {
+    return this.http.post(`${this.ultrasonicBaseUrl}/createRecord`, data);
+  }
+
+  getTechnicians(clinicName: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.ultrasonicBaseUrl}/clinic/${clinicName}/technicians`);
+  }
+
+  getEfficacyTests(clinicName: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.ultrasonicBaseUrl}/clinic/${clinicName}/efficacy-tests`);
+  }
+
+
+
+
+// Water Testing APIs
+
+
+
+   createWaterTestingRecord(data: WaterTestingRequestDTO): Observable<any> {
+    return this.http.post(`${this.waterTestingBaseUrl}/createRecord`, data);
+  }
+
+  getWaterTestingFilteredClinicRecords(clinicName: string, startDate: string, endDate: string, page: number) {
+    return this.http.get<any>(`${this.waterTestingBaseUrl}/clinic/filtered`, {
+      params: {
+        clinicName,
+        start: startDate,
+        end: endDate,
+        page: page.toString()
+      }
+    });
+  }
+
+ 
+  getWaterTestingRecordsByClinic(
+    clinicName: string, 
+    page: number = 0, 
+    size: number = 10
+  ): Observable<{
+    content: any[],
+    totalPages: number,
+    totalElements: number,
+    number: number
+  }> {
+    return this.http.get<any>(`${this.waterTestingBaseUrl}/clinic/${clinicName}`, {
+      params: { 
+        page: page.toString(), 
+        size: size.toString() 
+      }
+    });
+  }
+
+ 
+
+
+  getDevicesByClinic(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.waterTestingBaseUrl}/clinic/${clinicName}/devices`);
+  }
+
+
+
+  getLocationsByClinic(clinicName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.waterTestingBaseUrl}/clinic/${clinicName}/locations`);
+  }
+
+
+  getWaterTestingTechniciansByClinic(clinicName: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.waterTestingBaseUrl}/clinic/${clinicName}/technicians`);
+  }
+
+
+
+  exportWaterTestingClinicExcel(clinicName: string, startDate: string, endDate: string) {
+    return this.http.get(`${this.waterTestingBaseUrl}/export/clinic/excel`, {
+      params: { clinicName, start: startDate, end: endDate },
+      responseType: 'blob'
+    });
+  }
+
+  exportWaterTestingClinicPDF(clinicName: string, startDate: string, endDate: string) {
+    return this.http.get(`${this.waterTestingBaseUrl}/export/clinic/pdf`, {
+      params: { clinicName, start: startDate, end: endDate },
+      responseType: 'blob'
+    });
+  }
+  
 }
 
 

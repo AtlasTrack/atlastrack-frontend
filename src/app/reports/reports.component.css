@@ -1,14 +1,12 @@
 .columnheading {
   background-color: #E6F1FD;
-  font-size: x-small;
+
 
 }
 .controldiv {
   border-radius: 30px;
 }
-td {
-  font-size: x-small;
-}
+
 
 .maincontainer {
   background: rgba(248, 249, 250, 1);

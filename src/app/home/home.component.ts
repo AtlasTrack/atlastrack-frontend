@@ -18,6 +18,29 @@ export class HomeComponent {
   menuOpen = false;
   constructor(private router: Router) {}
 
+
+  reportsDropdownOpen = false;
+
+// Add this method to your component class
+toggleReportsDropdown() {
+  this.reportsDropdownOpen = !this.reportsDropdownOpen;
+}
+
+// Add these methods for the report options
+onBILOGReport() {
+
+  this.router.navigate(['/report']);
+}
+
+onUltrasonicReport() {
+ 
+  this.router.navigate(['/ultrasonicwashertestreport']);
+}
+
+onWaterTestReport() {
+ 
+  this.router.navigate(['/watertestingreport']);
+}
   toggleSettings(event: Event): void {
     event.stopPropagation();
     this.showSettings = !this.showSettings;
@@ -32,9 +55,7 @@ export class HomeComponent {
   onHomeClick() {
     this.router.navigate(['/home']);
   }
-  onReportClick() {
-    this.router.navigate(['/report']);
-  }
+
   onDeviceDetail() {
     this.router.navigate(['/devicedescription']);
   }
@@ -64,7 +85,15 @@ export class HomeComponent {
   }
 
   onForgetPassword() {
-    this.router.navigate(['forgetpasswordemail']);
+    this.router.navigate(['/forgetpasswordemail']);
+  }
+
+  onWaterTesting() {
+    this.router.navigate(['/watertestinglog']);
+  }
+
+  onUltraSonicTest() {
+    this.router.navigate(['/ultrasonicwashertest']);
   }
 
 }

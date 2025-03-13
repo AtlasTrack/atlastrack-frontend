@@ -41,6 +41,30 @@ export class ManageaccountComponent implements OnInit {
   
   constructor(private router: Router, private http: HttpClient, private apiService: ApiService) {}
   
+
+  reportsDropdownOpen = false;
+
+  // Add this method to your component class
+  toggleReportsDropdown() {
+    this.reportsDropdownOpen = !this.reportsDropdownOpen;
+  }
+  
+  // Add these methods for the report options
+  onBILOGReport() {
+  
+    this.router.navigate(['/report']);
+  }
+  
+  onUltrasonicReport() {
+   
+    this.router.navigate(['/ultrasonicwashertestreport']);
+  }
+  
+  onWaterTestReport() {
+   
+    this.router.navigate(['/watertestingreport']);
+  }
+  
   ngOnInit() {
     // Load values from localStorage
     this.clinicName = localStorage.getItem('clinic') || '';

@@ -88,3 +88,39 @@ export interface ResetPasswordDTO {
   email: string;
   newPassword: string;
 }
+
+export interface UltrasonicFormData {
+  logType: string;
+  date: string;
+  solutionsChanged: string;
+  testResult: string;
+  teamMember: string;
+  efficacyTestType: string;
+  otherEfficacyTestType: string;
+}
+
+
+export interface UltraSonicRequestDTO {
+  date: Date;
+  testType: string;
+  solutionChanged: boolean;
+  result: string;
+  clinicName: string;
+  clinicAddress: string;
+  technicianName: string;
+  efficacyTestName: string | undefined;
+}
+
+export interface WaterTestingRequestDTO {
+  date: Date; // LocalDateTime
+  resultDate: Date; // LocalDate
+  result: string;
+  safetyLevel: string;
+  correctiveAction: string | null;
+  clinicName: string;
+  clinicAddress: string;
+  technicianName: string;
+  deviceName: string;
+  locationName: string;
+}
+
