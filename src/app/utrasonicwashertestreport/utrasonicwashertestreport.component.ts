@@ -1,23 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ApiService} from '../apiservice.service';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AutoReadRecord, UltraSonicRequestDTO } from '../apiinterfaces';
+import { ApiService } from '../apiservice.service';
 import { saveAs } from 'file-saver';
 import { NotificationPopupComponent } from '../notification-popup/notification-popup.component';
-import { AutoReadRecord } from '../apiinterfaces';
 
 @Component({
-  selector: 'app-reports',
+  selector: 'app-utrasonicwashertestreport',
   standalone: true,
-  imports: [FormsModule, CommonModule, NotificationPopupComponent],
-  templateUrl: './reports.component.html',
-  styleUrl: './reports.component.css'
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NotificationPopupComponent],
+  templateUrl: './utrasonicwashertestreport.component.html',
+  styleUrl: './utrasonicwashertestreport.component.css'
 })
-export class ReportsComponent implements OnInit {
-  records: AutoReadRecord[] = [];
+export class UtrasonicwashertestreportComponent {
+records: UltraSonicRequestDTO[] = [];
   showSettings = false;
-  filteredRecords: AutoReadRecord[] = [];
+  filteredRecords: UltraSonicRequestDTO[] = [];
   currentPage = 0;
   totalPages = 0;
   startTime!: string;
@@ -34,6 +34,7 @@ export class ReportsComponent implements OnInit {
   menuOpen = true;
   username: any = localStorage.getItem('clinic');
   constructor(private router: Router, private apiService: ApiService) { }
+
   reportsDropdownOpen = false;
 
 // Add this method to your component class
@@ -93,7 +94,7 @@ onWaterTestReport() {
   }
 
   fetchClinicRecords() {
-    this.apiService.getRecordsByClinic(
+    this.apiService.getUltraSonicRecordsByClinic(
       this.selectedClinic, 
       this.currentPage
     ).subscribe({
@@ -123,7 +124,7 @@ onWaterTestReport() {
   
   
     // Use clinic-specific filter if a clinic is selected
-    this.apiService.getFilteredClinicRecords(this.selectedClinic, startDate, endDate, this.currentPage)
+    this.apiService.getUltrasonicFilteredClinicRecords(this.selectedClinic, startDate, endDate, this.currentPage)
       .subscribe({
         next: (response) => {
           this.records = response.content;
@@ -149,7 +150,7 @@ onWaterTestReport() {
     return;
   }
 
-    this.apiService.exportClinicExcel(this.selectedClinic, startDate, endDate).subscribe(blob => {
+    this.apiService.exportUltraSonicClinicExcel(this.selectedClinic, startDate, endDate).subscribe(blob => {
       saveAs(blob, `${this.selectedClinic}-report-${this.startTime}-to-${this.endTime}.xlsx`);
     });
   }
@@ -168,7 +169,7 @@ onWaterTestReport() {
     return;
   }
 
-    this.apiService.exportClinicPDF(this.selectedClinic, startDate, endDate).subscribe(blob => {
+    this.apiService.exportUltraSonicClinicPDF(this.selectedClinic, startDate, endDate).subscribe(blob => {
       saveAs(blob, `${this.selectedClinic}-report-${this.startTime}-to-${this.endTime}.pdf`);
     });
   
@@ -213,41 +214,7 @@ onWaterTestReport() {
   }
 
 
-  applySearchAndFilter() {
-    // If no search text, show all records
-    if (!this.searchText || this.searchText.trim() === '') {
-      this.filteredRecords = [];
-      return;
-    }
   
-    // Convert search text to lowercase for case-insensitive search
-    const searchLower = this.searchText.toLowerCase().trim();
-  
-    // Filter records across all columns
-    this.filteredRecords = this.records.filter(record => {
-      // Search in all string properties of the record
-      return (
-        // Basic info
-        (record.wellNumber?.toString() || '').toLowerCase().includes(searchLower) ||
-        (record.serialNumber || '').toLowerCase().includes(searchLower) ||
-        (record.result || '').toLowerCase().includes(searchLower) ||
-        (record.biType || '').toLowerCase().includes(searchLower) ||
-        (record.biLotNumber || '').toLowerCase().includes(searchLower) ||
-        (record.sterilizerModels || '').toLowerCase().includes(searchLower) ||
-        (record.loadNumber?.toString() || '').toLowerCase().includes(searchLower) ||
-        (record.cycleCount?.toString() || '').toLowerCase().includes(searchLower) ||
-        (record.chemicalIntegrators || '').toLowerCase().includes(searchLower) ||
-        
-        // Additional fields if they exist in your data model
-        (record.clinicName || '').toLowerCase().includes(searchLower) ||
-        (record.clinicAddress || '').toLowerCase().includes(searchLower) ||
-        
-        // Date fields - convert to string format for searching
-        (record.startTime ? new Date(record.startTime).toLocaleString() : '').toLowerCase().includes(searchLower) ||
-        (record.endTime ? new Date(record.endTime).toLocaleString() : '').toLowerCase().includes(searchLower)
-      );
-    });
-  }
 
   // Toggle filter options dropdown
   toggleFilterOptions() {
@@ -258,7 +225,7 @@ onWaterTestReport() {
   setFilterCriteria(criteria: string) {
     this.filterCriteria = criteria;
     this.showFilterOptions = false;
-    this.applySearchAndFilter();
+    
   }
 
   toggleMenu() {

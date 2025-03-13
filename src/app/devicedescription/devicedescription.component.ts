@@ -25,7 +25,28 @@ export class DevicedescriptionComponent {
   menuOpen = false;
 
   constructor(private router: Router){}
+  reportsDropdownOpen = false;
 
+// Add this method to your component class
+toggleReportsDropdown() {
+  this.reportsDropdownOpen = !this.reportsDropdownOpen;
+}
+
+// Add these methods for the report options
+onBILOGReport() {
+
+  this.router.navigate(['/report']);
+}
+
+onUltrasonicReport() {
+ 
+  this.router.navigate(['/ultrasonicwashertestreport']);
+}
+
+onWaterTestReport() {
+ 
+  this.router.navigate(['/watertestingreport']);
+}
    onServicePackClick() {
     // Store values in localStorage
     localStorage.setItem('servicePackSerial', this.incubatorSerialNumber);

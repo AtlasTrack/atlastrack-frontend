@@ -107,6 +107,29 @@ export class RendervalueformComponent {
     this.endDateTime = this.formatDateTimeForInput(now);
   }
 
+  reportsDropdownOpen = false;
+
+  // Add this method to your component class
+  toggleReportsDropdown() {
+    this.reportsDropdownOpen = !this.reportsDropdownOpen;
+  }
+  
+  // Add these methods for the report options
+  onBILOGReport() {
+  
+    this.router.navigate(['/report']);
+  }
+  
+  onUltrasonicReport() {
+   
+    this.router.navigate(['/ultrasonicwashertestreport']);
+  }
+  
+  onWaterTestReport() {
+   
+    this.router.navigate(['/watertestingreport']);
+  }
+
   ngOnInit() {
     const now = new Date();
     this.startDateTime = this.formatDateTimeForInput(now);

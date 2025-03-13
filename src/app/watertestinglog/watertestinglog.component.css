@@ -1,0 +1,125 @@
+.printbtn {
+    background-color: #BA29FF;
+    border-radius: 15px;
+}
+
+.visitmorebtn {
+    
+    border-radius: 15px;
+}
+
+.closebtn {
+    background-color: rgba(67, 67, 67, 1);
+    border-radius: 35px;
+}
+
+.fieldsHeading {
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(51, 51, 51, 0.8);
+}
+
+.fields {
+    background-color: #F5F6FA;
+    border-radius: 6px;
+    /* border: 0.3px solid rgba(171, 171, 171, 0.2); */
+    font-family: 'Poppins';
+    font-size: 12px;
+    font-weight: 400;
+    padding-left: 20px;
+    color: gray;
+}
+
+hr {
+    background-color: rgba(144, 5, 230, 1);
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(51, 51, 51, 1);
+}
+
+/* Style for datetime inputs to match your design */
+input[type="datetime-local"] {
+    background-color: #F5F6FA;
+    border-radius: 6px;
+    /* border: 0.3px solid rgba(171, 171, 171, 0.2); */
+    font-family: 'Poppins';
+    font-size: 12px;
+    font-weight: 400;
+    padding-left: 20px;
+    color: gray;
+    width: 100%;
+}
+
+input[type="datetime-local"]:focus {
+    outline: none;
+    border: 0.3px solid rgba(144, 5, 230, 0.5);
+}
+
+/* Checkbox styles to match your theme */
+.form-checkbox {
+    border-radius: 4px;
+    border: 0.3px solid rgba(171, 171, 171, 0.5);
+    cursor: pointer;
+}
+
+.form-checkbox:checked {
+    background-color: rgba(126, 33, 184, 1);
+    border-color: rgba(126, 33, 184, 1);
+}
+
+/* Button hover effects */
+/* .printbtn:hover {
+    background-color: rgba(126, 33, 184, 0.9);
+} */
+
+.savebtn {
+    
+        background-color: #BA29FF;
+        border-radius: 35px;
+    
+}
+
+.closebtn:hover {
+    background-color: rgba(67, 67, 67, 0.9);
+}
+
+.menustyle {
+    background-color: rgb(230, 230, 230);
+}
+
+.menustyleinner {
+    background-color: rgba(145, 110, 201, 1);
+}
+
+
+.safety-radio {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .safety-radio:checked {
+    border-color: transparent;
+  }
+  
+  /* Colors for each safety level */
+  #safetyRadio1:checked {
+
+    background-color: #3EA748;
+  }
+  
+  #safetyRadio2:checked {
+    background-color: #FFAC2F;
+  }
+  
+  #safetyRadio3:checked {
+    background-color: red;
+  }

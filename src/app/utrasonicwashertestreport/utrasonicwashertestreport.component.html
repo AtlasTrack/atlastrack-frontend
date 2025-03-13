@@ -1,7 +1,8 @@
-<div class="maincontainer font-sans">
+
+<div class="maincontainer font-sans gap-8">
     <!-- Transparent overlay layer - shown only when settings popup is open -->
     <div *ngIf="showSettings" class="fixed inset-0 bg-opacity-30 z-10" (click)="closeSettings()"></div>
-    
+   
     <div class="flex flex-col md:flex-row h-screen">
         <!-- Mobile Header with Menu Toggle -->
         <div class="block md:hidden bg-white p-4 shadow-sm">
@@ -23,8 +24,7 @@
                     <i class="fas fa-th-large mr-3"></i>
                     <span>Home</span>
                 </a>
-                
-                <!-- Reports Dropdown Menu -->
+              
                 <div class="relative">
                     <!-- Reports Menu Header -->
                     <a class="flex items-center py-2 px-4 md:px-8 text-gray-600 mt-3 hover:bg-purple-50 hover:rounded-lg hover:text-purple-700 cursor-pointer" (click)="toggleReportsDropdown()">
@@ -37,7 +37,7 @@
                     <div class="pl-8 md:pl-12 overflow-hidden transition-all duration-300" [ngClass]="{'max-h-0': !reportsDropdownOpen, 'max-h-48': reportsDropdownOpen}">
                         <a class="flex items-center py-3 px-1 text-xs text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onBILOGReport()">
                             <i class="fas fa-file-alt mr-3"></i>
-                            <span>BILOG Report</span>
+                            <span>BI Type Report</span>
                         </a>
                         <a class="flex items-center py-2 px-1 text-xs text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onUltrasonicReport()">
                             <i class="fas fa-file-alt mr-3"></i>
@@ -49,8 +49,7 @@
                         </a>
                     </div>
                 </div>
-                
-                <a class="flex items-center py-2 mt-3 px-4 md:px-8 text-gray-600 hover:bg-purple-50 hover:text-purple-700 hover:rounded-lg" (click)="onDeviceDetail()">
+                <a class="flex items-center py-2 mt-3 px-4 md:px-8 text-gray-600 hover:bg-purple-50 hover:text-purple-700 hover:rounded-lg" (click)="onDeviceDetailClick()">
                     <i class="fas fa-database mr-3"></i>
                     <span>Device</span>
                 </a>
@@ -63,7 +62,7 @@
             <header class="flex items-center justify-between h-16 md:h-24 px-4 md:px-6 bg-white shadow-sm md:shadow-none">
                 <div class="flex items-center">
                     <h1 class="text-gray-600 text-sm font-medium">
-                        Dashboard / Home
+                        Dashboard / Ultrasonic-Washer Report
                     </h1>
                 </div>
                 <div class="flex items-center">
@@ -74,7 +73,7 @@
                     
                         <div class="relative">
                             <div class="flex items-center gap-2 cursor-pointer z-20" (click)="toggleSettings($event)">
-                                <img alt="User Avatar" class="rounded-full w-8 h-8 md:w-10 md:h-10" src="assets/newui/demoprofile.png"/>
+                                <img alt="User Avatar" class="rounded-full w-8 h-8 md:w-10 md:h-10" src="assets/newui/demoprofile.png" />
                                 <span class="text-gray-600 hidden sm:inline">{{username}}</span>
                                 <i class="fas fa-caret-down ml-auto"></i>
                             </div>
@@ -106,52 +105,90 @@
                 </div>
             </header>
             
-            <!-- Main Section -->
-            <main class="flex-1 p-4 md:p-6 overflow-auto">
-                <div class="bg-gradient-to-l from-[rgba(173,0,255,0.75)] to-[rgba(173,0,255,1)] h-32 md:h-48 rounded-lg mb-4 md:mb-6">
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                    <!-- Card 1 -->
-                    <div class="bilogbg rounded-lg shadow-md p-4 hover:shadow-lg cursor-pointer" (click)="bilogformOpen()">
-                        <div class="flex items-center justify-between mb-3">
-                            <img alt="Business Intelligence Log Icon" class="w-12 h-12 md:w-16 md:h-16" src="assets/newui/icons/bilog.png"/>
-                            <img src="assets/newui/icons/exportpurple.png" class="w-8 h-8 md:w-10 md:h-10">
-                        </div>
-                        <div class="ml-2 md:ml-4">
-                            <h2 class="text-gray-800 font-semibold text-base md:text-lg">
-                                Business Intelligence Log
-                            </h2>
-                        </div>
-                    </div>
-                    
-                    <!-- Card 2 -->
-                    <div class="utrasonicbg rounded-lg shadow-md p-4 cursor-pointer" (click)="onUltraSonicTest()">
-                        <div class="flex items-center justify-between mb-3">
-                            <img alt="Ultrasonic/ Washer Log Icon" class="w-12 h-12 md:w-16 md:h-16" src="assets/newui/icons/ultrasonic.png"/>
-                            <img src="assets/newui/icons/exportBlue.png" class="w-8 h-8 md:w-10 md:h-10">
-                        </div>
-                        <div class="ml-2 md:ml-4">
-                            <h2 class="text-gray-800 font-semibold text-base md:text-lg">
-                                Ultrasonic/ Washer <br>
-                                Log
-                            </h2>
-                        </div>
-                    </div>
-                    
-                    <!-- Card 3 -->
-                    <div class="bilogbg rounded-lg shadow-md p-4 cursor-pointer" (click)="onWaterTesting()">
-                        <div class="flex items-center justify-between mb-3">
-                            <img alt="Water Testing Log Icon" class="w-12 h-12 md:w-16 md:h-16" src="assets/newui/icons/waterlog.png"/>
-                            <img src="assets/newui/icons/exportpurple.png" class="w-8 h-8 md:w-10 md:h-10">
-                        </div>
-                        <div class="ml-2 md:ml-4">
-                            <h2 class="text-gray-800 font-semibold text-base md:text-lg">
-                                Water Testing <br>Log
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
+           
+           <!-- Main Section -->
+           <main class="flex-1 p-3 md:p-6 overflow-auto">
+               <div class="bg-gradient-to-l from-[rgba(173,0,255,0.75)] to-[rgba(173,0,255,1)] h-36 md:h-48 rounded-lg mb-4 md:mb-6">
+               </div>
+               
+               <div class="bg-white p-3 md:p-6 rounded-lg shadow-xl">
+                   <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 space-y-3 md:space-y-0">
+                       <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                           <input class="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg mb-2 sm:mb-0" type="date" [(ngModel)]="startTime" (change)="onDateChange()"/>
+                           <input class="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg" type="date" [(ngModel)]="endTime" (change)="onDateChange()"/>
+                       </div>
+                       <div class="flex space-x-2 md:space-x-4">
+                           <button class="flex-1 md:flex-none px-3 md:px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm md:text-base" (click)="exportPDF()">
+                               PDF
+                           </button>
+                           <button class="flex-1 md:flex-none px-3 md:px-4 py-2 bg-green-100 text-green-600 rounded-lg text-sm md:text-base" (click)="exportExcel()">
+                               Excel
+                           </button>
+                       </div>
+                   </div>
+                   
+                   <!-- Responsive Table - Scrollable horizontally on small screens -->
+                   <div class="overflow-x-auto -mx-3 md:mx-0">
+                       <table class="min-w-full text-sm text-center">
+                           <thead class="columnheading rounded-lg">
+                               <tr>
+                                   <th class="py-1 px-1 border-b border-gray-200">Record</th>
+                                   <th class="py-1 px-4 border-b border-gray-200">Date</th>
+                                   <th class="py-1 px-4 border-b border-gray-200">Test Type</th>
+                                   <th class="py-1 px-4 border-b border-gray-200">Solutions Changed & Degassed</th> 
+                                   <th class="py-2 px-4 border-b border-gray-200">Test Result</th>
+                                   <th class="py-2 px-4 border-b border-gray-200">Team Members                                </th>
+                                   <th class="py-1 px-3 border-b border-gray-200">Efficacy Test Type
+                                </th>
+                                
+                               </tr>
+                           </thead>
+                           <tbody class="bg-white">
+                               <tr *ngFor="let record of filteredRecords.length > 0 ? filteredRecords : records; let i = index" class="text-center">
+                                   <td class="py-2 text-sm px-1 border-b border-gray-200">{{ i+1 }}</td>
+                                   <td class="py-2 px-4 border-b border-gray-200">{{ record.date| date:'dd-MM-yy HH:mm' }}</td>
+                                   <td class="py-2 px-4 border-b border-gray-200">{{ record.testType }}</td> 
+                                   <td class="py-2 px-1 border-b border-gray-200">{{ record.solutionChanged ? 'Yes': 'No' }}</td>
+                                   
+                                   <td class="py-2 px-1 border-b border-gray-200 text-red-500" [ngClass]="{
+                                       'text-green-500': record.result === 'Pass', 
+                                       'text-red-500': record.result === 'Fail', 
+                                       'text-gray-500': record.result !== 'Pass' && record.result !== 'Fail'
+                                   }">{{ record.result }}</td>
+                                   <td class="py-2 px-1 border-b border-gray-200">{{ record.technicianName }}</td>
+                                   <td class="py-2 px-1 border-b border-gray-200">{{ record.efficacyTestName }}</td>
+
+                                
+                               </tr>
+                           </tbody>
+                       </table>
+                   </div>
+                   
+                   <!-- Pagination -->
+                   <div class="mt-4 flex flex-col sm:flex-row items-center justify-between">
+                       <span class="mb-2 sm:mb-0 text-sm md:text-base">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+                       <div class="flex items-center">
+                           <button class="px-3 md:px-4 py-1 md:py-2 rounded-lg mr-2 disabled:opacity-50"
+                           (click)="changePage(currentPage - 1)" 
+                           [disabled]="currentPage === 0">
+                               &lt;
+                           </button>
+                           <button class="px-3 md:px-4 py-1 md:py-2 bg-gray-100 text-gray-600 rounded-lg disabled:opacity-50" 
+                           (click)="changePage(currentPage + 1)" 
+                           [disabled]="currentPage === totalPages || totalPages == currentPage + 1">
+                               &gt;
+                           </button>
+                       </div>
+                   </div>
+               </div>
+           </main>
+       </div>
+   </div>
+   
+   <app-notification-popup
+       [isOpen]="showPopup"
+       [message]="popupMessage"
+       [type]="popupType"
+       (onClose)="closePopup()">
+   </app-notification-popup>
 </div>

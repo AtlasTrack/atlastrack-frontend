@@ -13,6 +13,10 @@ import { ForgetpasswordemailpageComponent } from './forgetpassword/forgetpasswor
 import { ForgetpasswordotppageComponent } from './forgetpassword/forgetpasswordotppage/forgetpasswordotppage.component';
 import { ForgetpasswordnewpasswordComponent } from './forgetpassword/forgetpasswordnewpassword/forgetpasswordnewpassword.component';
 import { ManageaccountComponent } from './manageaccount/manageaccount.component';
+import { WatertestinglogComponent } from './watertestinglog/watertestinglog.component';
+import { UtrasonicwashertestComponent } from './utrasonicwashertest/utrasonicwashertest.component';
+import { UtrasonicwashertestreportComponent } from './utrasonicwashertestreport/utrasonicwashertestreport.component';
+import { WatertestinglogreportComponent } from './watertestinglogreport/watertestinglogreport.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' }, // First page is login
@@ -30,6 +34,12 @@ export const routes: Routes = [
     { path: 'forgetpasswordotp', component: ForgetpasswordotppageComponent},
     { path: 'manageaccount', component: ManageaccountComponent},
     { path: 'forgetpasswordnewpass', component: ForgetpasswordnewpasswordComponent},
+    { path: 'watertestinglog', component: WatertestinglogComponent},
+    { path: 'ultrasonicwashertest', component: UtrasonicwashertestComponent},
+    { path: 'ultrasonicwashertestreport', component: UtrasonicwashertestreportComponent},
+
+    { path: 'watertestingreport', component: WatertestinglogreportComponent},
+
 
 
 
