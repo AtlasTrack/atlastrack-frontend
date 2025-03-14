@@ -5,6 +5,8 @@ import { ApiService } from '../apiservice.service';
 import { saveAs } from 'file-saver';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { NotificationPopupComponent } from '../notification-popup/notification-popup.component';
 
 @Component({
@@ -155,26 +157,181 @@ onWaterTestReport() {
     });
   }
   
-  exportPDF() {
+  // exportPDF() {
    
+  //   if (!this.validateDates()) return;
+
+  // const startDate = `${this.startTime}T00:00:00`;
+  // const endDate = `${this.endTime}T23:59:59`;
+
+  // if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
+  //   this.showPopup = true;
+  //   this.popupMessage = 'Select the valid date';
+  //   this.popupType = 'error'
+  //   return;
+  // }
+
+  //   this.apiService.exportWaterTestingClinicPDF(this.selectedClinic, startDate, endDate).subscribe(blob => {
+  //     saveAs(blob, `${this.selectedClinic}-report-${this.startTime}-to-${this.endTime}.pdf`);
+  //   });
+  
+  
+  // }
+
+  exportPDF() {
     if (!this.validateDates()) return;
-
-  const startDate = `${this.startTime}T00:00:00`;
-  const endDate = `${this.endTime}T23:59:59`;
-
-  if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
-    this.showPopup = true;
-    this.popupMessage = 'Select the valid date';
-    this.popupType = 'error'
-    return;
+  
+    const startDate = `${this.startTime}T00:00:00`;
+    const endDate = `${this.endTime}T23:59:59`;
+  
+    if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
+      this.showPopup = true;
+      this.popupMessage = 'Select the valid date';
+      this.popupType = 'error';
+      return;
+    }
+  
+    this.apiService.getWaterTestingFilteredClinicRecords(this.selectedClinic, startDate, endDate, this.currentPage)
+      .subscribe({
+        next: (response) => {
+          // Get all records at once for PDF
+          const allRecords = response.content;
+          this.generatePDF(allRecords);
+        },
+        error: (err) => {
+          console.error('Error fetching records for PDF:', err);
+          this.showPopup = true;
+          this.popupMessage = 'Error generating PDF report';
+          this.popupType = 'error';
+        }
+      });
+  }
+  
+  generatePDF(data: WaterTestingRequestDTO[]) {
+    const doc = new jsPDF('landscape');
+    
+    // Add logo
+    const logoPath = 'assets/newui/atlasnewlogo.png';
+    const logoImg = new Image();
+    logoImg.src = logoPath;
+    
+    // When the image is loaded, continue with PDF generation
+    logoImg.onload = () => {
+      // Add logo to the PDF
+      doc.addImage(logoImg, 'PNG', 10, 10, 50, 20);
+      
+      // Add title
+      doc.setFontSize(16);
+      doc.text(`${this.selectedClinic} - Water Testing Report`, doc.internal.pageSize.width / 2, 20, { align: 'center' });
+      
+      // Add date range
+      doc.setFontSize(12);
+      doc.text(`Report Period: ${this.startTime} to ${this.endTime}`, doc.internal.pageSize.width / 2, 30, { align: 'center' });
+      
+      // Process the data
+      var processedData = data.map(record => {
+        return [
+          new Date(record.date).toLocaleString(),
+          new Date(record.resultDate).toLocaleString(),
+          record.technicianName,
+          record.locationName, 
+          record.deviceName,
+          record.result,
+          record.safetyLevel || 'unknown', // Keep the actual safety level as text
+          record.correctiveAction || 'N/A',
+        ];
+      });
+      
+      // Create the table with conditional styling
+      autoTable(doc, {
+        startY: 40,
+        head: [['Test Date', 'Date of Result', 'Team Member', 'Location', 'Device', 'Result', 
+                'Safety Level', 'Corrective Action']],
+        body: processedData,
+        theme: 'grid',
+        styles: {
+          fontSize: 8,
+          cellPadding: 2,
+          overflow: 'linebreak',
+          halign: 'center'
+        },
+        columnStyles: {
+          0: { cellWidth: 25 },
+          // Other column widths as needed
+        },
+        headStyles: {
+          fillColor: [189, 226, 189], // RGB color 189,226,189
+          textColor: [0, 0, 0],
+          fontStyle: 'bold'
+        },
+        alternateRowStyles: {
+          fillColor: [245, 245, 245]
+        },
+        // Custom cell styling for conditional formatting
+        didParseCell: function(data) {
+          // Style for Result column (index 5)
+          if (data.section === 'body' && data.column.index === 5) {
+            const value = data.cell.text[0]?.toLowerCase();
+            if (value === 'pass') {
+              data.cell.styles.textColor = [0, 128, 0]; // Green
+            } else if (value === 'fail') {
+              data.cell.styles.textColor = [255, 0, 0]; // Red
+            }
+          }
+          
+          // Process Safety Level column (index 6)
+          if (data.section === 'body' && data.column.index === 6) {
+            const safetyLevel = data.cell.text[0]?.toLowerCase();
+            
+            // Store the safety level for use in didDrawCell
+            data.cell.text[0] = safetyLevel;
+            
+            // Make the text color match the background (effectively hiding it)
+            // But keep the text for proper processing
+            data.cell.styles.textColor = [255, 255, 255]; // Transparent
+          }
+        },
+        // Custom drawing for cells
+        didDrawCell: function(data) {
+          // Only process Safety Level column (index 6)
+          if (data.section === 'body' && data.column.index === 6 ) {
+            const safetyLevel = data.cell.text[0];
+            let circleColor;
+            
+            // Set circle color based on safety level
+            if (safetyLevel === 'safe') {
+              circleColor = [0, 128, 0]; // Green
+            } else if (safetyLevel === 'warning') {
+              circleColor = [255, 165, 0]; // Orange/Yellow
+            } else if (safetyLevel === 'danger') {
+              circleColor = [255, 0, 0]; // Red
+            } else {
+              circleColor = [128, 128, 128]; // Gray for unknown
+            }
+            
+            // Draw the colored circle in the center of the cell
+            const x = data.cell.x + data.cell.width / 2;
+            const y = data.cell.y + data.cell.height / 2;
+            const radius = 2; // Larger circle for better visibility
+            
+            doc.setFillColor(circleColor[0], circleColor[1], circleColor[2]);
+            doc.circle(x, y, radius, 'F');
+          }
+        }
+      });
+      
+      // Save the PDF
+      doc.save(`${this.selectedClinic}-water-testing-report-${this.startTime}-to-${this.endTime}.pdf`);
+    };
+    
+    // Handle error if logo couldn't be loaded
+    logoImg.onerror = () => {
+      console.warn('Could not load logo, generating PDF without logo');
+      // Call the same PDF generation without the logo
+      // We should implement this part if needed
+    };
   }
 
-    this.apiService.exportWaterTestingClinicPDF(this.selectedClinic, startDate, endDate).subscribe(blob => {
-      saveAs(blob, `${this.selectedClinic}-report-${this.startTime}-to-${this.endTime}.pdf`);
-    });
-  
-  
-  }
   onLogoutClick() {
     localStorage.removeItem('access_token');
    localStorage.removeItem('profile');
