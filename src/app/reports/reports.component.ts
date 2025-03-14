@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { saveAs } from 'file-saver';
 import { NotificationPopupComponent } from '../notification-popup/notification-popup.component';
 import { AutoReadRecord } from '../apiinterfaces';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-reports',
@@ -154,25 +156,227 @@ onWaterTestReport() {
     });
   }
   
-  exportPDF() {
+  // exportPDF() {
    
+  //   if (!this.validateDates()) return;
+
+  // const startDate = `${this.startTime}T00:00:00`;
+  // const endDate = `${this.endTime}T23:59:59`;
+
+  // if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
+  //   this.showPopup = true;
+  //   this.popupMessage = 'Select the valid date';
+  //   this.popupType = 'error'
+  //   return;
+  // }
+
+  //   this.apiService.exportClinicPDF(this.selectedClinic, startDate, endDate).subscribe(blob => {
+  //     saveAs(blob, `${this.selectedClinic}-report-${this.startTime}-to-${this.endTime}.pdf`);
+  //   });
+  
+  
+  // }
+
+
+
+  // Updated PDF generation function with color coding
+  exportPDF() {
     if (!this.validateDates()) return;
-
-  const startDate = `${this.startTime}T00:00:00`;
-  const endDate = `${this.endTime}T23:59:59`;
-
-  if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
-    this.showPopup = true;
-    this.popupMessage = 'Select the valid date';
-    this.popupType = 'error'
-    return;
+  
+    const startDate = `${this.startTime}T00:00:00`;
+    const endDate = `${this.endTime}T23:59:59`;
+  
+    if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
+      this.showPopup = true;
+      this.popupMessage = 'Select the valid date';
+      this.popupType = 'error';
+      return;
+    }
+  
+    this.apiService.getFilteredClinicRecords(this.selectedClinic, startDate, endDate, this.currentPage)
+      .subscribe({
+        next: (response) => {
+          // Get all records at once for PDF
+          const allRecords = response.content;
+          this.generatePDF(allRecords);
+        },
+        error: (err) => {
+          console.error('Error fetching records for PDF:', err);
+          this.showPopup = true;
+          this.popupMessage = 'Error generating PDF report';
+          this.popupType = 'error';
+        }
+      });
   }
-
-    this.apiService.exportClinicPDF(this.selectedClinic, startDate, endDate).subscribe(blob => {
-      saveAs(blob, `${this.selectedClinic}-report-${this.startTime}-to-${this.endTime}.pdf`);
+  
+  generatePDF(data: AutoReadRecord[]) {
+    const doc = new jsPDF('landscape');
+    
+    // Add logo
+    const logoPath = 'assets/newui/atlasnewlogo.png';
+    const logoImg = new Image();
+    logoImg.src = logoPath;
+    
+    // When the image is loaded, continue with PDF generation
+    logoImg.onload = () => {
+      // Add logo to the PDF
+      doc.addImage(logoImg, 'PNG', 10, 10, 50, 20);
+      
+      // Add title
+      doc.setFontSize(16);
+      doc.text(`${this.selectedClinic} - BI Report`, doc.internal.pageSize.width / 2, 20, { align: 'center' });
+      
+      // Add date range
+      doc.setFontSize(12);
+      doc.text(`Report Period: ${this.startTime} to ${this.endTime}`, doc.internal.pageSize.width / 2, 30, { align: 'center' });
+      
+      // Process the data to include colored text for results and chemical integrators
+      const processedData = data.map(record => {
+        // Copy all standard fields
+        return [
+          new Date(record.startTime).toLocaleString(),
+          new Date(record.endTime).toLocaleString(),
+          record.wellNumber,
+          this.selectedClinic,
+          record.clinicAddress || 'N/A',
+          record.serialNumber,
+          record.result, // We'll apply conditional styling to this cell
+          record.biType,
+          record.isControlTest ? 'Yes' : 'No',
+          record.biLotNumber,
+          record.sterilizerModels,
+          record.loadNumber,
+          record.isImplant ? 'Yes' : 'No',
+          record.technicianNames,
+          record.cycleCount,
+          record.chemicalIntegrators // We'll apply conditional styling to this cell
+        ];
+      });
+      
+      // Create the table with conditional styling
+      autoTable(doc, {
+        startY: 40,
+        head: [['Start Time', 'End Time', 'Well Number', 'Clinic Name', 'Clinic Address', 'Serial Number', 
+                'Result', 'BI Type', 'Control Test', 'BI Lot Number', 'Sterilizer Model', 'Load Number', 
+                'Implant Test', 'Team Member', 'Cycle Count', 'Chemical Integrator']],
+        body: processedData,
+        theme: 'grid',
+        styles: {
+          fontSize: 8,
+          cellPadding: 2,
+          overflow: 'linebreak',
+          halign: 'center'
+        },
+        columnStyles: {
+          0: { cellWidth: 20 },
+          1: { cellWidth: 20 },
+          // Other column widths as needed
+        },
+        headStyles: {
+          fillColor: [189, 226, 189], // RGB color 189,226,189
+          textColor: [0, 0, 0],
+          fontStyle: 'bold'
+        },
+        alternateRowStyles: {
+          fillColor: [245, 245, 245]
+        },
+        // Custom cell styling for conditional formatting
+        didParseCell: function(data) {
+          // Style for Result column (index 6)
+          if (data.section === 'body' && data.column.index === 6) {
+            const value = data.cell.text[0]?.toLowerCase();
+            if (value === 'positive') {
+              data.cell.styles.textColor = [0, 128, 0]; // Green
+            } else if (value === 'negative') {
+              data.cell.styles.textColor = [255, 0, 0]; // Red
+            }
+          }
+          
+          // Style for Chemical Integrator column (index 15)
+          if (data.section === 'body' && data.column.index === 15) {
+            const value = data.cell.text[0]?.toLowerCase();
+            if (value === 'pass') {
+              data.cell.styles.textColor = [0, 128, 0]; // Green
+            } else if (value === 'fail') {
+              data.cell.styles.textColor = [255, 0, 0]; // Red
+            }
+          }
+        }
+      });
+      
+     
+      
+      // Save the PDF
+      doc.save(`${this.selectedClinic}-report-${this.startTime}-to-${this.endTime}.pdf`);
+    };
+    
+    // Handle error if logo couldn't be loaded
+    logoImg.onerror = () => {
+      console.warn('Could not load logo, generating PDF without logo');
+      this.generatePDFWithoutLogo(doc, data);
+    };
+  }
+  generatePDFWithoutLogo(doc: any, data: AutoReadRecord[]) {
+    // Add title
+    doc.setFontSize(16);
+    doc.text(`${this.selectedClinic} - BI Report`, doc.internal.pageSize.width / 2, 20, { align: 'center' });
+    
+    // Add date range
+    doc.setFontSize(12);
+    doc.text(`Report Period: ${this.startTime} to ${this.endTime}`, doc.internal.pageSize.width / 2, 30, { align: 'center' });
+    
+    // Create the table
+    autoTable(doc, {
+      startY: 40,
+      head: [['Start Time', 'End Time', 'Well Number', 'Clinic Name', 'Clinic Address', 'Serial Number', 
+              'Result', 'BI Type', 'Control Test', 'BI Lot Number', 'Sterilizer Model', 'Load Number', 
+              'Implant Test', 'Team Member', 'Cycle Count', 'Chemical Integrator']],
+      body: data.map(record => [
+        new Date(record.startTime).toLocaleString(),
+        new Date(record.endTime).toLocaleString(),
+        record.wellNumber,
+        this.selectedClinic,
+        record.clinicAddress || 'N/A',
+        record.serialNumber,
+        record.result,
+        record.biType,
+        record.isControlTest ? 'Yes' : 'No',
+        record.biLotNumber,
+        record.sterilizerModels,
+        record.loadNumber,
+        record.isImplant ? 'Yes' : 'No',
+        record.technicianNames,
+        record.cycleCount,
+        record.chemicalIntegrators
+      ]),
+      theme: 'grid',
+      styles: {
+        fontSize: 8,
+        cellPadding: 2,
+        overflow: 'linebreak',
+        halign: 'center'
+      },
+      headStyles: {
+        fillColor: [128, 0, 128],
+        textColor: [255, 255, 255],
+        fontStyle: 'bold'
+      },
+      alternateRowStyles: {
+        fillColor: [245, 245, 245]
+      }
+      
     });
-  
-  
+    
+    // Add page numbers
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width - 20, doc.internal.pageSize.height - 10);
+    }
+    
+    // Save the PDF
+    doc.save(`${this.selectedClinic}-report-${this.startTime}-to-${this.endTime}.pdf`);
   }
   onLogoutClick() {
     localStorage.removeItem('access_token');

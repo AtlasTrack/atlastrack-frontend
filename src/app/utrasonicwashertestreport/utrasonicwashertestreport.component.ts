@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { AutoReadRecord, UltraSonicRequestDTO } from '../apiinterfaces';
 import { ApiService } from '../apiservice.service';
 import { saveAs } from 'file-saver';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { NotificationPopupComponent } from '../notification-popup/notification-popup.component';
 
 @Component({
@@ -155,26 +157,158 @@ onWaterTestReport() {
     });
   }
   
-  exportPDF() {
+  // exportPDF() {
    
+  //   if (!this.validateDates()) return;
+
+  // const startDate = `${this.startTime}T00:00:00`;
+  // const endDate = `${this.endTime}T23:59:59`;
+
+  // if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
+  //   this.showPopup = true;
+  //   this.popupMessage = 'Select the valid date';
+  //   this.popupType = 'error'
+  //   return;
+  // }
+
+  //   this.apiService.exportUltraSonicClinicPDF(this.selectedClinic, startDate, endDate).subscribe(blob => {
+  //     saveAs(blob, `${this.selectedClinic}-report-${this.startTime}-to-${this.endTime}.pdf`);
+  //   });
+  
+  
+  // }
+
+
+  exportPDF() {
     if (!this.validateDates()) return;
-
-  const startDate = `${this.startTime}T00:00:00`;
-  const endDate = `${this.endTime}T23:59:59`;
-
-  if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
-    this.showPopup = true;
-    this.popupMessage = 'Select the valid date';
-    this.popupType = 'error'
-    return;
-  }
-
-    this.apiService.exportUltraSonicClinicPDF(this.selectedClinic, startDate, endDate).subscribe(blob => {
-      saveAs(blob, `${this.selectedClinic}-report-${this.startTime}-to-${this.endTime}.pdf`);
-    });
   
+    const startDate = `${this.startTime}T00:00:00`;
+    const endDate = `${this.endTime}T23:59:59`;
   
+    if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
+      this.showPopup = true;
+      this.popupMessage = 'Select the valid date';
+      this.popupType = 'error';
+      return;
+    }
+  
+    this.apiService.getUltrasonicFilteredClinicRecords(this.selectedClinic, startDate, endDate, this.currentPage)
+      .subscribe({
+        next: (response) => {
+          // Get all records at once for PDF
+          const allRecords = response.content;
+          this.generatePDF(allRecords);
+          this.showPopup = true;
+          this.popupMessage = 'PDF Generated Successfully';
+          this.popupType = 'success';
+        },
+        error: (err) => {
+          console.error('Error fetching records for PDF:', err);
+          this.showPopup = true;
+          this.popupMessage = 'Error generating PDF report';
+          this.popupType = 'error';
+        }
+      });
   }
+  
+  generatePDF(data: UltraSonicRequestDTO[]) {
+    const doc = new jsPDF('landscape');
+    
+    // Add logo
+    const logoPath = 'assets/newui/atlasnewlogo.png';
+    const logoImg = new Image();
+    logoImg.src = logoPath;
+    
+    // When the image is loaded, continue with PDF generation
+    logoImg.onload = () => {
+      // Add logo to the PDF
+      doc.addImage(logoImg, 'PNG', 10, 10, 50, 20);
+      
+      // Add title
+      doc.setFontSize(16);
+      doc.text(`${this.selectedClinic} - Ultrasonic Washer Test Report`, doc.internal.pageSize.width / 2, 20, { align: 'center' });
+      
+      // Add date range
+      doc.setFontSize(12);
+      doc.text(`Report Period: ${this.startTime} to ${this.endTime}`, doc.internal.pageSize.width / 2, 30, { align: 'center' });
+      
+      // Process the data to include colored text for results
+      const processedData = data.map(record => {
+        // Copy all standard fields
+        return [
+          new Date(record.date).toLocaleString(),
+          record.testType || 'N/A',
+          record.solutionChanged,
+          record.result, // We'll apply conditional styling to this cell
+          record.technicianName || 'N/A',
+          record.efficacyTestName || 'N/A',
+
+        ];
+      });
+      
+      // Create the table with conditional styling
+      autoTable(doc, {
+        startY: 40,
+        head: [['Test Date', 'Test Type', 'Solutions Changed & Degassed', 'Test Result', 'Team Member', 'Efficacy Test Type' ]],
+        body: processedData,
+        theme: 'grid',
+        styles: {
+          fontSize: 8,
+          cellPadding: 2,
+          overflow: 'linebreak',
+          halign: 'center'
+        },
+        columnStyles: {
+          0: { cellWidth: 25 },
+          // Other column widths as needed
+        },
+        headStyles: {
+          fillColor: [189, 226, 189], // RGB color 189,226,189
+          textColor: [0, 0, 0],
+          fontStyle: 'bold'
+        },
+        alternateRowStyles: {
+          fillColor: [245, 245, 245]
+        },
+        // Custom cell styling for conditional formatting
+        didParseCell: function(data) {
+          // Style for Test Result column (index 4)
+          if (data.section === 'body' && data.column.index === 2) {
+            const value = data.cell.text[0] === 'false' ? 'no' : 'yes' .toLowerCase();
+            if (value === 'yes') {
+              data.cell.styles.textColor = [0, 128, 0];// Green
+              data.cell.text[0] = 'Yes'
+            } else if (value === 'no') {
+              data.cell.styles.textColor = [255, 0, 0]; // Red
+              data.cell.text[0] = 'No'
+            }
+
+          }
+          if (data.section === 'body' && data.column.index === 3) {
+            const value = data.cell.text[0]?.toLowerCase();
+            if (value === 'pass') {
+              data.cell.styles.textColor = [0, 128, 0]; // Green
+            } else if (value === 'fail') {
+              data.cell.styles.textColor = [255, 0, 0]; // Red
+            }
+
+          }
+        }
+      });
+      
+    
+      // Save the PDF
+      doc.save(`${this.selectedClinic}-ultrasonic-report-${this.startTime}-to-${this.endTime}.pdf`);
+    };
+    
+    // Handle error if logo couldn't be loaded
+    logoImg.onerror = () => {
+      console.warn('Could not load logo, generating PDF without logo');
+      
+    };
+  }
+  
+ 
   onLogoutClick() {
     localStorage.removeItem('access_token');
    localStorage.removeItem('profile');
