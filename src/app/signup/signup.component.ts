@@ -30,7 +30,7 @@ export class SignupComponent implements OnInit {
   showPopup = false;
   popupMessage = '';
   popupType: 'success' | 'error' = 'success';
-  selectedCountryCode: string = '+92'; // Default country code
+  selectedCountryCode: string = '+1'; // Default country code
 
   constructor(
     private router: Router,
@@ -43,7 +43,7 @@ export class SignupComponent implements OnInit {
       {
         email: ['', [Validators.required, Validators.email]],
         fullName: ['', [Validators.required, Validators.minLength(3)]],
-        countryCode: ['+92'], // Default country code (Pakistan)
+        countryCode: ['+1'], // Default country code (Pakistan)
         phoneNumber: ['', [
           Validators.required,
           Validators.pattern('^[0-9]*$'),

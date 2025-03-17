@@ -130,8 +130,17 @@ export class WatertestinglogComponent implements OnInit {
       this.apiService.getDevicesByClinic(this.username).subscribe({
         next: (data) => {
           // Make sure "Source water" is in the list and at the top
-          const deviceList = data.filter(device => device !== 'Source water');
-          deviceList.unshift('Source water');
+          const deviceList = data.filter(device => device !== 'AW Syringe' && device !== 'Source Water' 
+            && device !== 'Scaler' && device !== 'Handpiece' && device !== 'Combined');
+            deviceList.unshift('Combined');
+            deviceList.unshift('Handpiece');
+            deviceList.unshift('Scaler');
+            deviceList.unshift('Source Water');
+            deviceList.unshift('AW Syringe');
+            
+           
+
+            
           this.devices$.next(deviceList);
         },
         error: (error) => {
@@ -428,7 +437,7 @@ export class WatertestinglogComponent implements OnInit {
     this.isSubmitting = true;
     
     // Determine the actual location value based on selection
-    const actualLocation = this.formData.location === 'Add more' 
+    const actualLocation = this.formData.location === 'Add More' 
       ? this.formData.customLocation
       : this.formData.location;
     

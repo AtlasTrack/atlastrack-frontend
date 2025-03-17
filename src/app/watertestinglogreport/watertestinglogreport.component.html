@@ -15,7 +15,7 @@
         </div>
 
         <!-- Sidebar - Hidden on mobile by default, shown when toggled -->
-        <div class="w-full md:w-64 bg-white p-4 sidebar-menu" [ngClass]="{'hidden': !menuOpen, 'block': menuOpen, 'md:block': true}">
+        <div class="w-full md:w-80 bg-white p-4   sidebar-menu" [ngClass]="{'hidden': !menuOpen, 'block': menuOpen, 'md:block': true}">
             <div class="flex items-center justify-center h-12 md:h-16 mb-6">
                 <img alt="Atlas Track Logo" class="max-w-full h-auto" src="assets/newui/atlasnewlogo.png" width="180"/>
             </div>
@@ -24,34 +24,36 @@
                     <i class="fas fa-th-large mr-3"></i>
                     <span>Home</span>
                 </a>
-              
+                
+                <!-- Reports Dropdown Menu -->
                 <div class="relative">
                     <!-- Reports Menu Header -->
                     <a class="flex items-center py-2 px-4 md:px-8 text-gray-600 mt-3 hover:bg-purple-50 hover:rounded-lg hover:text-purple-700 cursor-pointer" (click)="toggleReportsDropdown()">
                         <i class="fas fa-file-alt mr-3"></i>
-                        <span>Report</span>
+                        <span>Download Logs</span>
                         <i class="fas fa-caret-down ml-auto" [ngClass]="{'transform rotate-180': reportsDropdownOpen}"></i>
                     </a>
                     
                     <!-- Dropdown Items -->
                     <div class="pl-8 md:pl-12 overflow-hidden transition-all duration-300" [ngClass]="{'max-h-0': !reportsDropdownOpen, 'max-h-48': reportsDropdownOpen}">
-                        <a class="flex items-center py-3 px-1 text-xs text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onBILOGReport()">
+                        <a class="flex  items-center py-3 px-1 text-sm text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onBILOGReport()">
                             <i class="fas fa-file-alt mr-3"></i>
-                            <span>BI Type Report</span>
+                            <span>Bilogical Indicator Report</span>
                         </a>
-                        <a class="flex items-center py-2 px-1 text-xs text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onUltrasonicReport()">
+                        <a class="flex items-center py-2 px-1 text-sm text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onUltrasonicReport()">
                             <i class="fas fa-file-alt mr-3"></i>
                             <span>Ultrasonic/Washer Report</span>
                         </a>
-                        <a class="flex items-center py-2 px-1 text-xs text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onWaterTestReport()">
+                        <a class="flex items-center py-2 px-1 text-sm text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onWaterTestReport()">
                             <i class="fas fa-file-alt mr-3"></i>
-                            <span>Water Testing Report</span>
+                            <span>Waterline Test Report</span>
                         </a>
                     </div>
                 </div>
-                <a class="flex items-center py-2 mt-3 px-4 md:px-8 text-gray-600 hover:bg-purple-50 hover:text-purple-700 hover:rounded-lg" (click)="onDeviceDetailClick()">
+                
+                <a class="flex  items-center py-2 mt-3 px-4 md:px-8 text-gray-600 hover:bg-purple-50 hover:text-purple-700 hover:rounded-lg" (click)="onDeviceDetailClick()">
                     <i class="fas fa-database mr-3"></i>
-                    <span>Device</span>
+                    <span>Biological Indicator Device</span>
                 </a>
             </div>
         </div>
@@ -89,11 +91,11 @@
                                     <img src="assets/newui/icons/changePasswordIcon.png" class="w-4 h-4 mt-1" alt="">
                                     <p class="text-sm"> Change Password </p>
                                 </div>
-                                <hr class="mt-2">
+                                <!-- <hr class="mt-2">
                                 <div class="flex gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer">
                                     <img src="assets/newui/icons/activityLogIcon.png" class="w-4 h-4 mt-1" alt="">
                                     <p class="text-sm"> Activity Log </p>
-                                </div>
+                                </div> -->
                                 <hr class="mt-2">
                                 <div class="flex gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer" (click)="onLogoutClick()">
                                     <img src="assets/newui/icons/logoutIcon.png" class="w-5 h-4 mt-1" alt="">
@@ -114,15 +116,19 @@
                <div class="bg-white p-3 md:p-6 rounded-lg shadow-xl">
                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 space-y-3 md:space-y-0">
                        <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                           <input class="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg mb-2 sm:mb-0" type="date" [(ngModel)]="startTime" (change)="onDateChange()"/>
+                        <p>Start Date</p>
+                           <input class="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg  sm:mb-0" type="date" [(ngModel)]="startTime" (change)="onDateChange()"/>
+                           <p>End Date</p>
                            <input class="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg" type="date" [(ngModel)]="endTime" (change)="onDateChange()"/>
                        </div>
                        <div class="flex space-x-2 md:space-x-4">
                            <button class="flex-1 md:flex-none px-3 md:px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm md:text-base" (click)="exportPDF()">
                                PDF
+                               <i class="fas fa-download text-red-500 ml-2"></i>
                            </button>
                            <button class="flex-1 md:flex-none px-3 md:px-4 py-2 bg-green-100 text-green-600 rounded-lg text-sm md:text-base" (click)="exportExcel()">
                                Excel
+                               <i class="fas fa-download text-green-500 ml-2"></i>
                            </button>
                        </div>
                    </div>

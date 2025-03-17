@@ -14,46 +14,49 @@
     </div>
 
     <!-- Sidebar - Hidden on mobile by default, shown when toggled -->
-    <div class="w-full md:w-64 bg-white p-4 sidebar-menu" [ngClass]="{'hidden': !menuOpen, 'block': menuOpen, 'md:block': true}">
+    <div class="w-full md:w-80 bg-white p-4   sidebar-menu" [ngClass]="{'hidden': !menuOpen, 'block': menuOpen, 'md:block': true}">
       <div class="flex items-center justify-center h-12 md:h-16 mb-6">
-        <img alt="Atlas Track Logo" class="max-w-full h-auto" src="assets/newui/atlasnewlogo.png" width="180"/>
+          <img alt="Atlas Track Logo" class="max-w-full h-auto" src="assets/newui/atlasnewlogo.png" width="180"/>
       </div>
       <div class="mt-4 md:mt-10">
-        <a class="flex items-center py-2 px-4 md:px-8 hover:bg-purple-50 hover:rounded-lg text-gray-900 hover:text-purple-700 cursor-pointer" (click)="onHomeClick()">
-          <i class="fas fa-th-large mr-3"></i>
-          <span>Home</span>
-        </a>
-        <div class="relative">
-          <!-- Reports Menu Header -->
-          <a class="flex items-center py-2 px-4 md:px-8 text-gray-600 mt-3 hover:bg-purple-50 hover:rounded-lg hover:text-purple-700 cursor-pointer" (click)="toggleReportsDropdown()">
-              <i class="fas fa-file-alt mr-3"></i>
-              <span>Report</span>
-              <i class="fas fa-caret-down ml-auto" [ngClass]="{'transform rotate-180': reportsDropdownOpen}"></i>
+          <a class="flex items-center py-2 px-4 md:px-8 hover:bg-purple-50 hover:rounded-lg text-gray-900 hover:text-purple-700 cursor-pointer" (click)="onHomeClick()">
+              <i class="fas fa-th-large mr-3"></i>
+              <span>Home</span>
           </a>
           
-          <!-- Dropdown Items -->
-          <div class="pl-8 md:pl-12 overflow-hidden transition-all duration-300" [ngClass]="{'max-h-0': !reportsDropdownOpen, 'max-h-48': reportsDropdownOpen}">
-              <a class="flex items-center py-3 px-1 text-xs text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onBILOGReport()">
+          <!-- Reports Dropdown Menu -->
+          <div class="relative">
+              <!-- Reports Menu Header -->
+              <a class="flex items-center py-2 px-4 md:px-8 text-gray-600 mt-3 hover:bg-purple-50 hover:rounded-lg hover:text-purple-700 cursor-pointer" (click)="toggleReportsDropdown()">
                   <i class="fas fa-file-alt mr-3"></i>
-                  <span>BI Type Report</span>
+                  <span>Download Logs</span>
+                  <i class="fas fa-caret-down ml-auto" [ngClass]="{'transform rotate-180': reportsDropdownOpen}"></i>
               </a>
-              <a class="flex items-center py-2 px-1 text-xs text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onUltrasonicReport()">
-                  <i class="fas fa-file-alt mr-3"></i>
-                  <span>Ultrasonic/Washer Report</span>
-              </a>
-              <a class="flex items-center py-2 px-1 text-xs text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onWaterTestReport()">
-                  <i class="fas fa-file-alt mr-3"></i>
-                  <span>Water Testing Report</span>
-              </a>
+              
+              <!-- Dropdown Items -->
+              <div class="pl-8 md:pl-12 overflow-hidden transition-all duration-300" [ngClass]="{'max-h-0': !reportsDropdownOpen, 'max-h-48': reportsDropdownOpen}">
+                  <a class="flex  items-center py-3 px-1 text-sm text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onBILOGReport()">
+                      <i class="fas fa-file-alt mr-3"></i>
+                      <span>Bilogical Indicator Report</span>
+                  </a>
+                  <a class="flex items-center py-2 px-1 text-sm text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onUltrasonicReport()">
+                      <i class="fas fa-file-alt mr-3"></i>
+                      <span>Ultrasonic/Washer Report</span>
+                  </a>
+                  <a class="flex items-center py-2 px-1 text-sm text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onWaterTestReport()">
+                      <i class="fas fa-file-alt mr-3"></i>
+                      <span>Waterline Test Report</span>
+                  </a>
+              </div>
           </div>
+          
+          <a class="flex  items-center py-2 mt-3 px-4 md:px-8 text-gray-600 hover:bg-purple-50 hover:text-purple-700 hover:rounded-lg" (click)="onDeviceDetail()">
+              <i class="fas fa-database mr-3"></i>
+              <span>Biological Indicator Device</span>
+          </a>
       </div>
-      
-        <a class="flex items-center py-2 mt-3 px-4 md:px-8 text-gray-600 hover:bg-purple-50 hover:text-purple-700 hover:rounded-lg" (click)="onDeviceDetail()">
-          <i class="fas fa-database mr-3"></i>
-          <span>Device</span>
-        </a>
-      </div>
-    </div>
+  </div>
+  
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col">
@@ -88,11 +91,11 @@
                   <img src="assets/newui/icons/changePasswordIcon.png" class="w-4 h-4 mt-1" alt="">
                   <p class="text-sm"> Change Password </p>
                 </div>
-                <hr class="mt-2">
+                <!-- <hr class="mt-2">
                 <div class="flex gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer">
                   <img src="assets/newui/icons/activityLogIcon.png" class="w-4 h-4 mt-1" alt="">
                   <p class="text-sm"> Activity Log </p>
-                </div>
+                </div> -->
                 <hr class="mt-2">
                 <div class="flex gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer" (click)="onLogoutClick()">
                   <img src="assets/newui/icons/logoutIcon.png" class="w-5 h-4 mt-1" alt="">
@@ -106,7 +109,7 @@
 
       <!-- Main Section -->
       <main class="flex-1 p-4 md:p-6 overflow-auto">
-        <p class="font-bold text-xl md:text-2xl mb-2 md:ml-4">Water Testing Log</p>
+        <p class="font-bold text-xl md:text-2xl mb-2 md:ml-4">Waterline Test Log</p>
         <div class="bg-white min-h-screen p-4">
           <div class="bg-white rounded-lg shadow-lg p-4 md:p-2 w-full">
             
@@ -134,7 +137,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
            
               <div>
-                <label class="fieldsHeading">Date</label>
+                <label class="fieldsHeading">Sample Date</label>
                 <input 
                   class="w-full p-3 md:p-3 fields mt-2" 
                   type="datetime-local"
@@ -155,11 +158,11 @@
                 </p>
               </div>
 
-              <div  >
+              <div  *ngIf="!showCustomLocationField">
                 <label class="fieldsHeading">Locations</label>
                 <app-customcombobox 
                   [items$]="locations$" 
-                  placeholder="Type Or Select Location" 
+                  placeholder="Select Location" 
                   (selectionChange)="onLocationSelected($event)"
                   [hasError]="hasError('location')"
                 ></app-customcombobox>
@@ -170,11 +173,11 @@
 
               <!-- Custom Location Field - Only shown if "Add more" is selected -->
               <div *ngIf="showCustomLocationField">
-                <label class="fieldsHeading">Custom Location</label>
+                <label class="fieldsHeading">Locations</label>
                 <input 
                   class="w-full p-3 md:p-3 fields mt-2" 
                   type="text"
-                  placeholder="Enter custom location"
+                  placeholder="Add New Location"
                   [(ngModel)]="formData.customLocation"
                   [ngClass]="{'border-red-500': hasError('customLocation')}"
                 />
@@ -227,7 +230,7 @@
                   type="radio" 
                   name="safetyLevel" 
                   value="safe" 
-                  class="w-8 h-8 safety-radio" 
+                  class="w-8 h-8 safety-radio border-2 border-green-500" 
                   (change)="updateSafetyColor($event)" 
                   id="safetyRadio1"
                   [ngClass]="{'border-red-500': hasError('safetyLevel')}"
@@ -236,7 +239,7 @@
                   type="radio" 
                   name="safetyLevel" 
                   value="warning" 
-                  class="w-8 h-8 safety-radio" 
+                  class="w-8 h-8 safety-radio border-2 border-yellow-500" 
                   (change)="updateSafetyColor($event)" 
                   id="safetyRadio2"
                   [ngClass]="{'border-red-500': hasError('safetyLevel')}"
@@ -245,7 +248,7 @@
                   type="radio" 
                   name="safetyLevel" 
                   value="danger" 
-                  class="w-8 h-8 safety-radio" 
+                  class="w-8 h-8 safety-radio border-2 border-red-600" 
                   (change)="updateSafetyColor($event)" 
                   id="safetyRadio3"
                   [ngClass]="{'border-red-500': hasError('safetyLevel')}"

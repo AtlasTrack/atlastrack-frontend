@@ -15,46 +15,49 @@
       </div>
   
       <!-- Sidebar - Hidden on mobile by default, shown when toggled -->
-      <div class="w-full md:w-64 bg-white p-4 sidebar-menu" [ngClass]="{'hidden': !menuOpen, 'block': menuOpen, 'md:block': true}">
+      <div class="w-full md:w-80 bg-white p-4   sidebar-menu" [ngClass]="{'hidden': !menuOpen, 'block': menuOpen, 'md:block': true}">
         <div class="flex items-center justify-center h-12 md:h-16 mb-6">
-          <img alt="Atlas Track Logo" class="max-w-full h-auto" src="assets/newui/atlasnewlogo.png" width="180"/>
+            <img alt="Atlas Track Logo" class="max-w-full h-auto" src="assets/newui/atlasnewlogo.png" width="180"/>
         </div>
         <div class="mt-4 md:mt-10">
-          <a class="flex items-center py-2 px-4 md:px-8 hover:bg-purple-50 hover:rounded-lg text-gray-900 hover:text-purple-700 cursor-pointer" (click)="onHomeClick()">
-            <i class="fas fa-th-large mr-3"></i>
-            <span>Home</span>
-          </a>
-          <div class="relative">
-            <!-- Reports Menu Header -->
-            <a class="flex items-center py-2 px-4 md:px-8 text-gray-600 mt-3 hover:bg-purple-50 hover:rounded-lg hover:text-purple-700 cursor-pointer" (click)="toggleReportsDropdown()">
-                <i class="fas fa-file-alt mr-3"></i>
-                <span>Report</span>
-                <i class="fas fa-caret-down ml-auto" [ngClass]="{'transform rotate-180': reportsDropdownOpen}"></i>
+            <a class="flex items-center py-2 px-4 md:px-8 hover:bg-purple-50 hover:rounded-lg text-gray-900 hover:text-purple-700 cursor-pointer" (click)="onHomeClick()">
+                <i class="fas fa-th-large mr-3"></i>
+                <span>Home</span>
             </a>
             
-            <!-- Dropdown Items -->
-            <div class="pl-8 md:pl-12 overflow-hidden transition-all duration-300" [ngClass]="{'max-h-0': !reportsDropdownOpen, 'max-h-48': reportsDropdownOpen}">
-                <a class="flex items-center py-3 px-1 text-xs text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onBILOGReport()">
+            <!-- Reports Dropdown Menu -->
+            <div class="relative">
+                <!-- Reports Menu Header -->
+                <a class="flex items-center py-2 px-4 md:px-8 text-gray-600 mt-3 hover:bg-purple-50 hover:rounded-lg hover:text-purple-700 cursor-pointer" (click)="toggleReportsDropdown()">
                     <i class="fas fa-file-alt mr-3"></i>
-                    <span>BILOG Report</span>
+                    <span>Download Logs</span>
+                    <i class="fas fa-caret-down ml-auto" [ngClass]="{'transform rotate-180': reportsDropdownOpen}"></i>
                 </a>
-                <a class="flex items-center py-2 px-1 text-xs text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onUltrasonicReport()">
-                    <i class="fas fa-file-alt mr-3"></i>
-                    <span>Ultrasonic/Washer Report</span>
-                </a>
-                <a class="flex items-center py-2 px-1 text-xs text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onWaterTestReport()">
-                    <i class="fas fa-file-alt mr-3"></i>
-                    <span>Water Testing Report</span>
-                </a>
+                
+                <!-- Dropdown Items -->
+                <div class="pl-8 md:pl-12 overflow-hidden transition-all duration-300" [ngClass]="{'max-h-0': !reportsDropdownOpen, 'max-h-48': reportsDropdownOpen}">
+                    <a class="flex  items-center py-3 px-1 text-sm text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onBILOGReport()">
+                        <i class="fas fa-file-alt mr-3"></i>
+                        <span>Bilogical Indicator Report</span>
+                    </a>
+                    <a class="flex items-center py-2 px-1 text-sm text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onUltrasonicReport()">
+                        <i class="fas fa-file-alt mr-3"></i>
+                        <span>Ultrasonic/Washer Report</span>
+                    </a>
+                    <a class="flex items-center py-2 px-1 text-sm text-gray-600 hover:text-purple-700 cursor-pointer" (click)="onWaterTestReport()">
+                        <i class="fas fa-file-alt mr-3"></i>
+                        <span>Waterline Test Report</span>
+                    </a>
+                </div>
             </div>
+            
+            <a class="flex  items-center py-2 mt-3 px-4 md:px-8 text-gray-600 hover:bg-purple-50 hover:text-purple-700 hover:rounded-lg" (click)="onDeviceDetail()">
+                <i class="fas fa-database mr-3"></i>
+                <span>Biological Indicator Device</span>
+            </a>
         </div>
-        
-          <a class="flex items-center py-2 mt-3 px-4 md:px-8 text-gray-600 hover:bg-purple-50 hover:text-purple-700 hover:rounded-lg" (click)="onDeviceDetail()">
-            <i class="fas fa-database mr-3"></i>
-            <span>Device</span>
-          </a>
-        </div>
-      </div>
+    </div>
+    
   
       <!-- Main Content -->
       <div class="flex-1 flex flex-col">
@@ -89,11 +92,11 @@
                     <img src="assets/newui/icons/changePasswordIcon.png" class="w-4 h-4 mt-1" alt="">
                     <p class="text-sm"> Change Password </p>
                   </div>
-                  <hr class="mt-2">
+                  <!-- <hr class="mt-2">
                   <div class="flex gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer">
                     <img src="assets/newui/icons/activityLogIcon.png" class="w-4 h-4 mt-1" alt="">
                     <p class="text-sm"> Activity Log </p>
-                  </div>
+                  </div> -->
                   <hr class="mt-2">
                   <div class="flex gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer" (click)="onLogoutClick()">
                     <img src="assets/newui/icons/logoutIcon.png" class="w-5 h-4 mt-1" alt="">
@@ -110,7 +113,7 @@
           <p class="font-bold text-xl md:text-2xl mb-2 md:ml-4">Ultrasonic / Washer Log</p>
           <div class="bg-white min-h-screen p-4">
             <div class="bg-white rounded-lg shadow-lg p-4 md:p-2 w-full">
-              
+              <p class="ml-2 mb-2 text-muted ">Please Select Your Test</p>
               <div class="flex flex-col md:flex-row mb-8">
                 
                 <select 
@@ -139,7 +142,7 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
              
                 <div>
-                    <label class="fieldsHeading">Date</label>
+                    <label class="fieldsHeading">Sample Date</label>
                     <input 
                       class="w-full p-3 md:p-3 fields mt-2" 
                       type="datetime-local" 
@@ -148,7 +151,7 @@
                     />
                   </div>
           
-                  <div>
+                  <div *ngIf="formData.logType === 'Ultrasonic Log'">
                     <label class="fieldsHeading">Solutions Changed & Degassed</label>
                     <select 
                       class="w-full p-3 md:p-3 fields mt-2"
@@ -184,7 +187,7 @@
                 ></app-customcombobox>
               </div>
 
-              <div>
+              <div *ngIf="!showOtherEfficacyField">
                 <label class="fieldsHeading">Efficacy Test Type</label>
                 <app-customcombobox 
                 [items$]="efficacyTestTypes$" 
@@ -200,7 +203,7 @@
                   class="w-full p-3 md:p-3 fields mt-2" 
                   [ngClass]="{'border-red-500': hasError('otherEfficacyTestType')}"
                   type="text" 
-                  placeholder="Enter custom efficacy test type"
+                  placeholder="Add New Efficacy Test"
                   [(ngModel)]="formData.otherEfficacyTestType"
                 />
                 <p *ngIf="hasError('otherEfficacyTestType')" class="text-red-500 text-sm mt-1">
