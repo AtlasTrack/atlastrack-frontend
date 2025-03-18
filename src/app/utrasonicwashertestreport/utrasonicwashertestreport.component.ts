@@ -256,7 +256,7 @@ onWaterTestReport() {
       // Process the data to include conditional formatting for results
       const processedData = data.map(record => {
         // Format solution changed value based on test type
-        let solutionChangedValue = record.testType === 'Washer Log' ? 'N/A' : 
+        let solutionChangedValue = record.testType === 'Washer Log' ? '___' : 
                                   (record.solutionChanged ? 'Yes' : 'No');
         
         // Copy all standard fields
@@ -304,7 +304,7 @@ onWaterTestReport() {
               data.cell.styles.textColor = [0, 128, 0]; // Green
             } else if (value === 'No') {
               data.cell.styles.textColor = [255, 0, 0]; // Red
-            } else if (value === 'N/A') {
+            } else if (value === '___') {
               data.cell.styles.textColor = [128, 128, 128]; // Gray for N/A (when test type is Washer Log)
             }
           }

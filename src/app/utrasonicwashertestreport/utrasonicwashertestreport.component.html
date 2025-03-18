@@ -171,10 +171,10 @@
                                    <td class="py-2 px-4 border-b border-gray-200">{{ record.date| date:'dd-MM-yy HH:mm' }}</td>
                                    <td class="py-2 px-4 border-b border-gray-200">{{ record.testType }}</td> 
                                    <td class="py-2 px-1 border-b border-gray-200" [ngClass]="{
-                                    'text-gray-500': record.testType !== 'Ultrasonic Log', 
+                                    'text-gray-500 text-xl': record.testType !== 'Ultrasonic Log', 
                                     'text-green-500': record.solutionChanged, 
                                     'text-red-500': !record.solutionChanged && record.testType === 'Ultrasonic Log'
-                                }">{{ record.testType === 'Ultrasonic Log' ? (record.solutionChanged ? 'Yes': 'No') : 'N/A' }}</td>
+                                }">{{ record.testType === 'Ultrasonic Log' ? (record.solutionChanged ? 'Yes': 'No') : '___' }}</td>
                                    
                                    <td class="py-2 px-1 border-b border-gray-200 text-red-500" [ngClass]="{
                                        'text-green-500': record.result === 'Pass', 
