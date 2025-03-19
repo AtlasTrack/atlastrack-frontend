@@ -238,7 +238,7 @@ onWaterTestReport() {
           record.deviceName,
           record.result,
           record.safetyLevel || 'unknown', // Keep the actual safety level as text
-          record.correctiveAction || 'N/A',
+          record.correctiveAction || '___',
         ];
       });
       

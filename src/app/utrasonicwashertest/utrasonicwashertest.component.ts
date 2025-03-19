@@ -112,7 +112,7 @@ export class UtrasonicwashertestComponent implements OnInit {
 
   getDefaultEfficacyTests(logType: string): string[] {
     if (logType === 'Ultrasonic Log') {
-      return ['Atlas Ultrasonic Test', 'Aluminum Test'];
+      return ['Atlas Ultrasonic Test', 'Aluminum Foil Test'];
     } else {
       return ['Atlas Wash Test'];
     }
@@ -253,7 +253,7 @@ export class UtrasonicwashertestComponent implements OnInit {
   
     autoTable(doc, {
       startY: headerStartY + 30,
-      head: [['Date','Solution changed and degassed','Test Result', 'Efficacy Test', 'Team Member']],
+      head: [['Sample Date','Solution changed and degassed','Test Result', 'Efficacy Test', 'Team Member']],
       body: tableData,
       theme: 'grid',
       headStyles: {
@@ -280,18 +280,23 @@ export class UtrasonicwashertestComponent implements OnInit {
             const cellCenterX = data.cell.x + (data.cell.width / 2);
             const cellCenterY = data.cell.y + (data.cell.height / 2);
             
-            console.log('solutionsChanged value:', this.formData.solutionsChanged);
-            
-            // Text instead of radio buttons
-            doc.setFontSize(10);
-            if (this.formData.solutionsChanged === 'Yes') {
-              doc.setTextColor(0, 128, 0); // Green color
-              doc.text('Yes', cellCenterX, cellCenterY, { align: 'center' });
+            // Only show Solutions Changed for Ultrasonic Log
+            if (this.formData.logType === 'Ultrasonic Log') {
+              doc.setFontSize(10);
+              if (this.formData.solutionsChanged === 'Yes') {
+                doc.setTextColor(0, 128, 0); // Green color
+                doc.text('Yes', cellCenterX, cellCenterY, { align: 'center' });
+              } else {
+                doc.setTextColor(255, 0, 0); // Red color
+                doc.text('No', cellCenterX, cellCenterY, { align: 'center' });
+              }
+              doc.setTextColor(0, 0, 0); // Reset to black
             } else {
-              doc.setTextColor(255, 0, 0); // Red color
-              doc.text('No', cellCenterX, cellCenterY, { align: 'center' });
+              // For Washer Log, just put N/A or leave empty
+              doc.setTextColor(128, 128, 128); // Gray color
+              doc.text('N/A', cellCenterX, cellCenterY, { align: 'center' });
+              doc.setTextColor(0, 0, 0); // Reset to black
             }
-            doc.setTextColor(0, 0, 0); // Reset to black
           }
           
           // Test Result column

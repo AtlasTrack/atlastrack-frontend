@@ -34,6 +34,7 @@ records: UltraSonicRequestDTO[] = [];
   selectedClinic!: string;
   isMobile = window.innerWidth < 1024; // Initial check for screen size
   menuOpen = true;
+  selectedTestType: string = 'Ultrasonic Log'; 
   username: any = localStorage.getItem('clinic');
   constructor(private router: Router, private apiService: ApiService) { }
 
@@ -67,6 +68,11 @@ onWaterTestReport() {
 
   onDateChange() {
     if (this.validateDates()) {
+      const startDate = `${this.startTime}T00:00:00`;
+      const endDate = `${this.endTime}T23:59:59`;
+      if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
+        return;
+      }
       this.currentPage = 0; // Reset pagination to first page
       this.fetchFilteredRecords();
     }
@@ -98,6 +104,7 @@ onWaterTestReport() {
   fetchClinicRecords() {
     this.apiService.getUltraSonicRecordsByClinic(
       this.selectedClinic, 
+      this.selectedTestType, 
       this.currentPage
     ).subscribe({
       next: (response) => {
@@ -105,6 +112,22 @@ onWaterTestReport() {
         this.totalPages = response.totalPages;
       }
     });
+  }
+
+  // Add a method to handle test type changes
+  onTestTypeChange() {
+    this.currentPage = 0; // Reset to first page when filter changes
+
+    const startDate = `${this.startTime}T00:00:00`;
+    const endDate = `${this.endTime}T23:59:59`;
+  
+    if (startDate.includes('undefinedT') || endDate.includes('undefinedT')) {
+      this.fetchClinicRecords();
+    } else {
+      this.fetchFilteredRecords();
+    }
+
+   
   }
 
   // fetchRecords() {
@@ -126,7 +149,7 @@ onWaterTestReport() {
   
   
     // Use clinic-specific filter if a clinic is selected
-    this.apiService.getUltrasonicFilteredClinicRecords(this.selectedClinic, startDate, endDate, this.currentPage)
+    this.apiService.getUltrasonicFilteredClinicRecords(this.selectedClinic, this.selectedTestType, startDate, endDate, this.currentPage)
       .subscribe({
         next: (response) => {
           this.records = response.content;
@@ -152,7 +175,7 @@ onWaterTestReport() {
     return;
   }
 
-    this.apiService.exportUltraSonicClinicExcel(this.selectedClinic, startDate, endDate).subscribe(blob => {
+    this.apiService.exportUltraSonicClinicExcel(this.selectedClinic, this.selectedTestType, startDate, endDate).subscribe(blob => {
       saveAs(blob, `${this.selectedClinic}-report-${this.startTime}-to-${this.endTime}.xlsx`);
     });
   }
@@ -192,15 +215,13 @@ onWaterTestReport() {
       return;
     }
   
-    this.apiService.getUltrasonicFilteredClinicRecords(this.selectedClinic, startDate, endDate, this.currentPage)
+    this.apiService.getUltrasonicFilteredClinicRecords(this.selectedClinic, this.selectedTestType, startDate, endDate, this.currentPage)
       .subscribe({
         next: (response) => {
           // Get all records at once for PDF
           const allRecords = response.content;
           this.generatePDF(allRecords);
-          this.showPopup = true;
-          this.popupMessage = 'PDF Generated Successfully';
-          this.popupType = 'success';
+         
         },
         error: (err) => {
           console.error('Error fetching records for PDF:', err);
@@ -232,24 +253,27 @@ onWaterTestReport() {
       doc.setFontSize(12);
       doc.text(`Report Period: ${this.startTime} to ${this.endTime}`, doc.internal.pageSize.width / 2, 30, { align: 'center' });
       
-      // Process the data to include colored text for results
+      // Process the data to include conditional formatting for results
       const processedData = data.map(record => {
+        // Format solution changed value based on test type
+        let solutionChangedValue = record.testType === 'Washer Log' ? '___' : 
+                                  (record.solutionChanged ? 'Yes' : 'No');
+        
         // Copy all standard fields
         return [
           new Date(record.date).toLocaleString(),
           record.testType || 'N/A',
-          record.solutionChanged,
-          record.result, // We'll apply conditional styling to this cell
+          solutionChangedValue, // Now properly formatted based on test type
+          record.result,
           record.technicianName || 'N/A',
           record.efficacyTestName || 'N/A',
-
         ];
       });
       
       // Create the table with conditional styling
       autoTable(doc, {
         startY: 40,
-        head: [['Test Date', 'Test Type', 'Solutions Changed & Degassed', 'Test Result', 'Team Member', 'Efficacy Test Type' ]],
+        head: [['Test Date', 'Test Type', 'Solutions Changed & Degassed', 'Test Result', 'Team Member', 'Efficacy Test Type']],
         body: processedData,
         theme: 'grid',
         styles: {
@@ -272,18 +296,20 @@ onWaterTestReport() {
         },
         // Custom cell styling for conditional formatting
         didParseCell: function(data) {
-          // Style for Test Result column (index 4)
+          // Style for Solutions Changed column (index 2)
           if (data.section === 'body' && data.column.index === 2) {
-            const value = data.cell.text[0] === 'false' ? 'no' : 'yes' .toLowerCase();
-            if (value === 'yes') {
-              data.cell.styles.textColor = [0, 128, 0];// Green
-              data.cell.text[0] = 'Yes'
-            } else if (value === 'no') {
+            const value = data.cell.text[0];
+            
+            if (value === 'Yes') {
+              data.cell.styles.textColor = [0, 128, 0]; // Green
+            } else if (value === 'No') {
               data.cell.styles.textColor = [255, 0, 0]; // Red
-              data.cell.text[0] = 'No'
+            } else if (value === '___') {
+              data.cell.styles.textColor = [128, 128, 128]; // Gray for N/A (when test type is Washer Log)
             }
-
           }
+          
+          // Style for Test Result column (index 3)
           if (data.section === 'body' && data.column.index === 3) {
             const value = data.cell.text[0]?.toLowerCase();
             if (value === 'pass') {
@@ -291,11 +317,9 @@ onWaterTestReport() {
             } else if (value === 'fail') {
               data.cell.styles.textColor = [255, 0, 0]; // Red
             }
-
           }
         }
       });
-      
     
       // Save the PDF
       doc.save(`${this.selectedClinic}-ultrasonic-report-${this.startTime}-to-${this.endTime}.pdf`);
@@ -304,10 +328,9 @@ onWaterTestReport() {
     // Handle error if logo couldn't be loaded
     logoImg.onerror = () => {
       console.warn('Could not load logo, generating PDF without logo');
-      
+      // You could add fallback PDF generation here without the logo
     };
   }
-  
  
   onLogoutClick() {
     localStorage.removeItem('access_token');

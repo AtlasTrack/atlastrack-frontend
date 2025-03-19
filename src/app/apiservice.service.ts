@@ -98,7 +98,8 @@ private waterTestingBaseUrl = environment.waterTestingBaseUrl;
 
 
   getUltraSonicRecordsByClinic(
-    clinicName: string, 
+    clinicName: string,
+    testTypeName: string,
     page: number = 0, 
     size: number = 10
   ): Observable<{
@@ -107,7 +108,7 @@ private waterTestingBaseUrl = environment.waterTestingBaseUrl;
     totalElements: number,
     number: number
   }> {
-    return this.http.get<any>(`${this.ultrasonicBaseUrl}/clinic/${clinicName}`, {
+    return this.http.get<any>(`${this.ultrasonicBaseUrl}/clinic/${clinicName}/${testTypeName}`, {
       params: { 
         page: page.toString(), 
         size: size.toString() 
@@ -334,10 +335,11 @@ private waterTestingBaseUrl = environment.waterTestingBaseUrl;
     });
   }
 
-  getUltrasonicFilteredClinicRecords(clinicName: string, startDate: string, endDate: string, page: number) {
+  getUltrasonicFilteredClinicRecords(clinicName: string, testTypeName: string, startDate: string, endDate: string, page: number) {
     return this.http.get<any>(`${this.ultrasonicBaseUrl}/clinic/filtered`, {
       params: {
         clinicName,
+        testTypeName,
         start: startDate,
         end: endDate,
         page: page.toString()
@@ -353,9 +355,9 @@ private waterTestingBaseUrl = environment.waterTestingBaseUrl;
   }
 
 
-  exportUltraSonicClinicExcel(clinicName: string, startDate: string, endDate: string) {
+  exportUltraSonicClinicExcel(clinicName: string, testTypeName: string, startDate: string, endDate: string) {
     return this.http.get(`${this.ultrasonicBaseUrl}/export/clinic/excel`, {
-      params: { clinicName, start: startDate, end: endDate },
+      params: { clinicName, testTypeName, start: startDate, end: endDate },
       responseType: 'blob'
     });
   }
