@@ -167,6 +167,18 @@ private waterTestingBaseUrl = environment.waterTestingBaseUrl;
     );
   }
 
+
+  getClinicTypes(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/auth/clinictypes`)
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching clinic types:', error);
+          return of([]); // Return empty array on error
+        })
+      );
+  }
+
+
   login(email: string, password: string): Observable<boolean> {
     console.log('Starting login process for user:', email);
     

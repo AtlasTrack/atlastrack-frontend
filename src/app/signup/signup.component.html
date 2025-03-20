@@ -138,11 +138,13 @@
 </div> -->
 
 
-<div class="maindiv flex items-center justify-center min-h-screen bg-cover bg-center pt-4 pb-4 sm:pt-10 sm:pb-10 px-4" style="background-image: url('assets/newui/background.png');">
+<div class="maindiv flex flex-col items-center justify-center min-h-screen bg-cover bg-center px-4 py-1" style="background-image: url('assets/newui/background.png');">
+ 
   <div class="bg-white formcontainer shadow-lg p-4 sm:p-8 md:p-12 w-full max-w-md">
-      <h2 class="text-2xl sm:text-3xl font-semibold text-center mb-2">Create Account</h2>
-      <p class="text-center text-gray-600 text-xs sm:text-sm mb-4">Create an account to continue</p>
-      <form [formGroup]="signupForm" (ngSubmit)="onSignupClick()" class="pt-3"> 
+    <img src="assets/newui/atlasnewlogo.png" class="w-60 h-28 ml-10 sm:ml-20 sm:-mt-4" alt="Atlas Track Logo">
+      <h2 class="text-xl sm:text-xl font-semibold text-center mb-1">Create Account</h2>
+      <p class="text-center text-gray-600 text-xs sm:text-sm mb-2">Create an account to continue</p>
+      <form [formGroup]="signupForm" (ngSubmit)="onSignupClick()" class="pt-2"> 
         <!-- Email Field -->
         <div class="mb-2">
           <div>
@@ -238,13 +240,36 @@
         </div>
 
         <!-- Clinic Address Field -->
-        <div class="mb-4 fieldContainer">
+        <div class=" mb-2 fieldContainer">
           <div class="input-group" [class.invalid-border]="isFieldInvalid('clinicAddress')">
             <input 
               type="text" 
               class="w-full px-3 sm:px-4 py-2 border fieldContainer rounded-lg bg-gray-100 text-gray-500" 
               placeholder="Clinic Address"
               formControlName="clinicAddress">
+          </div>
+        </div>
+
+        <div *ngIf="!isAddNewClinic" class="mb-2 fieldContainer">
+          <div class="input-group" [class.invalid-border]="isFieldInvalid('clinicType')">
+            <select 
+              class="w-full px-3 sm:px-4 py-2 border fieldContainer rounded-lg bg-gray-100 text-gray-500" 
+              placeholder="Clinic Type"
+              formControlName="clinicType">
+              <option [value]="''" disabled>Select Clinic Type</option>
+              <option *ngFor="let type of clinicTypes" [value]="type">{{ type }}</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Update the addNewClinic input visibility -->
+        <div *ngIf="isAddNewClinic" class="mb-2 fieldContainer">
+          <div class="input-group" [class.invalid-border]="isFieldInvalid('addNewClinic')">
+            <input 
+              type="text" 
+              class="w-full px-3 sm:px-4 py-2 border fieldContainer rounded-lg bg-gray-100 text-gray-500" 
+              placeholder="Enter New Clinic Type"
+              formControlName="addNewClinic">
           </div>
         </div>
 

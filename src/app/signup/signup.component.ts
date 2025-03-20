@@ -30,6 +30,8 @@ export class SignupComponent implements OnInit {
   showPopup = false;
   popupMessage = '';
   popupType: 'success' | 'error' = 'success';
+  clinicTypes: string[] = [];
+  isAddNewClinic: boolean = false;
   selectedCountryCode: string = '+1'; // Default country code
 
   constructor(
@@ -58,10 +60,50 @@ export class SignupComponent implements OnInit {
         confirmPassword: ['', [Validators.required]],
         clinicName: ['', [Validators.required]],
         clinicAddress: ['', [Validators.required]],
+        clinicType: ['', [Validators.required]],
+        addNewClinic: [''],
       },
       { validator: this.passwordMatchValidator }
+
     );
+
+    this.fetchClinicTypes();
+    
+    // Watch for changes in clinicType to toggle the addNewClinic field
+    this.signupForm.get('clinicType')?.valueChanges.subscribe(value => {
+      if (value === 'Add New Clinic') { // "Add New Clinic" option
+        this.isAddNewClinic = true;
+        this.signupForm.get('addNewClinic')?.setValidators([Validators.required]);
+      } else {
+        this.isAddNewClinic = false;
+        this.signupForm.get('addNewClinic')?.clearValidators();
+        this.signupForm.get('addNewClinic')?.setValue('');
+      }
+      this.signupForm.get('addNewClinic')?.updateValueAndValidity();
+    });
   }
+
+
+
+  fetchClinicTypes() {
+    this.apiService.getClinicTypes().subscribe({
+      next: (types) => {
+        // Add default options
+        this.clinicTypes = ['Dental Clinic', 'Medical Clinic', 'Add New Clinic'];
+        
+        // Add unique clinic types from API
+        if (types && types.length) {
+          const uniqueTypes = types.filter(type => 
+            !this.clinicTypes.includes(type) && type !== 'Add New Clinic');
+          this.clinicTypes = [...this.clinicTypes.slice(0, 2), ...uniqueTypes, 'Add New Clinic'];
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching clinic types:', error);
+      }
+    });
+  }
+
 
   onCountryCodeChange(event: any) {
     this.selectedCountryCode = event.target.value;
@@ -125,11 +167,19 @@ export class SignupComponent implements OnInit {
       // Concatenate country code and phone number
       const fullPhoneNumber = `${formData.countryCode}${formData.phoneNumber}`;
       
+      let clinicTypeValue = formData.clinicType;
+      
+      // If "Add New Clinic" is selected, use the addNewClinic value
+      if (formData.clinicType === 'Add New Clinic') {
+        clinicTypeValue = formData.addNewClinic;
+      }
+      
       // Create the final registration data
       const registrationData = {
         ...formData,
+        clinicType: clinicTypeValue,
         phoneNumber: fullPhoneNumber,
-        countryCode: undefined // Remove the separate country code field
+        countryCode: undefined
       };
 
       // Remove confirm password from the request
