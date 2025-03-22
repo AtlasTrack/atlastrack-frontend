@@ -222,7 +222,7 @@ onWaterTestReport() {
       
       // Add title
       doc.setFontSize(16);
-      doc.text(`${this.selectedClinic} - Water Testing Report`, doc.internal.pageSize.width / 2, 20, { align: 'center' });
+      doc.text(`${this.selectedClinic} - Waterline Testing Report`, doc.internal.pageSize.width / 2, 20, { align: 'center' });
       
       // Add date range
       doc.setFontSize(12);

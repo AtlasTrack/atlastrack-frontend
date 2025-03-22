@@ -294,7 +294,7 @@ export class UtrasonicwashertestComponent implements OnInit {
             } else {
               // For Washer Log, just put N/A or leave empty
               doc.setTextColor(128, 128, 128); // Gray color
-              doc.text('N/A', cellCenterX, cellCenterY, { align: 'center' });
+              doc.text('__', cellCenterX, cellCenterY, { align: 'center' });
               doc.setTextColor(0, 0, 0); // Reset to black
             }
           }

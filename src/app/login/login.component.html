@@ -85,57 +85,67 @@
 </div> -->
 
 
-<div class="maindiv flex items-center justify-center min-h-screen bg-cover bg-center" style="background-image: url('assets/newui/background.png');">
-  <div class="bg-white formcontainer shadow-lg p-4 sm:p-8 md:p-12 w-full max-w-md mx-4">
-      <h2 class="text-xl sm:text-2xl font-bold text-center mb-2">Login to Account</h2>
-      <p class="text-center text-gray-600 text-xs sm:text-sm mb-4">Please enter your email and password to continue</p>
-      <form [formGroup]="loginForm" class="pt-2" (ngSubmit)="onLoginClick()">
-          <div class="mb-4">
-              <label class="block text-gray-600 text-sm mb-2" for="email">Email Address:</label>
-              <input class="w-full px-3 sm:px-4 py-2 border rounded-lg bg-gray-100 text-gray-500" 
-                type="email" 
-                id="email"  
-                formControlName="email"
-                placeholder="Email Address"
-                [class.invalid-border]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-          </div>
-          <div class="mb-4">
-              <label class="block text-gray-600 text-sm mb-2" for="password">Password</label>
-              <div class="relative">
-                  <input class="w-full px-3 sm:px-4 py-2 border rounded-lg bg-gray-100 text-gray-500" 
-                    [type]="showPassword ? 'text' : 'password'"
-                    formControlName="password"
-                    placeholder="Password"
-                    [class.invalid-border]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-                  <i class="fas absolute right-3 top-3 text-gray-400" 
-                    [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" 
-                    (click)="togglePasswordVisibility()"></i>
-                  <span class="input-group-text fieldIcons border-0 cursor-pointer">
-                    <i class="bi"></i>
-                  </span>
-              </div>
-              <div class="flex flex-col sm:flex-row mt-2">
-                <div class="flex-0 mb-2 flex items-center">
-                  <input 
-                    type="checkbox" 
-                    class="mr-2 ml-0 sm:ml-2" 
-                    id="rememberMe"
-                    formControlName="rememberMe">
-                  <label for="remember" class="text-gray-500 text-sm">Remember Password</label>
-                </div>
-                <div class="text-left sm:text-right mb-2 flex-1 items-center">
-                  <a class="text-gray-500 text-sm cursor-pointer" (click)="onForgetPassword()">Forget Password?</a>
-                </div>
-              </div>
-          </div>
-          <div *ngIf="errorMessage" class="text-red-500 text-sm mb-4 text-center">
-            {{ errorMessage }}
-          </div>
-          <button
-            class="w-full sm:w-3/4 sm:ml-12 loginbtn text-white py-2 rounded-lg transition duration-200"
-            type="submit" 
-            [disabled]="loginForm.invalid">Login</button>
-      </form>
-      <p class="text-center text-gray-500 text-xs mt-2 mb-4">Don't have an account? <a class="text-purple-500 cursor-pointer" (click)="onCreateAccount()">Create Account</a></p>
+<div class="maindiv flex flex-col items-center justify-center min-h-screen bg-cover bg-center px-4" style="background-image: url('assets/newui/background.png');">
+  <!-- Logo and Welcome Text Container -->
+  <div class="text-center">
+    <div class="flex justify-center items-center">
+      
+    </div>
+
   </div>
+
+  <!-- Form Container -->
+  <div class="bg-white formcontainer shadow-lg p-4 sm:p-8 md:p-12 w-full max-w-md mx-4">
+    <img src="assets/newui/atlasnewlogo.png" class="w-60 h-28 ml-10 sm:ml-20 mb-2" alt="Atlas Track Logo">
+    <p class="text-center text-lg text-muted font-semibold  mb-2">Welcome to Atlas Track</p>
+    <h2 class="text-lg sm:text-lg font-bold text-center mb-2">Login to Account</h2>
+    <form [formGroup]="loginForm" class="pt-2" (ngSubmit)="onLoginClick()">
+        <div class="mb-4">
+            <label class="block text-gray-600 text-sm mb-2" for="email">Email Address:</label>
+            <input class="w-full px-3 sm:px-4 py-2 border rounded-lg bg-gray-100 text-gray-500" 
+              type="email" 
+              id="email"  
+              formControlName="email"
+              placeholder="Email Address"
+              [class.invalid-border]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-600 text-sm mb-2" for="password">Password</label>
+            <div class="relative">
+                <input class="w-full px-3 sm:px-4 py-2 border rounded-lg bg-gray-100 text-gray-500" 
+                  [type]="showPassword ? 'text' : 'password'"
+                  formControlName="password"
+                  placeholder="Password"
+                  [class.invalid-border]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                <i class="fas absolute right-3 top-3 text-gray-400" 
+                  [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" 
+                  (click)="togglePasswordVisibility()"></i>
+                <span class="input-group-text fieldIcons border-0 cursor-pointer">
+                  <i class="bi"></i>
+                </span>
+            </div>
+            <div class="flex flex-col sm:flex-row mt-2">
+              <div class="flex-0 mb-2 flex items-center">
+                <input 
+                  type="checkbox" 
+                  class="mr-2 ml-0 sm:ml-2" 
+                  id="rememberMe"
+                  formControlName="rememberMe">
+                <label for="remember" class="text-gray-500 text-sm">Remember Password</label>
+              </div>
+              <div class="text-left sm:text-right mb-2 flex-1 items-center">
+                <a class="text-gray-500 text-sm cursor-pointer" (click)="onForgetPassword()">Forget Password?</a>
+              </div>
+            </div>
+        </div>
+        <div *ngIf="errorMessage" class="text-red-500 text-sm mb-4 text-center">
+          {{ errorMessage }}
+        </div>
+        <button
+          class="w-full sm:w-3/4 sm:ml-12 loginbtn text-white py-2 rounded-lg transition duration-200"
+          type="submit" 
+          [disabled]="loginForm.invalid">Login</button>
+    </form>
+    <p class="text-center text-gray-500 text-xs mt-2 mb-4">Don't have an account? <a class="text-purple-500 cursor-pointer" (click)="onCreateAccount()">Create Account</a></p>
+</div>
 </div>
