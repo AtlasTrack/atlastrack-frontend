@@ -219,12 +219,12 @@ export class UtrasonicwashertestComponent implements OnInit {
     doc.setFont('helvetica', 'bold');
   
     doc.text('Clinic Name:', margin , headerStartY);
-
+  
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
   
     doc.text(this.clinicName || 'Clinic Name', margin + 40 , headerStartY);
-
+  
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);
     doc.text('Clinic Address:', margin  , headerStartY + 8);
@@ -239,21 +239,54 @@ export class UtrasonicwashertestComponent implements OnInit {
     const titleWidth = doc.getTextWidth(title);
     doc.text(title, (pageWidth - titleWidth) / 2, headerStartY + 25);
   
-    // Table with All Relevant Form Data
-    const tableData = [
-      [
-        new Date(this.formData.date).toLocaleDateString('en-CA', { month: '2-digit', day: '2-digit', year: 'numeric' }) + ' ' + 
-        new Date(this.formData.date).toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit' }),
-        '', // Will be filled with radio buttons in didDrawCell
-        '', // Will be filled with radio buttons in didDrawCell
-        this.formData.efficacyTestType === 'Other'? this.formData.otherEfficacyTestType : this.formData.efficacyTestType || '',
-        this.formData.teamMember || '',
-      ],
-    ];
+    // Determine columns based on log type
+    let headers = [];
+    let tableData = [];
+    let columnStyles = {};
+    
+    if (this.formData.logType === 'Ultrasonic Log') {
+      // Include Solution Changed column for Ultrasonic Log
+      headers = ['Sample Date', 'Solution changed and degassed', 'Test Result', 'Efficacy Test', 'Team Member'];
+      tableData = [
+        [
+          new Date(this.formData.date).toLocaleDateString('en-CA', { month: '2-digit', day: '2-digit', year: 'numeric' }) + ' ' + 
+          new Date(this.formData.date).toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit' }),
+          '', // Will be filled with Yes/No in didDrawCell
+          '', // Will be filled with Pass/Fail in didDrawCell
+          this.formData.efficacyTestType === 'Other' ? this.formData.otherEfficacyTestType : this.formData.efficacyTestType || '',
+          this.formData.teamMember || '',
+        ],
+      ];
+      columnStyles = {
+        0: { cellWidth: 35, cellPadding: 5 },
+        1: { cellWidth: 35, cellPadding: 5 },
+        2: { cellWidth: 35, cellPadding: 5 },
+        3: { cellWidth: 35, cellPadding: 5 },
+        4: { cellWidth: 30, cellPadding: 5 },
+      };
+    } else {
+      // Exclude Solution Changed column for Washer Log
+      headers = ['Sample Date', 'Test Result', 'Efficacy Test', 'Team Member'];
+      tableData = [
+        [
+          new Date(this.formData.date).toLocaleDateString('en-CA', { month: '2-digit', day: '2-digit', year: 'numeric' }) + ' ' + 
+          new Date(this.formData.date).toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit' }),
+          '', // Will be filled with Pass/Fail in didDrawCell
+          this.formData.efficacyTestType === 'Other' ? this.formData.otherEfficacyTestType : this.formData.efficacyTestType || '',
+          this.formData.teamMember || '',
+        ],
+      ];
+      columnStyles = {
+        0: { cellWidth: 45, cellPadding: 5 },
+        1: { cellWidth: 45, cellPadding: 5 },
+        2: { cellWidth: 45, cellPadding: 5 },
+        3: { cellWidth: 45, cellPadding: 5 },
+      };
+    }
   
     autoTable(doc, {
       startY: headerStartY + 30,
-      head: [['Sample Date','Solution changed and degassed','Test Result', 'Efficacy Test', 'Team Member']],
+      head: [headers],
       body: tableData,
       theme: 'grid',
       headStyles: {
@@ -266,22 +299,15 @@ export class UtrasonicwashertestComponent implements OnInit {
         fontSize: 10,
         halign: 'center',
       },
-      columnStyles: {
-        0: { cellWidth: 35, cellPadding: 5},
-        1: { cellWidth: 35, cellPadding: 5 },
-        2: { cellWidth: 35, cellPadding: 5 },
-        3: { cellWidth: 35, cellPadding: 5 },
-        4: { cellWidth: 30, cellPadding: 5 },
-      },
+      columnStyles: columnStyles,
       didDrawCell: (data) => {
         if (data.row.section === 'body') {
-          // Solutions Changed column
-          if (data.column.index === 1 && data.row.index === 0) {
-            const cellCenterX = data.cell.x + (data.cell.width / 2);
-            const cellCenterY = data.cell.y + (data.cell.height / 2);
-            
-            // Only show Solutions Changed for Ultrasonic Log
-            if (this.formData.logType === 'Ultrasonic Log') {
+          if (this.formData.logType === 'Ultrasonic Log') {
+            // Solutions Changed column (only for Ultrasonic Log)
+            if (data.column.index === 1 && data.row.index === 0) {
+              const cellCenterX = data.cell.x + (data.cell.width / 2);
+              const cellCenterY = data.cell.y + (data.cell.height / 2);
+              
               doc.setFontSize(10);
               if (this.formData.solutionsChanged === 'Yes') {
                 doc.setTextColor(0, 128, 0); // Green color
@@ -291,31 +317,39 @@ export class UtrasonicwashertestComponent implements OnInit {
                 doc.text('No', cellCenterX, cellCenterY, { align: 'center' });
               }
               doc.setTextColor(0, 0, 0); // Reset to black
-            } else {
-              // For Washer Log, just put N/A or leave empty
-              doc.setTextColor(128, 128, 128); // Gray color
-              doc.text('__', cellCenterX, cellCenterY, { align: 'center' });
+            }
+            
+            // Test Result column for Ultrasonic Log
+            if (data.column.index === 2 && data.row.index === 0) {
+              const cellCenterX = data.cell.x + (data.cell.width / 2);
+              const cellCenterY = data.cell.y + (data.cell.height / 2);
+              
+              doc.setFontSize(10);
+              if (this.formData.testResult === 'Pass') {
+                doc.setTextColor(0, 128, 0); // Green color
+                doc.text('Pass', cellCenterX, cellCenterY, { align: 'center' });
+              } else {
+                doc.setTextColor(255, 0, 0); // Red color
+                doc.text('Fail', cellCenterX, cellCenterY, { align: 'center' });
+              }
               doc.setTextColor(0, 0, 0); // Reset to black
             }
-          }
-          
-          // Test Result column
-          if (data.column.index === 2 && data.row.index === 0) {
-            const cellCenterX = data.cell.x + (data.cell.width / 2);
-            const cellCenterY = data.cell.y + (data.cell.height / 2);
-            
-            console.log('testResult value:', this.formData.testResult);
-            
-            // Text instead of radio buttons
-            doc.setFontSize(10);
-            if (this.formData.testResult === 'Pass') {
-              doc.setTextColor(0, 128, 0); // Green color
-              doc.text('Pass', cellCenterX, cellCenterY, { align: 'center' });
-            } else {
-              doc.setTextColor(255, 0, 0); // Red color
-              doc.text('Fail', cellCenterX, cellCenterY, { align: 'center' });
+          } else {
+            // Test Result column for Washer Log (index 1 instead of 2 since no Solutions Changed column)
+            if (data.column.index === 1 && data.row.index === 0) {
+              const cellCenterX = data.cell.x + (data.cell.width / 2);
+              const cellCenterY = data.cell.y + (data.cell.height / 2);
+              
+              doc.setFontSize(10);
+              if (this.formData.testResult === 'Pass') {
+                doc.setTextColor(0, 128, 0); // Green color
+                doc.text('Pass', cellCenterX, cellCenterY, { align: 'center' });
+              } else {
+                doc.setTextColor(255, 0, 0); // Red color
+                doc.text('Fail', cellCenterX, cellCenterY, { align: 'center' });
+              }
+              doc.setTextColor(0, 0, 0); // Reset to black
             }
-            doc.setTextColor(0, 0, 0); // Reset to black
           }
         }
       },
@@ -347,7 +381,6 @@ export class UtrasonicwashertestComponent implements OnInit {
     // Save the PDF
     doc.save(`${this.formData.logType.replace(' ', '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
   }
-
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;

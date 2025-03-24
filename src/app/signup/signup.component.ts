@@ -71,7 +71,7 @@ export class SignupComponent implements OnInit {
     
     // Watch for changes in clinicType to toggle the addNewClinic field
     this.signupForm.get('clinicType')?.valueChanges.subscribe(value => {
-      if (value === 'Add New Clinic') { // "Add New Clinic" option
+      if (value === 'Add Other') { // "Add New Clinic" option
         this.isAddNewClinic = true;
         this.signupForm.get('addNewClinic')?.setValidators([Validators.required]);
       } else {
@@ -89,13 +89,13 @@ export class SignupComponent implements OnInit {
     this.apiService.getClinicTypes().subscribe({
       next: (types) => {
         // Add default options
-        this.clinicTypes = ['Dental Clinic', 'Medical Clinic', 'Add New Clinic'];
+        this.clinicTypes = ['Dental Clinic', 'Medical Clinic', 'Add Other'];
         
         // Add unique clinic types from API
         if (types && types.length) {
           const uniqueTypes = types.filter(type => 
-            !this.clinicTypes.includes(type) && type !== 'Add New Clinic');
-          this.clinicTypes = [...this.clinicTypes.slice(0, 2), ...uniqueTypes, 'Add New Clinic'];
+            !this.clinicTypes.includes(type) && type !== 'Add Other');
+          this.clinicTypes = [...this.clinicTypes.slice(0, 2), ...uniqueTypes, 'Add Other'];
         }
       },
       error: (error) => {
@@ -170,7 +170,7 @@ export class SignupComponent implements OnInit {
       let clinicTypeValue = formData.clinicType;
       
       // If "Add New Clinic" is selected, use the addNewClinic value
-      if (formData.clinicType === 'Add New Clinic') {
+      if (formData.clinicType === 'Add Other') {
         clinicTypeValue = formData.addNewClinic;
       }
       
