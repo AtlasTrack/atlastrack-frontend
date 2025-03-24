@@ -96,8 +96,8 @@ export class RendervalueformComponent {
 
  
   
-  initialSerialNumber: any = localStorage.getItem('servicePackSerial');
-  initialBIType: any = localStorage.getItem('biType');
+  initialSerialNumber: string = '';
+  initialBIType: string = '';
   username: any = localStorage.getItem('clinic');
   clinicAddress: any = localStorage.getItem('clinicAddress');
 
@@ -131,23 +131,30 @@ export class RendervalueformComponent {
   }
 
   ngOnInit() {
+
+    if (!this.username) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    // Fetch last serial number and BI type
+  
+
     const now = new Date();
     this.startDateTime = this.formatDateTimeForInput(now);
     this.endDateTime = this.formatDateTimeForInput(now);
-   
-    this.formData.serialNumber = this.initialSerialNumber;
-    this.formData.biType = this.initialBIType;
     this.updateFormTimes();
     this.fetchDropdownData();
-    if (!this.validateFields()) {
-      // Map validation errors to form errors for display
-      if (this.errorMessages['serialNumber']) {
-        this.formErrors['serialNumber'] = true;
-      }
-      if (this.errorMessages['biType']) {
-        this.formErrors['biType'] = true;
-      }
-    }
+    this.fetchLastSerialNumberAndBIType();
+    // if (!this.validateFields()) {
+    //   // Map validation errors to form errors for display
+    //   if (this.errorMessages['serialNumber']) {
+    //     this.formErrors['serialNumber'] = true;
+    //   }
+    //   if (this.errorMessages['biType']) {
+    //     this.formErrors['biType'] = true;
+    //   }
+    // }
     console.log("Serial ", this.initialSerialNumber);
     console.log('Bi type', this.initialBIType);
   }
@@ -173,6 +180,45 @@ export class RendervalueformComponent {
     return isValid;
   }
 
+  private fetchLastSerialNumberAndBIType() {
+    // Fetch last serial number
+    this.apiService.getLastSerialNumberByClinic(this.username).subscribe({
+      next: (serialNumber) => {
+        if (serialNumber) {
+          this.initialSerialNumber = serialNumber;
+          this.formData.serialNumber = serialNumber;
+        } else {
+          this.errorMessages['serialNumber'] = 'Serial Number is Empty';
+          this.formErrors['serialNumber'] = true;
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching serial number:', error);
+        this.errorMessages['serialNumber'] = 'Failed to fetch Serial Number';
+        this.formErrors['serialNumber'] = true;
+      }
+    });
+
+    // Fetch last BI type
+    this.apiService.getLastBITypeByClinic(this.username).subscribe({
+      next: (biType) => {
+        if (biType) {
+          this.initialBIType = biType;
+          this.formData.biType = biType;
+        } else {
+          this.errorMessages['biType'] = 'BI Type is Empty';
+          this.formErrors['biType'] = true;
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching BI type:', error);
+        this.errorMessages['biType'] = 'Failed to fetch BI Type';
+        this.formErrors['biType'] = true;
+      }
+    });
+  }
+
+ 
   private fetchDropdownData(): void {
     if(!this.username) {
       this.router.navigate(['/login']);

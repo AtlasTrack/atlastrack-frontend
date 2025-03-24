@@ -253,27 +253,48 @@ onWaterTestReport() {
       doc.setFontSize(12);
       doc.text(`Report Period: ${this.startTime} to ${this.endTime}`, doc.internal.pageSize.width / 2, 30, { align: 'center' });
       
+      // Define table headers based on test type
+      let headers = [];
+      if (this.selectedTestType === 'Ultrasonic Log') {
+        headers = [['Test Date', 'Test Type', 'Solutions Changed & Degassed', 'Test Result', 'Team Member', 'Efficacy Test Type']];
+      } else { // Washer Log
+        headers = [['Test Date', 'Test Type', 'Test Result', 'Team Member', 'Efficacy Test Type']];
+      }
+      
       // Process the data to include conditional formatting for results
       const processedData = data.map(record => {
-        // Format solution changed value based on test type
-        let solutionChangedValue = record.testType === 'Washer Log' ? '___' : 
-                                  (record.solutionChanged ? 'Yes' : 'No');
+        // Create a row array based on test type
+        let row = [];
         
-        // Copy all standard fields
-        return [
-          new Date(record.date).toLocaleString(),
-          record.testType || 'N/A',
-          solutionChangedValue, // Now properly formatted based on test type
-          record.result,
-          record.technicianName || 'N/A',
-          record.efficacyTestName || 'N/A',
-        ];
+        if (this.selectedTestType === 'Ultrasonic Log') {
+          row = [
+            new Date(record.date).toLocaleString(),
+            record.testType || 'N/A',
+            record.solutionChanged ? 'Yes' : 'No',
+            record.result,
+            record.technicianName || 'N/A',
+            record.efficacyTestName || 'N/A',
+          ];
+        } else { // Washer Log
+          row = [
+            new Date(record.date).toLocaleString(),
+            record.testType || 'N/A',
+            record.result,
+            record.technicianName || 'N/A',
+            record.efficacyTestName || 'N/A',
+          ];
+        }
+        
+        return row;
       });
+      
+      // Store the selectedTestType in a variable to use it inside didParseCell
+      const selectedTestType = this.selectedTestType;
       
       // Create the table with conditional styling
       autoTable(doc, {
         startY: 40,
-        head: [['Test Date', 'Test Type', 'Solutions Changed & Degassed', 'Test Result', 'Team Member', 'Efficacy Test Type']],
+        head: headers,
         body: processedData,
         theme: 'grid',
         styles: {
@@ -295,34 +316,44 @@ onWaterTestReport() {
           fillColor: [245, 245, 245]
         },
         // Custom cell styling for conditional formatting
-        didParseCell: function(data) {
-          // Style for Solutions Changed column (index 2)
-          if (data.section === 'body' && data.column.index === 2) {
-            const value = data.cell.text[0];
-            
-            if (value === 'Yes') {
-              data.cell.styles.textColor = [0, 128, 0]; // Green
-            } else if (value === 'No') {
-              data.cell.styles.textColor = [255, 0, 0]; // Red
-            } else if (value === '___') {
-              data.cell.styles.textColor = [128, 128, 128]; // Gray for N/A (when test type is Washer Log)
+        didParseCell: function(cellData: any) {
+          if (selectedTestType === 'Ultrasonic Log') {
+            // Style for Solutions Changed column (index 2) - only applies to Ultrasonic Log
+            if (cellData.section === 'body' && cellData.column.index === 2) {
+              const value = cellData.cell.text[0];
+              
+              if (value === 'Yes') {
+                cellData.cell.styles.textColor = [0, 128, 0]; // Green
+              } else if (value === 'No') {
+                cellData.cell.styles.textColor = [255, 0, 0]; // Red
+              }
             }
-          }
-          
-          // Style for Test Result column (index 3)
-          if (data.section === 'body' && data.column.index === 3) {
-            const value = data.cell.text[0]?.toLowerCase();
-            if (value === 'pass') {
-              data.cell.styles.textColor = [0, 128, 0]; // Green
-            } else if (value === 'fail') {
-              data.cell.styles.textColor = [255, 0, 0]; // Red
+            
+            // Test Result column is index 3 for Ultrasonic Log
+            if (cellData.section === 'body' && cellData.column.index === 3) {
+              const value = cellData.cell.text[0]?.toLowerCase();
+              if (value === 'pass') {
+                cellData.cell.styles.textColor = [0, 128, 0]; // Green
+              } else if (value === 'fail') {
+                cellData.cell.styles.textColor = [255, 0, 0]; // Red
+              }
+            }
+          } else { // Washer Log
+            // Test Result column is index 2 for Washer Log (since Solutions Changed column is removed)
+            if (cellData.section === 'body' && cellData.column.index === 2) {
+              const value = cellData.cell.text[0]?.toLowerCase();
+              if (value === 'pass') {
+                cellData.cell.styles.textColor = [0, 128, 0]; // Green
+              } else if (value === 'fail') {
+                cellData.cell.styles.textColor = [255, 0, 0]; // Red
+              }
             }
           }
         }
       });
     
       // Save the PDF
-      doc.save(`${this.selectedClinic}-ultrasonic-report-${this.startTime}-to-${this.endTime}.pdf`);
+      doc.save(`${this.selectedClinic}-${this.selectedTestType.toLowerCase().replace(' ', '-')}-report-${this.startTime}-to-${this.endTime}.pdf`);
     };
     
     // Handle error if logo couldn't be loaded
@@ -331,7 +362,6 @@ onWaterTestReport() {
       // You could add fallback PDF generation here without the logo
     };
   }
- 
   onLogoutClick() {
     localStorage.removeItem('access_token');
    localStorage.removeItem('profile');

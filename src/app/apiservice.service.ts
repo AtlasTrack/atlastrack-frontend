@@ -336,6 +336,53 @@ private waterTestingBaseUrl = environment.waterTestingBaseUrl;
     return this.http.post(`${this.baseUrl}/createRecord`, data);
   }
 
+  // Add this method to your existing ApiService class
+createSerialAndBIType(
+  clinicName: string,
+  clinicAddress: string,
+  serialNumber: string,
+  biTypeValue: string
+): Observable<any> {
+  const params = new HttpParams()
+    .set('clinicName', clinicName)
+    .set('clinicAddress', clinicAddress)
+    .set('serialNumber', serialNumber)
+    .set('biTypeValue', biTypeValue);
+
+  return this.http.post(`${this.baseUrl}/createSerialAndBIType`, null, { params }).pipe(
+    tap(response => {
+      console.log('Serial and BI Type created successfully:', response);
+    }),
+    catchError(error => {
+      console.error('Error creating Serial and BI Type:', error);
+      return throwError(() => ({
+        message: error.error?.message || error.error || 'Failed to create Serial and BI Type'
+      }));
+    })
+  );
+}
+
+
+getLastSerialNumberByClinic(clinicName: string): Observable<string | null> {
+  return this.http.get(`${this.baseUrl}/serialNumbers/clinic/${clinicName}`, { responseType: 'text' }).pipe(
+    map(response => response || null),
+    catchError(error => {
+      console.error('Error fetching last serial number:', error);
+      return of(null);
+    })
+  );
+}
+
+// Method to get the last BI type for a clinic
+getLastBITypeByClinic(clinicName: string): Observable<string | null> {
+  return this.http.get(`${this.baseUrl}/biType/clinic/${clinicName}`, { responseType: 'text' }).pipe(
+    map(response => response || null),
+    catchError(error => {
+      console.error('Error fetching last BI type:', error);
+      return of(null);
+    })
+  );
+}
   getFilteredClinicRecords(clinicName: string, startDate: string, endDate: string, page: number) {
     return this.http.get<any>(`${this.baseUrl}/filter/clinic`, {
       params: {
